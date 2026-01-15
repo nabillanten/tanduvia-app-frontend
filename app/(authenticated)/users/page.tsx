@@ -23,7 +23,7 @@ const UserPage = async (props: {searchParams: SearchParams}) => {
     <div className="flex flex-col gap-6">
       <div className="flex gap-6">
         <SearchInput placeholder="Cari Berdasarkan Nama..." />
-        <Link href={"/users"}>
+        <Link href={"/users/create"}>
           <Button>
             <PlusIcon /> <span>Baru</span>
           </Button>
