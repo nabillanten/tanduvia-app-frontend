@@ -1,7 +1,39 @@
-import React from "react";
+import {Button} from "@/components/ui/button";
+import SearchInput from "@/components/ui/SearchInput";
+import {PlusIcon} from "lucide-react";
+import Link from "next/link";
+import React, {Suspense} from "react";
+import UsersTable from "./UsersTable";
 
-const UserPage = () => {
-  return <div>UserPage</div>;
+type SearchParams = Promise<{page?: string; perPage?: string; q?: string}>;
+
+const UserPage = async (props: {searchParams: SearchParams}) => {
+  const searchParams = await props.searchParams;
+
+  const page = Number(searchParams.page) || 1;
+  const perPage = Number(searchParams.perPage) || 10;
+  const query = searchParams.q ?? "";
+  const usersTableProps = {
+    page,
+    perPage,
+    query,
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex gap-6">
+        <SearchInput placeholder="Cari Berdasarkan Nama..." />
+        <Link href={"/users"}>
+          <Button>
+            <PlusIcon /> <span>Baru</span>
+          </Button>
+        </Link>
+      </div>
+      <Suspense key={123} fallback={<p>Loading..</p>}>
+        <UsersTable {...usersTableProps} />
+      </Suspense>
+    </div>
+  );
 };
 
 export default UserPage;
