@@ -18,10 +18,10 @@ import {NavMenu} from "./nav-menu";
 import {usePathname} from "next/navigation";
 import Image from "next/image";
 
-const data = {
+const dataAdmin = {
   user: {
     name: "super admin",
-    email: "superadmin@tanduvia.com",
+    email: "Superadmin",
   },
   projects: [
     {
@@ -52,8 +52,54 @@ const data = {
   ],
 };
 
+const dataPetugas = {
+  user: {
+    name: "Aridiansyah",
+    email: "Petugas Posyandu",
+  },
+  projects: [
+    {
+      name: "Beranda",
+      url: "#",
+      icon: Home,
+    },
+    {
+      name: "Anak",
+      url: "/anak",
+      icon: Baby,
+    },
+    {
+      name: "Pemeriksaan",
+      url: "#",
+      icon: Map,
+    },
+  ],
+};
+
+const dataAhliGizi = {
+  user: {
+    name: "Dr. Aridiansyah",
+    email: "Ahli Gizi",
+  },
+  projects: [
+    {
+      name: "Beranda",
+      url: "#",
+      icon: Home,
+    },
+    {
+      name: "Panduan Gizi",
+      url: "/panduan_gizi",
+      icon: Salad,
+    },
+  ],
+};
+
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const role = "SUPERADMIN"
+
+  const navigation = role === "SUPERADMIN" ? dataAdmin : role === "PETUGAS" ? dataPetugas : dataAhliGizi
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -75,10 +121,10 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMenu menu={data.projects} pathNow={pathname} />
+        <NavMenu menu={navigation.projects} pathNow={pathname} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={navigation.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
