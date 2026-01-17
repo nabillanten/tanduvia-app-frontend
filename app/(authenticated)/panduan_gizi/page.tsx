@@ -19,9 +19,9 @@ const PanduanGiziPage = async (props: {searchParams: SearchParams}) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex gap-6">
-        <SearchInput placeholder="Cari Berdasarkan Nama..." />
+        <SearchInput placeholder="Cari Berdasarkan Judul..." />
       </div>
-      <Suspense key={123} fallback={<TableLoading tableColumn={8} />}>
+      <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
         <PanduanGiziTable {...usersTableProps} />
       </Suspense>
     </div>

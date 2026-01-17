@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
-import React from "react";
 import {useRouter} from "next/navigation";
 import {
   CircleAlertIcon,
@@ -61,7 +60,7 @@ const Actions = (props: z.infer<typeof schema>) => {
 export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "judul",
-    header: "Title",
+    header: "Judul",
   },
   {
     accessorKey: "jenis_indeks",

@@ -29,7 +29,7 @@ const AnakPage = async (props: {searchParams: SearchParams}) => {
           </Button>
         </Link>
       </div>
-      <Suspense key={123} fallback={<TableLoading tableColumn={8} />}>
+      <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
         <AnakTable {...usersTableProps} />
       </Suspense>
     </div>
