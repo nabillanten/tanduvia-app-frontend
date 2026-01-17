@@ -1,15 +1,21 @@
 import {DataTable} from "@/components/ui/table/data-table";
 import {columns} from "./columns";
 import TablePagination from "@/components/ui/table/table-pagination";
-import {mockAnak} from "@/app/mock-data/mock-anak";
-
+import fetchWithCredentials from "@/lib/fetchWithCredential";
 
 type Props = {page: number; perPage: number; query: string};
 
+async function findAllAnak(page: number, perPage: number, query: string) {
+  const response = await fetchWithCredentials(
+    `/anak?page=${page}&perPage=${perPage}&search=nama:${query}&sort=created_at%3Adesc`,
+  );
+  return response?.data;
+}
+
 const AnakTable = async (props: Props) => {
   const {page, perPage, query} = props;
-  //   const users = await findAllUsers(page, perPage, query)
-  const anak = {data: mockAnak, count: 0};
+  const anak = await findAllAnak(page, perPage, query);
+
   const count = anak?.count;
   const TablePaginationProps = {
     page,
