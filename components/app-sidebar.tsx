@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {Home, Map, Users} from "lucide-react";
+import {Baby, Home, Map, Users} from "lucide-react";
 import {NavUser} from "@/components/nav-user";
 import Logo from "@/public/images/logo.png";
 import {
@@ -18,12 +18,10 @@ import {NavMenu} from "./nav-menu";
 import {usePathname} from "next/navigation";
 import Image from "next/image";
 
-// This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "super admin",
+    email: "superadmin@tanduvia.com",
   },
   projects: [
     {
@@ -35,6 +33,11 @@ const data = {
       name: "Pengguna",
       url: "/users",
       icon: Users,
+    },
+     {
+      name: "Anak",
+      url: "/anak",
+      icon: Baby,
     },
     {
       name: "Pemeriksaan",
