@@ -18,46 +18,18 @@ import {NavMenu} from "./nav-menu";
 import {usePathname} from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import {getCookie} from "@/lib/cookies";
-import {appConfig} from "@/app/app-config";
 
-type User = {
-  id: string;
-  nama: string;
-  role: string;
-};
-
-export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  name,
+  userRole,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {name: string; userRole: string}) {
   const pathname = usePathname();
-
-  const [user, setUser] = React.useState<User>();
-  React.useEffect(() => {
-    const getPosyandu = async () => {
-      try {
-        const access_token = getCookie("access_token");
-        const userId = getCookie("userId");
-        const request = await fetch(appConfig.baseUrl + "/users/" + userId, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-          cache: "no-store",
-        });
-        const response = await request.json();
-        setUser(response?.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getPosyandu();
-  }, []);
 
   const dataAdmin = {
     user: {
-      name: user?.nama,
-      role: user?.role,
+      name: name,
+      role: userRole,
     },
     projects: [
       {
@@ -75,7 +47,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
         url: "/anak",
         icon: Baby,
       },
-       {
+      {
         name: "Posyandu",
         url: "/posyandu",
         icon: Baby,
@@ -95,8 +67,8 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
 
   const dataPetugas = {
     user: {
-      name: user?.nama,
-      role: user?.role,
+      name: name,
+      role: userRole,
     },
     projects: [
       {
@@ -119,8 +91,8 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
 
   const dataAhliGizi = {
     user: {
-      name: user?.nama,
-      role: user?.role,
+      name: name,
+      role: userRole,
     },
     projects: [
       {
@@ -136,12 +108,10 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
     ],
   };
 
-  const role = user?.role;
-
   const navigation =
-    role === "SUPERADMIN"
+    userRole === "SUPERADMIN"
       ? dataAdmin
-      : role === "PETUGAS"
+      : userRole === "PETUGAS"
       ? dataPetugas
       : dataAhliGizi;
   return (
