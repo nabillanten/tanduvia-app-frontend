@@ -22,53 +22,84 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import {createUser} from "@/lib/actions/pengguna";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
+import {getCookie} from "@/lib/cookies";
+import {appConfig} from "@/app/app-config";
+import {createUser} from "@/app/actions/users";
 
 const formSchema = z.object({
   username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Username minimal 2 karakter.",
   }),
-  nama: z.string(),
-  no_telepon: z.string().min(10),
-  posyandu_id: z.string().nullable(),
-  role: z.enum(["super_admin", "petugas", "ahli_gizi"]),
-  password: z.string().min(8),
+  nama: z.string().min(2, {message: "Nama lengkap minimal 2 karakter"}),
+  // no_telepon: z.string().min(10),
+  posyandu_id: z.string().nonempty({message: "Posyandu tidak boleh kosong!"}),
+  role: z.enum(["SUPERADMIN", "PETUGAS", "AHLI_GIZI"], {
+    message: "Role tidak boleh kosong!",
+  }),
+  password: z.string().min(8, {message: "Nama lengkap minimal 2 karakter"}),
 });
 
 type PosyanduItem = {
   id: string;
-  nama_posyandu: string;
+  nama: string;
 };
 
 type Props = {
-  posyandu: PosyanduItem[];
+  data: PosyanduItem[];
+  count: number;
 };
 
-export default function CreateUserForm({posyandu}: Props) {
+export default function CreateUserForm() {
   const {push} = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       nama: "",
-      no_telepon: "",
+      // no_telepon: "",
       password: "",
-      posyandu_id: "",
-      role: "petugas",
+      posyandu_id: undefined,
+      role: undefined,
     },
   });
 
-  // 2. Define a submit handler.
+  // get all posyandu
+  const [posyandu, setPosyandu] = useState<Props>();
+  useEffect(() => {
+    const getPosyandu = async () => {
+      try {
+        const access_token = getCookie("access_token");
+        const request = await fetch(appConfig.baseUrl + "/posyandu", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+          cache: "no-store",
+        });
+        const response = await request.json();
+        setPosyandu(response?.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getPosyandu();
+  }, []);
+
+  // form submit
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
     try {
-    //   await createUser(values);
-      toast.success("Berhasil Membuat Pengguna!");
-      push("/pengguna");
+      const req = await createUser(values);
+      const res = await req;
+
+      if (res?.statusCode === 201 || res?.statusCode === 200) {
+        toast.success("Berhasil Membuat Pengguna!");
+        push("/users");
+      }
     } catch (error) {
       console.log(error);
       toast.success("Gagal Membuat Pengguna!");
@@ -106,7 +137,7 @@ export default function CreateUserForm({posyandu}: Props) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="no_telepon"
           render={({field}) => (
@@ -118,7 +149,7 @@ export default function CreateUserForm({posyandu}: Props) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="role"
@@ -126,14 +157,13 @@ export default function CreateUserForm({posyandu}: Props) {
             <FormItem>
               <FormLabel>Role</FormLabel>
               <FormControl>
-                <Select value={field?.value} onValueChange={field.onChange}>
+                <Select defaultValue={undefined} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Pilih Role" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ibu">Ibu</SelectItem>
-                    <SelectItem value="petugas">Petugas Posyandu</SelectItem>
-                    <SelectItem value="ahli_gizi">Ahli Gizi</SelectItem>
+                    <SelectItem value="PETUGAS">Petugas Posyandu</SelectItem>
+                    <SelectItem value="AHLI_GIZI">Ahli Gizi</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -146,18 +176,16 @@ export default function CreateUserForm({posyandu}: Props) {
           name="posyandu_id"
           render={({field}) => (
             <FormItem>
-              <FormLabel>Role</FormLabel>
+              <FormLabel>Posyandu</FormLabel>
               <FormControl>
-                <Select
-                  value={field?.value || undefined}
-                  onValueChange={field.onChange}>
+                <Select defaultValue={undefined} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Pilih Posyandu" />
                   </SelectTrigger>
                   <SelectContent>
-                    {posyandu?.map(({id, nama_posyandu}) => (
+                    {posyandu?.data?.map(({id, nama}) => (
                       <SelectItem key={id} value={id}>
-                        {nama_posyandu}
+                        {nama}
                       </SelectItem>
                     ))}
                   </SelectContent>
