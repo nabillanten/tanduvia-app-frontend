@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {Baby, Home, Map, Users} from "lucide-react";
+import {Baby, Home, Map, Salad, Users} from "lucide-react";
 import {NavUser} from "@/components/nav-user";
 import Logo from "@/public/images/logo.png";
 import {
@@ -34,10 +34,15 @@ const data = {
       url: "/users",
       icon: Users,
     },
-     {
+    {
       name: "Anak",
       url: "/anak",
       icon: Baby,
+    },
+    {
+      name: "Panduan Gizi",
+      url: "/panduan_gizi",
+      icon: Salad,
     },
     {
       name: "Pemeriksaan",
@@ -61,7 +66,9 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 <figure className="w-8">
                   <Image src={Logo} alt="Tanduvia Logo" />
                 </figure>
-                <span className="text-xl font-bold text-[#0366a9]">Tanduvia</span>
+                <span className="text-xl font-bold text-[#0366a9]">
+                  Tanduvia
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
