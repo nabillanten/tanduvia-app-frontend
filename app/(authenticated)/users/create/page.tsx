@@ -108,7 +108,7 @@ export default function CreateUserPage() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-8">
         <FormField
           control={form.control}
           name="username"
@@ -214,7 +214,7 @@ export default function CreateUserPage() {
         />
         <div className="space-x-5 text-end">
           <Button
-            onClick={() => push("/pengguna")}
+            onClick={() => push("/users")}
             disabled={form.formState.isSubmitting}
             variant={"ghost"}
             className="border"

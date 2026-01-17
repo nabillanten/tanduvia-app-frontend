@@ -117,7 +117,7 @@ export default function CreateAnakPage() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-8">
         <FormField
           control={form.control}
           name="nama"
@@ -262,7 +262,7 @@ export default function CreateAnakPage() {
         />
         <div className="space-x-5 text-end">
           <Button
-            onClick={() => push("/pengguna")}
+            onClick={() => push("/anak")}
             disabled={form.formState.isSubmitting}
             variant={"ghost"}
             className="border"

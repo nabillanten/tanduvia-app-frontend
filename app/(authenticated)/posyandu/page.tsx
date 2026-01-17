@@ -31,7 +31,7 @@ const PosyanduPage = async (props: {searchParams: SearchParams}) => {
           </Button>
         </Link>
       </div>
-      <Suspense key={page} fallback={<TableLoading tableColumn={3} />}>
+      <Suspense key={page} fallback={<TableLoading tableColumn={3} firstColumnSpan/>}>
         <PosyanduTable {...posyanduTableProps} />
       </Suspense>
     </div>
