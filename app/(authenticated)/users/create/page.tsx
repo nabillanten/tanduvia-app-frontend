@@ -39,7 +39,7 @@ const formSchema = z.object({
   role: z.enum(["SUPERADMIN", "PETUGAS", "AHLI_GIZI"], {
     message: "Role tidak boleh kosong!",
   }),
-  password: z.string().min(8, {message: "Nama lengkap minimal 2 karakter"}),
+  password: z.string().min(8, {message: "Password minimal 8 karakter"}),
 });
 
 type PosyanduItem = {
