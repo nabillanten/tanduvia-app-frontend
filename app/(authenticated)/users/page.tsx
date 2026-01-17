@@ -4,6 +4,7 @@ import {PlusIcon} from "lucide-react";
 import Link from "next/link";
 import React, {Suspense} from "react";
 import UsersTable from "./UsersTable";
+import TableLoading from "@/components/ui/table/table-loading";
 
 type SearchParams = Promise<{page?: string; perPage?: string; q?: string}>;
 
@@ -29,7 +30,7 @@ const UserPage = async (props: {searchParams: SearchParams}) => {
           </Button>
         </Link>
       </div>
-      <Suspense key={123} fallback={<p>Loading..</p>}>
+      <Suspense key={123} fallback={<TableLoading tableColumn={7}/>}>
         <UsersTable {...usersTableProps} />
       </Suspense>
     </div>
