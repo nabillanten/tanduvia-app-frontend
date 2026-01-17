@@ -45,10 +45,9 @@ export const schema = z.object({
 });
 
 const roleLabels: Record<string, string> = {
-  super_admin: "Super Admin",
-  petugas: "Petugas",
-  ahli_gizi: "Ahli Gizi",
-  ibu: "Ibu",
+  SUPERADMIN: "Super Admin",
+  PETUGAS: "Petugas",
+  AHLI_GIZI: "Ahli Gizi",
 };
 
 const Actions = (props: z.infer<typeof schema>) => {
@@ -129,10 +128,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "createdAt",
     header: "Tanggal Dibuat",
     cell: ({row}) => {
-      const date = format(row.getValue("created_at"), "MMM d, yyyy");
+      const date = format(row.getValue("createdAt"), "MMM d, yyyy");
       return date;
     },
   },

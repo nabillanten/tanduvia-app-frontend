@@ -30,7 +30,7 @@ const UserPage = async (props: {searchParams: SearchParams}) => {
           </Button>
         </Link>
       </div>
-      <Suspense key={123} fallback={<TableLoading tableColumn={7}/>}>
+      <Suspense key={page} fallback={<TableLoading tableColumn={7}/>}>
         <UsersTable {...usersTableProps} />
       </Suspense>
     </div>
