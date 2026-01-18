@@ -7,7 +7,7 @@ type Props = {page: number; perPage: number; query: string};
 
 async function findAllAnak(page: number, perPage: number, query: string) {
   const response = await fetchWithCredentials(
-    `/anak?page=${page}&perPage=${perPage}&search=nama:${query}&sort=created_at%3Adesc`,
+    `/anak?page=${page}&pageSize=${perPage}&search=${query}`,
   );
   return response?.data;
 }
