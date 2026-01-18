@@ -107,7 +107,7 @@ export function AppSidebar({
       },
       {
         name: "Panduan Gizi",
-        url: "/panduan_gizi",
+        url: "/staff/panduangizi",
         icon: Salad,
       },
     ],
