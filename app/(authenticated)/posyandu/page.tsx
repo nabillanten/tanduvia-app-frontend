@@ -23,15 +23,16 @@ const PosyanduPage = async (props: {searchParams: SearchParams}) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex gap-6">
-        <SearchInput placeholder="Cari Berdasarkan Nama..." />
+      <div className="flex justify-end gap-6">
         <Link href={"/posyandu/create"}>
           <Button>
             <PlusIcon /> <span>Baru</span>
           </Button>
         </Link>
       </div>
-      <Suspense key={page} fallback={<TableLoading tableColumn={3} firstColumnSpan/>}>
+      <Suspense
+        key={page}
+        fallback={<TableLoading tableColumn={3} firstColumnSpan />}>
         <PosyanduTable {...posyanduTableProps} />
       </Suspense>
     </div>
