@@ -10,7 +10,7 @@ export const createUser = async (body: object) => {
 };
 
 export const updateUser = async (id: string, body: object) => {
-  const req = await fetchWithCredentials("/users/" + id, "PUT", body);
+  const req = await fetchWithCredentials("/users/" + id, "PATCH", body);
   revalidatePath("/users");
   return req;
 };
