@@ -25,23 +25,18 @@ import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
 
-export const JenisKelaminEnum = z.enum(["L", "P"]);
 export const schema = z.object({
   id: z.string(),
-  rfid_tag: z.string(),
   nik: z.string(),
   nama: z.string(),
+  alamat: z.string(),
+  no_telepon: z.string(),
   tempat_lahir: z.string(),
   tanggal_lahir: z.string(),
   jenis_kelamin: z.string(),
   is_active: z.boolean(),
-  created_at: z.date(),
+  createdAt: z.date(),
 });
-
-const jenisKelaminLabel: Record<string, string> = {
-  L: "Laki-Laki",
-  P: "Perempuan",
-};
 
 const Actions = (props: z.infer<typeof schema>) => {
   const [showDialog, setShowDialog] = React.useState(false);
@@ -61,7 +56,7 @@ const Actions = (props: z.infer<typeof schema>) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem onSelect={() => push(`/anak/update/${id}`)}>
+          <DropdownMenuItem onSelect={() => push(`/ibu/update/${id}`)}>
             Ubah
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -113,9 +108,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "NIK",
   },
   {
-    accessorKey: "rfid_tag",
-    header: "RFID Tag",
+    accessorKey: "no_telepon",
+    header: "Nomor Telepon",
   },
+
   {
     accessorKey: "tempat_lahir",
     header: "Tempat Lahir",
@@ -128,14 +124,7 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
       return date;
     },
   },
-  {
-    accessorKey: "jenis_kelamin",
-    header: "Jenis Kelamin",
-    cell: ({row}) => {
-      const jenis_kelamin = row.original.jenis_kelamin;
-      return <p>{jenisKelaminLabel[jenis_kelamin] || jenis_kelamin}</p>;
-    },
-  },
+
   {
     accessorKey: "createdAt",
     header: "Tanggal Dibuat",
@@ -157,6 +146,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
         {row.original.is_active ? "Aktif" : "Non-Aktif"}
       </Badge>
     ),
+  },
+  {
+    accessorKey: "alamat",
+    header: "Alamat",
   },
   {
     accessorKey: "id",

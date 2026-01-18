@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {Baby, Home, Map, Salad, Users} from "lucide-react";
+import {Baby, Home, Map, PersonStanding, Salad, Users} from "lucide-react";
 import {NavUser} from "@/components/nav-user";
 import Logo from "@/public/images/logo.png";
 import {
@@ -46,6 +46,11 @@ export function AppSidebar({
         name: "Anak",
         url: "/anak",
         icon: Baby,
+      },
+      {
+        name: "Ibu",
+        url: "/ibu",
+        icon: PersonStanding,
       },
       {
         name: "Posyandu",
@@ -112,8 +117,8 @@ export function AppSidebar({
     userRole === "SUPERADMIN"
       ? dataAdmin
       : userRole === "PETUGAS"
-      ? dataPetugas
-      : dataAhliGizi;
+        ? dataPetugas
+        : dataAhliGizi;
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
