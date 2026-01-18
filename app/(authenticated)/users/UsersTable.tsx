@@ -7,9 +7,9 @@ type Props = {page: number; perPage: number; query: string};
 
 async function findAllUsers(page: number, perPage: number, query: string) {
   const response = await fetchWithCredentials(
-    `/users?page=${page}&perPage=${perPage}&search=nama:${query}&sort=created_at%3Adesc`,
+    `/users?page=${page}&pageSize=${perPage}&search=${query}`,
   );
-  return response;
+  return response?.data;
 }
 
 const UsersTable = async (props: Props) => {

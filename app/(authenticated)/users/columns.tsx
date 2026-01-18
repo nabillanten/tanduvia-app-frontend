@@ -150,7 +150,7 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "posyandu.nama_posyandu",
+    accessorKey: "posyandu.nama",
     header: "Posyandu",
   },
   {
