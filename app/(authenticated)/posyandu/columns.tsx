@@ -4,16 +4,27 @@ import {type ColumnDef} from "@tanstack/react-table";
 import {Badge} from "@/components/ui/badge";
 import {format} from "date-fns";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/button";
 import React from "react";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {EllipsisIcon} from "lucide-react";
+import {DeletePosyandu} from "@/app/actions/posyandu";
 
 export const schema = z.object({
   id: z.string(),
@@ -22,9 +33,9 @@ export const schema = z.object({
 });
 
 const Actions = (props: z.infer<typeof schema>) => {
+  const [showDialog, setShowDialog] = React.useState(false);
   const {push} = useRouter();
   const {id, nama} = props;
-
   return (
     <>
       <DropdownMenu>
@@ -41,8 +52,39 @@ const Actions = (props: z.infer<typeof schema>) => {
           <DropdownMenuItem onSelect={() => push(`/posyandu/update/${id}`)}>
             Ubah
           </DropdownMenuItem>
+          <DropdownMenuItem
+            variant={"destructive"}
+            onClick={() => setShowDialog(true)}>
+            Hapus
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Anda akan menghapus posyandu dengan nama {nama}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                try {
+                  await DeletePosyandu(id);
+                  toast.success("Berhasil menghapus posyandu!");
+                } catch (error) {
+                  console.log(error);
+                  toast.error("Gagal menghapus posyandu!");
+                }
+              }}
+              className={buttonVariants({variant: "destructive"})}>
+              Yakin
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
