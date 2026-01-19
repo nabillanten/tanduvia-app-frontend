@@ -120,12 +120,9 @@ const UpdatePanduanGiziForm = ({
       makanan: values?.makanan?.map(({name}) => name),
     };
 
-    console.log(payload, "payload");
     try {
       const req = await updatePanduanGizi(panduanGiziId, payload);
       const res = await req;
-
-      console.log(res, "res");
 
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil mengubah panduan gizi!");

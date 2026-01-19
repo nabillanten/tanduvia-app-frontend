@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {
   CircleAlertIcon,
@@ -17,6 +17,19 @@ import {
   CircleXIcon,
   EllipsisIcon,
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import React from "react";
+import {toast} from "sonner";
+import {DeletePanduanGizi} from "@/app/actions/panduangizi";
 
 export const schema = z.object({
   id: z.string(),
@@ -33,7 +46,8 @@ export const schema = z.object({
 
 const Actions = (props: z.infer<typeof schema>) => {
   const {push} = useRouter();
-  const {id} = props;
+  const [showDialog, setShowDialog] = React.useState(false);
+  const {id, judul} = props;
 
   return (
     <>
@@ -48,11 +62,45 @@ const Actions = (props: z.infer<typeof schema>) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem onSelect={() => push(`/staff/panduangizi/update/${id}`)}>
+          <DropdownMenuItem
+            onSelect={() => push(`/staff/panduangizi/update/${id}`)}>
             Ubah
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            variant={"destructive"}
+            onClick={() => setShowDialog(true)}>
+            Hapus
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Anda akan menghapus rekomendasi gizi &quot;{judul}&quot;?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                try {
+                  DeletePanduanGizi(id);
+                  toast.success("Berhasil menghapus rekomendasi gizi!");
+                } catch (error) {
+                  console.log(error);
+                  toast.error("Gagal menghapus rekomendasi gizi!");
+                }
+              }}
+              className={buttonVariants({
+                variant: "destructive",
+              })}>
+              Yakin
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
