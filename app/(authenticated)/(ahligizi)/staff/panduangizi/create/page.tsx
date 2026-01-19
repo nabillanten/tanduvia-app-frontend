@@ -3,16 +3,13 @@ import React from "react";
 import CreatePanduanGiziForm from "./create-panduangizi-form";
 
 async function getAllAhlliGizi() {
-  const response = await fetchWithCredentials("/users");
+  const response = await fetchWithCredentials("/users?role=AHLI_GIZI");
   return response?.data;
 }
 
 const CreateGiziPage = async () => {
-  const user = await getAllAhlliGizi();
-  const ahliGizi = user?.data?.filter(
-    (user: {role: string}) => user.role === "AHLI_GIZI",
-  );
-  return <CreatePanduanGiziForm ahliGizi={ahliGizi} />;
+  const ahliGizi = await getAllAhlliGizi();
+  return <CreatePanduanGiziForm ahliGizi={ahliGizi?.data} />;
 };
 
 export default CreateGiziPage;
