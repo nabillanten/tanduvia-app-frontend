@@ -24,6 +24,7 @@ import React from "react";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
+import {updateAnak} from "@/app/actions/anak";
 
 export const JenisKelaminEnum = z.enum(["L", "P"]);
 export const schema = z.object({
@@ -76,7 +77,7 @@ const Actions = (props: z.infer<typeof schema>) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
             <AlertDialogDescription>
-              Anda akan {is_active ? "menonaktifkan" : "mengaktifkan"} pengguna
+              Anda akan {is_active ? "menonaktifkan" : "mengaktifkan"} anak
               dengan nama {nama}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -85,10 +86,11 @@ const Actions = (props: z.infer<typeof schema>) => {
             <AlertDialogAction
               onClick={async () => {
                 try {
-                  toast.success("Berhasil memperbarui status pengguna!");
+                  updateAnak(id, {is_active: !is_active});
+                  toast.success("Berhasil memperbarui status anak!");
                 } catch (error) {
                   console.log(error);
-                  toast.error("Gagal memperbarui status pengguna!");
+                  toast.error("Gagal memperbarui status anak!");
                 }
               }}
               className={buttonVariants({
