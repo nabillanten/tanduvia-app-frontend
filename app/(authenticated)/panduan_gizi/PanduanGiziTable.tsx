@@ -1,17 +1,26 @@
 import {DataTable} from "@/components/ui/table/data-table";
 import {columns} from "./columns";
 import TablePagination from "@/components/ui/table/table-pagination";
-import { mockRekomendasiGizi } from "@/app/mock-data/mock-panduan-gizi";
-
-
+import {mockRekomendasiGizi} from "@/app/mock-data/mock-panduan-gizi";
+import fetchWithCredentials from "@/lib/fetchWithCredential";
 
 type Props = {page: number; perPage: number; query: string};
 
+async function findAllPanduanGizi(
+  page: number,
+  perPage: number,
+  query: string,
+) {
+  const response = await fetchWithCredentials(
+    `/rekomendasi-gizi?page=${page}&pageSize=${perPage}&search=${query}`,
+  );
+  return response?.data;
+}
+
 const PanduanGiziTable = async (props: Props) => {
   const {page, perPage, query} = props;
-  //   const users = await findAllUsers(page, perPage, query)
-  const anak = {data: mockRekomendasiGizi, count: 0};
-  const count = anak?.count;
+  const panduanGizi = await findAllPanduanGizi(page, perPage, query);
+  const count = panduanGizi?.count;
   const TablePaginationProps = {
     page,
     perPage,
@@ -20,7 +29,7 @@ const PanduanGiziTable = async (props: Props) => {
   };
   return (
     <>
-      <DataTable columns={columns} data={anak?.data ?? []} />
+      <DataTable columns={columns} data={panduanGizi?.data ?? []} />
       <TablePagination {...TablePaginationProps} />
     </>
   );
