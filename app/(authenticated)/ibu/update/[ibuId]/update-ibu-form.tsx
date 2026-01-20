@@ -200,8 +200,8 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
             type="reset">
             Cancel
           </Button>
-          <Button type="submit" disabled={form.formState.isLoading}>
-            {form.formState.isLoading && <Spinner />}Submit
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && <Spinner />}Submit
           </Button>
         </div>
       </form>

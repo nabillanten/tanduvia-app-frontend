@@ -28,6 +28,7 @@ import {useEffect, useState} from "react";
 import {getCookie} from "@/lib/cookies";
 import {appConfig} from "@/app/app-config";
 import {createUser} from "@/app/actions/users";
+import {Spinner} from "@/components/ui/spinner";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -221,7 +222,9 @@ export default function CreateUserPage() {
             type="reset">
             Cancel
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && <Spinner />}Submit
+          </Button>
         </div>
       </form>
     </Form>

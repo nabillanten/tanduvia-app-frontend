@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {CircleAlertIcon, CircleCheckIcon, CircleXIcon} from "lucide-react";
@@ -410,7 +411,9 @@ const UpdatePanduanGiziForm = ({
             type="reset">
             Cancel
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && <Spinner />}Submit
+          </Button>
         </div>
       </form>
     </Form>

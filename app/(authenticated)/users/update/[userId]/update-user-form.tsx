@@ -25,6 +25,7 @@ import {
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {updateUser} from "@/app/actions/users";
+import {Spinner} from "@/components/ui/spinner";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -197,7 +198,9 @@ export default function UpdateUserForm({
             type="reset">
             Cancel
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && <Spinner />}Submit
+          </Button>
         </div>
       </form>
     </Form>

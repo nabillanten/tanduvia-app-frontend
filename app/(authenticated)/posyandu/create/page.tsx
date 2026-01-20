@@ -18,6 +18,7 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {Textarea} from "@/components/ui/textarea";
 import {createPosyandu} from "@/app/actions/posyandu";
+import {Spinner} from "@/components/ui/spinner";
 
 const formSchema = z.object({
   alamat: z.string().nonempty({message: "Alamat tidak boleh kosong!"}),
@@ -89,7 +90,9 @@ export default function CreatePosyanduPage() {
             type="reset">
             Cancel
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && <Spinner />}Submit
+          </Button>
         </div>
       </form>
     </Form>

@@ -131,94 +131,102 @@ export default function CreateAnakPage() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="nik"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>NIK</FormLabel>
-              <FormControl>
-                <Input placeholder="Masukan NIK anak" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="tempat_lahir"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Tempat Lahir</FormLabel>
-              <FormControl>
-                <Input placeholder="Masukan tempat lahir anak" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="tanggal_lahir"
-          render={({field}) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Tanggal Lahir</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}>
-                      {field.value ? (
-                        // format(field.value, "PPP")
-                        field.value.toLocaleDateString()
-                      ) : (
-                        <span>Pilih Tanggal</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    captionLayout="dropdown"
-                    selected={field.value}
-                    onSelect={field.onChange} // Connects the calendar to RHF's onChange
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="jenis_kelamin"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Jenis Kelamin</FormLabel>
-              <FormControl>
-                <Select defaultValue={undefined} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih jenis kelami anak" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="L">Laki-laki</SelectItem>
-                    <SelectItem value="P">Perempuan</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <section className="flex gap-4">
+          <FormField
+            control={form.control}
+            name="nik"
+            render={({field}) => (
+              <FormItem className="w-full">
+                <FormLabel>NIK</FormLabel>
+                <FormControl>
+                  <Input placeholder="Masukan NIK anak" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="jenis_kelamin"
+            render={({field}) => (
+              <FormItem className="w-full">
+                <FormLabel>Jenis Kelamin</FormLabel>
+                <FormControl>
+                  <Select
+                    defaultValue={undefined}
+                    onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih jenis kelamin anak" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="L">Laki-laki</SelectItem>
+                      <SelectItem value="P">Perempuan</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </section>
+
+        <section className="flex gap-4">
+          <FormField
+            control={form.control}
+            name="tempat_lahir"
+            render={({field}) => (
+              <FormItem className="w-full">
+                <FormLabel>Tempat Lahir</FormLabel>
+                <FormControl>
+                  <Input placeholder="Masukan tempat lahir anak" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="tanggal_lahir"
+            render={({field}) => (
+              <FormItem className="flex flex-col w-full">
+                <FormLabel>Tanggal Lahir</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}>
+                        {field.value ? (
+                          // format(field.value, "PPP")
+                          field.value.toLocaleDateString()
+                        ) : (
+                          <span>Pilih Tanggal</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      captionLayout="dropdown"
+                      selected={field.value}
+                      onSelect={field.onChange} // Connects the calendar to RHF's onChange
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </section>
+
         <FormField
           control={form.control}
           name="ibu_id"
@@ -269,8 +277,8 @@ export default function CreateAnakPage() {
             type="reset">
             Cancel
           </Button>
-          <Button type="submit" disabled={form.formState.isLoading}>
-            {form.formState.isLoading && <Spinner />}Submit
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && <Spinner />}Submit
           </Button>
         </div>
       </form>
