@@ -24,6 +24,7 @@ import React from "react";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
+import {DeleteIbu} from "@/app/actions/ibu";
 
 export const schema = z.object({
   id: z.string(),
@@ -60,9 +61,9 @@ const Actions = (props: z.infer<typeof schema>) => {
             Ubah
           </DropdownMenuItem>
           <DropdownMenuItem
-            variant={is_active ? "destructive" : "default"}
+            variant={"destructive"}
             onClick={() => setShowDialog(true)}>
-            {is_active ? " Nonaktifkan" : "Aktifkan"}
+            Hapus
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -71,8 +72,7 @@ const Actions = (props: z.infer<typeof schema>) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
             <AlertDialogDescription>
-              Anda akan {is_active ? "menonaktifkan" : "mengaktifkan"} pengguna
-              dengan nama {nama}
+              Anda akan menghapus ibu dengan nama {nama}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -80,14 +80,15 @@ const Actions = (props: z.infer<typeof schema>) => {
             <AlertDialogAction
               onClick={async () => {
                 try {
-                  toast.success("Berhasil memperbarui status pengguna!");
+                  await DeleteIbu(id);
+                  toast.success("Berhasil menghapus ibu!");
                 } catch (error) {
                   console.log(error);
-                  toast.error("Gagal memperbarui status pengguna!");
+                  toast.error("Gagal menghapus ibu!");
                 }
               }}
               className={buttonVariants({
-                variant: is_active ? "destructive" : "default",
+                variant: "destructive",
               })}>
               Yakin
             </AlertDialogAction>
