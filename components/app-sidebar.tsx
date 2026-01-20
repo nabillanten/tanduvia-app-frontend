@@ -64,7 +64,7 @@ export function AppSidebar({
       },
       {
         name: "Pemeriksaan",
-        url: "#",
+        url: "/pemeriksaan",
         icon: Map,
       },
     ],
@@ -93,7 +93,7 @@ export function AppSidebar({
       },
       {
         name: "Pemeriksaan",
-        url: "#",
+        url: "/pemeriksaan",
         icon: Map,
       },
     ],
