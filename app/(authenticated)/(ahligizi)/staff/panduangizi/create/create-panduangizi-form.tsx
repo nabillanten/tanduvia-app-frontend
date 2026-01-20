@@ -312,8 +312,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => append({name: ""})}
-            disabled={fields.length >= 5}>
+            onClick={() => append({name: ""})}>
             <PlusIcon /> Tambah Makanan
           </Button>
         </FieldSet>

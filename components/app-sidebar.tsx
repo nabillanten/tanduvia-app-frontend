@@ -82,6 +82,11 @@ export function AppSidebar({
         icon: Home,
       },
       {
+        name: "Ibu",
+        url: "/ibu",
+        icon: PersonStanding,
+      },
+      {
         name: "Anak",
         url: "/anak",
         icon: Baby,
