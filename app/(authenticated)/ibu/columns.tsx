@@ -36,7 +36,7 @@ export const schema = z.object({
   tanggal_lahir: z.string(),
   jenis_kelamin: z.string(),
   is_active: z.boolean(),
-  createdAt: z.date(),
+  created_at: z.date(),
 });
 
 const Actions = (props: z.infer<typeof schema>) => {
@@ -127,10 +127,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
 
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: "Tanggal Dibuat",
     cell: ({row}) => {
-      const date = format(row.getValue("createdAt"), "MMM d, yyyy");
+      const date = format(row.getValue("created_at"), "MMM d, yyyy");
       return date;
     },
   },

@@ -130,10 +130,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: "Tanggal Dibuat",
     cell: ({row}) => {
-      const date = format(row.getValue("createdAt"), "MMM d, yyyy");
+      const date = format(row.getValue("created_at"), "MMM d, yyyy");
       return date;
     },
   },

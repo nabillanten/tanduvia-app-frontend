@@ -28,7 +28,7 @@ export const schema = z.object({
   target_status: z.string(),
   catatan_admin: z.string().nullable(),
   status: z.string(),
-  createdAt: z.date(),
+  created_at: z.date(),
 });
 
 const Actions = (props: z.infer<typeof schema>) => {
@@ -80,10 +80,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
 
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: "Tanggal Diupload",
     cell: ({row}) => {
-      const date = format(row.getValue("createdAt"), "MMM d, yyyy");
+      const date = format(row.getValue("created_at"), "MMM d, yyyy");
       return date;
     },
   },
