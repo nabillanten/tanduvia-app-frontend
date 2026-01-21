@@ -61,7 +61,10 @@ const Actions = (props: z.infer<typeof schema>) => {
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
+        <DropdownMenuContent align="end" className="w-42">
+          <DropdownMenuItem onSelect={() => push(`/anak/${id}/pemeriksaan`)}>
+            Riwayat Pemeriksaan
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => push(`/anak/update/${id}`)}>
             Ubah
           </DropdownMenuItem>
