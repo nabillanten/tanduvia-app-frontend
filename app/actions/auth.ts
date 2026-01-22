@@ -1,6 +1,7 @@
 "use server";
 import {cookies} from "next/headers";
 import {appConfig} from "../app-config";
+import {redirect} from "next/navigation";
 
 export const login = async (body: {username: string; password: string}) => {
   const cookie = await cookies();
@@ -30,4 +31,11 @@ export const login = async (body: {username: string; password: string}) => {
   }
 
   return response;
+};
+
+export const logout = async () => {
+  const cookie = await cookies();
+  cookie.delete("access_token");
+  cookie.delete("refresh_token");
+  return redirect("/auth/signin");
 };

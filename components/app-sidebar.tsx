@@ -93,7 +93,7 @@ export function AppSidebar({
       },
       {
         name: "Pemeriksaan",
-        url: "/pemeriksaan",
+        url: "/pemeriksaan/create",
         icon: Map,
       },
     ],
