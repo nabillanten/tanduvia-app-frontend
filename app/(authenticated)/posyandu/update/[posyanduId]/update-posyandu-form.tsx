@@ -19,6 +19,13 @@ import {useRouter} from "next/navigation";
 import {Textarea} from "@/components/ui/textarea";
 import {updatePosyandu} from "@/app/actions/posyandu";
 import {Spinner} from "@/components/ui/spinner";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const formSchema = z.object({
   alamat: z.string().nonempty({message: "Alamat tidak boleh kosong!"}),
@@ -58,49 +65,60 @@ export default function UpdatePosyanduForm({
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-8">
-        <FormField
-          control={form.control}
-          name="nama"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Nama Posyandu</FormLabel>
-              <FormControl>
-                <Input placeholder="Contoh : Posyandu Mawar" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="alamat"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Alamat</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Masukkan alamat lengkap" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <Card>
+      <CardHeader>
+        <CardTitle>Ubah Data Posyandu</CardTitle>
+        <CardDescription>Formulir Ubah Data Posyandu</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="nama"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Nama Posyandu</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Contoh : Posyandu Mawar" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="alamat"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Alamat</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Masukkan alamat lengkap"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div className="space-x-5 text-end">
-          <Button
-            onClick={() => push("/posyandu")}
-            disabled={form.formState.isSubmitting}
-            variant={"ghost"}
-            className="border"
-            type="reset">
-            Cancel
-          </Button>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting && <Spinner />}Submit
-          </Button>
-        </div>
-      </form>
-    </Form>
+            <div className="space-x-5 text-end">
+              <Button
+                onClick={() => push("/posyandu")}
+                disabled={form.formState.isSubmitting}
+                variant={"ghost"}
+                className="border"
+                type="reset">
+                Batal
+              </Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Spinner />} Ubah
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
