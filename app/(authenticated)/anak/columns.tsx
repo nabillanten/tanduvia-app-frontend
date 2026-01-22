@@ -37,6 +37,9 @@ export const schema = z.object({
   jenis_kelamin: z.string(),
   is_active: z.boolean(),
   created_at: z.date(),
+  ibu: z.object({
+    nama: z.string(),
+  }),
 });
 
 const jenisKelaminLabel: Record<string, string> = {
@@ -118,9 +121,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "NIK",
   },
   {
-    accessorKey: "rfid_tag",
-    header: "RFID Tag",
+    accessorKey: "ibu.nama",
+    header: "Nama Ibu",
   },
+
   {
     accessorKey: "tempat_lahir",
     header: "Tempat Lahir",
@@ -142,12 +146,8 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     },
   },
   {
-    accessorKey: "created_at",
-    header: "Tanggal Dibuat",
-    cell: ({row}) => {
-      const date = format(row.getValue("created_at"), "MMM d, yyyy");
-      return date;
-    },
+    accessorKey: "rfid_tag",
+    header: "RFID Tag",
   },
   {
     accessorKey: "is_active",
