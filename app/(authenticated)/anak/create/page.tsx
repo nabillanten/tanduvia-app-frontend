@@ -126,7 +126,7 @@ export default function CreateAnakPage() {
     <Card>
       <CardHeader>
         <CardTitle>Tambah Anak Baru</CardTitle>
-        <CardDescription>Formulir Anak baru</CardDescription>
+        <CardDescription>Formulir Anak Baru</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

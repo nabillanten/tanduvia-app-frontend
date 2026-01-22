@@ -1,7 +1,14 @@
 "use client";
-import {createIbu, updateIbu} from "@/app/actions/ibu";
+import {updateIbu} from "@/app/actions/ibu";
 import {Button} from "@/components/ui/button";
 import {Calendar} from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -72,140 +79,148 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
 
   const {push} = useRouter();
   return (
-    <Form {...form}>
-      <form className="space-y-6 mt-8" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          name="nama"
-          control={form.control}
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Nama</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="Masukkan nama" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="nik"
-          control={form.control}
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>NIK</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="Masukkan NIK" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <section className="flex gap-4">
-          <FormField
-            name="tempat_lahir"
-            control={form.control}
-            render={({field}) => (
-              <FormItem className="w-full">
-                <FormLabel>Tempat Lahir</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Masukkan Tempat Lahir"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="tanggal_lahir"
-            render={({field}) => (
-              <FormItem className="flex flex-col w-full">
-                <FormLabel>Tanggal Lahir</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
+    <Card>
+      <CardHeader>
+        <CardTitle>Ubah Data Ibu</CardTitle>
+        <CardDescription>Formulir Ubah Data Ibu</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              name="nama"
+              control={form.control}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Nama</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Masukkan nama" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="nik"
+              control={form.control}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>NIK</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Masukkan NIK" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <section className="flex gap-4">
+              <FormField
+                name="tempat_lahir"
+                control={form.control}
+                render={({field}) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Tempat Lahir</FormLabel>
                     <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}>
-                        {field.value ? (
-                          // format(field.value, "PPP")
-                          field.value.toLocaleDateString()
-                        ) : (
-                          <span>Pilih Tanggal</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan Tempat Lahir"
+                        {...field}
+                      />
                     </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      captionLayout="dropdown"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="tanggal_lahir"
+                render={({field}) => (
+                  <FormItem className="flex flex-col w-full">
+                    <FormLabel>Tanggal Lahir</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground",
+                            )}>
+                            {field.value ? (
+                              // format(field.value, "PPP")
+                              field.value.toLocaleDateString()
+                            ) : (
+                              <span>Pilih Tanggal</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          captionLayout="dropdown"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </section>
+            <FormField
+              name="no_telepon"
+              control={form.control}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Nomor Telepon</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Masukkan Nomor Telepon (08xxxxxxxxxx)"
+                      {...field}
                     />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </section>
-        <FormField
-          name="no_telepon"
-          control={form.control}
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Nomor Telepon</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Masukkan Nomor Telepon (08xxxxxxxxxx)"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="alamat"
-          control={form.control}
-          render={({field}) => (
-            <FormItem>
-              <FormLabel>Alamat</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Masukkan Alamat" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="alamat"
+              control={form.control}
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Alamat</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Masukkan Alamat" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div className="space-x-5 text-end">
-          <Button
-            onClick={() => push("/ibu")}
-            disabled={form.formState.isSubmitting}
-            variant={"ghost"}
-            className="border"
-            type="reset">
-            Cancel
-          </Button>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting && <Spinner />}Submit
-          </Button>
-        </div>
-      </form>
-    </Form>
+            <div className="space-x-5 text-end">
+              <Button
+                onClick={() => push("/ibu")}
+                disabled={form.formState.isSubmitting}
+                variant={"ghost"}
+                className="border"
+                type="reset">
+                Cancel
+              </Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Spinner />}Submit
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };
 

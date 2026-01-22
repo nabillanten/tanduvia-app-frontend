@@ -122,7 +122,7 @@ export default function CreateUserPage() {
     <Card>
       <CardHeader>
         <CardTitle>Tambah Pengguna Baru</CardTitle>
-        <CardDescription>Formulir pengguna baru</CardDescription>
+        <CardDescription>Formulir Pengguna Paru</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
