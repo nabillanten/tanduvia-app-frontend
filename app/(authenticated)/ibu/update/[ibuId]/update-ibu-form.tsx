@@ -210,10 +210,10 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                 variant={"ghost"}
                 className="border"
                 type="reset">
-                Cancel
+                Batal
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Spinner />}Submit
+                {form.formState.isSubmitting && <Spinner />} Simpan
               </Button>
             </div>
           </form>

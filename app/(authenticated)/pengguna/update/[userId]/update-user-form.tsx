@@ -218,7 +218,7 @@ export default function UpdateUserForm({
                 Batal
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Spinner />} Ubah
+                {form.formState.isSubmitting && <Spinner />} Simpan
               </Button>
             </div>
           </form>

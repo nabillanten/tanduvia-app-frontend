@@ -270,7 +270,7 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                 Batal
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Spinner />} Ubah
+                {form.formState.isSubmitting && <Spinner />} Simpan
               </Button>
             </div>
           </form>

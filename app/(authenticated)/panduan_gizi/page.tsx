@@ -18,7 +18,8 @@ const PanduanGiziPage = async (props: {searchParams: SearchParams}) => {
   };
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex gap-6">
+      <div className="flex gap-4">
+        <h1 className="text-lg font-bold shrink-0">Daftar Panduan Gizi</h1>
         <SearchInput placeholder="Cari Berdasarkan Judul..." />
       </div>
       <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
