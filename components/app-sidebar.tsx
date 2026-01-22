@@ -39,7 +39,7 @@ export function AppSidebar({
       },
       {
         name: "Pengguna",
-        url: "/users",
+        url: "/pengguna",
         icon: Users,
       },
       {

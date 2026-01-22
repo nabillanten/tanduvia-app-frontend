@@ -13,7 +13,7 @@ interface DecodedToken {
 const ROLE_PERMISSIONS: Record<string, string[]> = {
   SUPERADMIN: [
     "/dashboard",
-    "/users",
+    "/pengguna",
     "/anak",
     "/ibu",
     "/posyandu",

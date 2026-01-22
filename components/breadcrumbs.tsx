@@ -5,7 +5,6 @@ import {Separator} from "@radix-ui/react-separator";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -49,6 +48,7 @@ const Breadcrumbs = (props: Props) => {
         />
         <Breadcrumb>
           <BreadcrumbList>
+            <BreadcrumbSeparator />
             {segments.map((segment, index) => {
               const href = `/${segments.slice(0, index + 1).join("/")}`;
               const isLast = index === segments.length - 1;
@@ -57,15 +57,9 @@ const Breadcrumbs = (props: Props) => {
               return (
                 <React.Fragment key={href}>
                   <BreadcrumbItem>
-                    {isLast ? (
-                      <BreadcrumbPage>{label}</BreadcrumbPage>
-                    ) : (
-                      <>
-                        <BreadcrumbLink href={"#"}>{label}</BreadcrumbLink>
-                        <BreadcrumbSeparator />
-                      </>
-                    )}
+                    <BreadcrumbPage>{label}</BreadcrumbPage>
                   </BreadcrumbItem>
+                  {!isLast && <BreadcrumbSeparator />}
                 </React.Fragment>
               );
             })}

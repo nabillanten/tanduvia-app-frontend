@@ -1,18 +1,6 @@
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/app-sidebar";
-import {Separator} from "@/components/ui/separator";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 import {cookies} from "next/headers";
 import {jwtDecode} from "jwt-decode";
 import {appConfig} from "../app-config";
@@ -46,13 +34,13 @@ export default async function Layout({children}: {children: React.ReactNode}) {
       <SidebarProvider
         style={
           {
-            "--sidebar-width": "calc(var(--spacing) * 52)",
+            "--sidebar-width": "calc(var(--spacing) * 64)",
             "--header-height": "calc(var(--spacing) * 12)",
           } as React.CSSProperties
         }>
         <AppSidebar userRole={role as string} name={name} />
         <SidebarInset>
-          <Breadcrumbs/>
+          <Breadcrumbs />
           <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
               <div className="p-4">{children}</div>

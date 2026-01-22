@@ -24,7 +24,7 @@ import React from "react";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
-import { updateUser } from "@/app/actions/users";
+import {updateUser} from "@/app/actions/users";
 
 const PosyanduSchema = z.object({
   id: z.string(),
@@ -69,7 +69,7 @@ const Actions = (props: z.infer<typeof schema>) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem onSelect={() => push(`/users/update/${id}`)}>
+          <DropdownMenuItem onSelect={() => push(`/pengguna/update/${id}`)}>
             Ubah
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -93,7 +93,7 @@ const Actions = (props: z.infer<typeof schema>) => {
             <AlertDialogAction
               onClick={async () => {
                 try {
-                  updateUser(id,{is_active : !is_active})
+                  updateUser(id, {is_active: !is_active});
                   toast.success("Berhasil memperbarui status pengguna!");
                 } catch (error) {
                   console.log(error);
@@ -120,6 +120,10 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "username",
     header: "Username",
+  },
+  {
+    accessorKey: "no_telepon",
+    header: "Nomor Telepon",
   },
   {
     accessorKey: "role",

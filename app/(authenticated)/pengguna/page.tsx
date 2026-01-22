@@ -2,7 +2,7 @@ import {Button} from "@/components/ui/button";
 import SearchInput from "@/components/ui/SearchInput";
 import {PlusIcon} from "lucide-react";
 import Link from "next/link";
-import React, {Suspense} from "react";
+import React from "react";
 import UsersTable from "./UsersTable";
 import TableLoading from "@/components/ui/table/table-loading";
 
@@ -22,17 +22,18 @@ const UserPage = async (props: {searchParams: SearchParams}) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex gap-6">
+      <div className="flex gap-4">
+        <h1 className="text-lg font-bold shrink-0">Daftar Pengguna</h1>
         <SearchInput placeholder="Cari Berdasarkan Nama..." />
-        <Link href={"/users/create"}>
+        <Link href={"/pengguna/create"}>
           <Button>
             <PlusIcon /> <span>Baru</span>
           </Button>
         </Link>
       </div>
-      <Suspense key={page} fallback={<TableLoading tableColumn={7}/>}>
+      <React.Suspense key={page} fallback={<TableLoading tableColumn={7} />}>
         <UsersTable {...usersTableProps} />
-      </Suspense>
+      </React.Suspense>
     </div>
   );
 };
