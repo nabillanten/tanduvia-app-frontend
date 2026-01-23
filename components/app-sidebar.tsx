@@ -111,8 +111,8 @@ export function AppSidebar({
         icon: Home,
       },
       {
-        name: "Panduan Gizi",
-        url: "/staff/panduangizi",
+        name: "Rekomendasi Gizi",
+        url: "/rekomendasi_gizi",
         icon: Salad,
       },
     ],

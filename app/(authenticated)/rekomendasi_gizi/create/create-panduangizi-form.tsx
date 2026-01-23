@@ -1,0 +1,359 @@
+"use client";
+
+import {createPanduanGizi} from "@/app/actions/panduangizi";
+import {Button} from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from "@/components/ui/field";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {Spinner} from "@/components/ui/spinner";
+import {Textarea} from "@/components/ui/textarea";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {PlusIcon, XIcon} from "lucide-react";
+import {useRouter} from "next/navigation";
+import React from "react";
+import {Controller, useFieldArray, useForm} from "react-hook-form";
+import {toast} from "sonner";
+import z from "zod";
+
+type Props = {
+  ahliGizi: {id: string; nama: string}[];
+};
+
+const JenisIndeksEnum = z.enum(
+  ["BB_U", "TB_U", "BB_TB", "IMT_U"],
+  "Jenis indeks tidak boleh kosong!",
+);
+
+const formSchema = z.object({
+  ahli_gizi_id: z.string({message: "Ahli gizi tidak boleh kosong!"}),
+  judul: z.string({message: "Judul tidak boleh kosong!"}),
+  deskripsi: z.string({message: "Deskripsi tidak boleh kosong!"}),
+  status: z.string(),
+  usia_min: z.number({message: "Usia minimal tidak boleh kosong!"}),
+  usia_max: z.number({message: "Usia maksimal tidak boleh kosong!"}),
+  jenis_indeks: JenisIndeksEnum,
+  target_status: z.string({message: "Target status tidak boleh kosong!"}),
+  makanan: z
+    .array(
+      z.object({
+        name: z.string().nonempty({message: "Makanan tidak boleh kosong!"}),
+      }),
+    )
+    .min(1, "Tambahkan setidaknya satu rekomendasi makanan."),
+});
+
+const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      status: "pending",
+      makanan: [{name: ""}],
+    },
+  });
+
+  const {push} = useRouter();
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const payload = {
+      ...values,
+      makanan: values?.makanan?.map(({name}) => name),
+    };
+
+    try {
+      const req = await createPanduanGizi(payload);
+      const res = await req;
+
+      if (res?.statusCode === 201 || res?.statusCode === 200) {
+        toast.success("Berhasil membuat panduan gizi!");
+        push("/staff/panduangizi");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.success("Gagal membuat panduan gizi!");
+    }
+  };
+
+  const {fields, append, remove} = useFieldArray({
+    control: form.control,
+    name: "makanan",
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Tambah Rekomendasi Gizi Baru</CardTitle>
+        <CardDescription>Formulir Rekomendasi Gizi Baru</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="ahli_gizi_id"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Ahli Gizi</FormLabel>
+                  <FormControl>
+                    <Select
+                      {...field}
+                      onValueChange={field.onChange}
+                      value={field.value}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih ahli gizi" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ahliGizi?.map(({nama, id}) => (
+                          <SelectItem key={id} value={id}>
+                            {nama}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="judul"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Judul</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Masukan Judul" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="deskripsi"
+              render={({field}) => (
+                <FormItem>
+                  <FormLabel>Deskripsi</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Masukan Deskripsi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <section className="flex gap-6">
+              <FormField
+                control={form.control}
+                name="usia_min"
+                render={({field}) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Usia minimal (bulan)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Masukan Usia minimal (bulan)"
+                        {...field}
+                        type="number"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="usia_max"
+                render={({field}) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Usia maksimal (bulan)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Masukan Usia maksimal (bulan)"
+                        {...field}
+                        type="number"
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </section>
+            <section className="flex gap-6">
+              <FormField
+                control={form.control}
+                name="jenis_indeks"
+                render={({field}) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Jenis indeks</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={field.onChange}
+                        value={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih jenis indeks" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="BB_U">BB_U</SelectItem>
+                          <SelectItem value="TB_U">TB_U</SelectItem>
+                          <SelectItem value="BB_TB">BB_TB</SelectItem>
+                          <SelectItem value="IMT_U">IMT_U</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="target_status"
+                render={({field}) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Target status</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={field.onChange}
+                        value={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih Target Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sangat_pendek">
+                            Sangat Pendek
+                          </SelectItem>
+                          <SelectItem value="pendek">Pendek</SelectItem>
+                          <SelectItem value="normal">Normal</SelectItem>
+                          <SelectItem value="tinggi">Tinggi</SelectItem>
+                          <SelectItem value="bb_sangat_kurang">
+                            Berat Badan Sangat Kurang
+                          </SelectItem>
+                          <SelectItem value="bb_kurang">
+                            Berat Badan Kurang
+                          </SelectItem>
+                          <SelectItem value="bb_normal">
+                            Berat Badan Normal
+                          </SelectItem>
+                          <SelectItem value="risiko_bb_lebih">
+                            Risiko Berat Badan Berlebih
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </section>
+            <FieldSet className="gap-4">
+              <FieldLegend variant="label">Makanan</FieldLegend>
+              <FieldDescription>
+                Masukan beberapa rekomendasi makanan
+              </FieldDescription>
+              <FieldGroup className="gap-4">
+                {fields.map((field, index) => (
+                  <Controller
+                    key={field.id}
+                    name={`makanan.${index}.name`}
+                    control={form.control}
+                    render={({field: controllerField, fieldState}) => (
+                      <Field
+                        orientation="horizontal"
+                        data-invalid={fieldState.invalid}>
+                        <FieldContent>
+                          <InputGroup>
+                            <InputGroupInput
+                              {...controllerField}
+                              id={`form-rhf-array-makanan-${index}`}
+                              aria-invalid={fieldState.invalid}
+                              placeholder="Masukan nama makanan"
+                              type="text"
+                            />
+                            {fields.length > 1 && (
+                              <InputGroupAddon align="inline-end">
+                                <InputGroupButton
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon-xs"
+                                  onClick={() => remove(index)}
+                                  aria-label={`Hapus makanan ${index + 1}`}>
+                                  <XIcon />
+                                </InputGroupButton>
+                              </InputGroupAddon>
+                            )}
+                          </InputGroup>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
+                ))}
+              </FieldGroup>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => append({name: ""})}>
+                <PlusIcon /> Tambah Makanan
+              </Button>
+            </FieldSet>
+
+            <div className="space-x-5 text-end">
+              <Button
+                onClick={() => push("/rekomendasi_gizi")}
+                disabled={form.formState.isSubmitting}
+                variant={"ghost"}
+                className="border"
+                type="reset">
+                Batal
+              </Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Spinner />} Tambah
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default CreatePanduanGiziForm;

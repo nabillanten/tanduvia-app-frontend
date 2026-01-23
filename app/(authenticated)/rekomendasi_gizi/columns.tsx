@@ -63,7 +63,7 @@ const Actions = (props: z.infer<typeof schema>) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuItem
-            onSelect={() => push(`/staff/panduangizi/update/${id}`)}>
+            onSelect={() => push(`/rekomendasi_gizi/update/${id}`)}>
             Ubah
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -120,11 +120,19 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "usia_min",
-    header: "Usia Minimal (bulan)",
+    header: "Usia Minimal",
+    cell: ({row}) => {
+      const usia_min = row.original.usia_min;
+      return <p>{usia_min} bulan</p>;
+    },
   },
   {
     accessorKey: "usia_max",
-    header: "Usia Maksimal (bulan)",
+    header: "Usia Maksimal",
+    cell: ({row}) => {
+      const usia_max = row.original.usia_max;
+      return <p>{usia_max} bulan</p>;
+    },
   },
 
   {
