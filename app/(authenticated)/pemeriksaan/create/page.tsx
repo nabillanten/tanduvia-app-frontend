@@ -209,9 +209,13 @@ const CreatePemeriksaanPage = () => {
         // @ts-expect-error error type
         const response = await getAnakByRfid(values?.rfid_tag);
         if (response?.statusCode === 200 && response?.data?.count !== 0) {
-          toast.success("Data Anak Ditemukan!");
-          setAnak(response?.data?.data[0]);
-          setTimeout(() => stepper.next(), 1000);
+          if (response?.data?.data?.[0]?.is_active) {
+            toast.success("Data Anak Ditemukan!");
+            setAnak(response?.data?.data[0]);
+            setTimeout(() => stepper.next(), 1000);
+          } else {
+            toast.error("Data Anak Tidak Aktif!");
+          }
         } else {
           toast.error("Data Anak Tidak Ditemukan!");
         }
