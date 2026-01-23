@@ -24,7 +24,9 @@ export function AppSidebar({
   userRole,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {name: string; userRole: string}) {
-  const pathname = usePathname();
+  const mainPath = usePathname();
+  const segments = mainPath.split("/");
+  const pathname = `/${segments[1]}`;
 
   const dataAdmin = {
     user: {
