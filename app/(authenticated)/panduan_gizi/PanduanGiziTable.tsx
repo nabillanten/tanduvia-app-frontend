@@ -1,7 +1,6 @@
 import {DataTable} from "@/components/ui/table/data-table";
 import {columns} from "./columns";
 import TablePagination from "@/components/ui/table/table-pagination";
-import {mockRekomendasiGizi} from "@/app/mock-data/mock-panduan-gizi";
 import fetchWithCredentials from "@/lib/fetchWithCredential";
 
 type Props = {page: number; perPage: number; query: string};
