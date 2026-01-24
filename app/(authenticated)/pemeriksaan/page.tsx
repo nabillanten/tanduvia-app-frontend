@@ -1,8 +1,5 @@
-import {Button} from "@/components/ui/button";
 import SearchInput from "@/components/ui/SearchInput";
 import TableLoading from "@/components/ui/table/table-loading";
-import {PlusIcon} from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import PemeriksaanTable from "./PemeriksaanTable";
 
@@ -22,14 +19,10 @@ const PemeriksaanPage = async (props: {searchParams: SearchParams}) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex gap-6">
-        <SearchInput placeholder="Cari Berdasarkan NIK atau Nama" />
-        <Link href={"/pemeriksaan/create"}>
-          <Button>
-            <PlusIcon /> <span>Baru</span>
-          </Button>
-        </Link>
+        <h1 className="text-lg font-bold shrink-0">Daftar Pemeriksaan</h1>
+        {/* <SearchInput placeholder="Cari Berdasarkan NIK atau Nama" /> */}
       </div>
-      <React.Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
+      <React.Suspense key={page} fallback={<TableLoading tableColumn={10} />}>
         <PemeriksaanTable {...PemreiksaanTableProps} />
       </React.Suspense>
     </div>
