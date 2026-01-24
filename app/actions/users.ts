@@ -15,6 +15,15 @@ export const updateUser = async (id: string, body: object) => {
   return req;
 };
 
+export const changePassword = async (id: string, body: object) => {
+  const req = await fetchWithCredentials(
+    "/users/" + id + "/change-password",
+    "PATCH",
+    body,
+  );
+  revalidatePath("/users");
+  return req;
+};
 export const DeleteUser = async (id: string) => {
   const req = await fetchWithCredentials("/users/" + id, "DELETE");
   revalidatePath("/users");

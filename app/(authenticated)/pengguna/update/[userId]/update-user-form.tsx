@@ -47,7 +47,6 @@ const formSchema = z.object({
   role: z.enum(["SUPERADMIN", "PETUGAS", "AHLI_GIZI"], {
     message: "Role tidak boleh kosong!",
   }),
-  password: z.string().optional(),
 });
 
 export default function UpdateUserForm({
@@ -186,23 +185,6 @@ export default function UpdateUserForm({
                         ))}
                       </SelectContent>
                     </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Masukan Password"
-                      type="password"
-                      {...field}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

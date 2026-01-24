@@ -20,11 +20,41 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import React from "react";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
-import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
-import {updateUser} from "@/app/actions/users";
+import {
+  CircleCheckIcon,
+  CircleXIcon,
+  EllipsisIcon,
+  EyeClosed,
+  EyeOffIcon,
+} from "lucide-react";
+import {changePassword, updateUser} from "@/app/actions/users";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {useForm} from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 const PosyanduSchema = z.object({
   id: z.string(),
@@ -51,10 +81,40 @@ const roleLabels: Record<string, string> = {
   AHLI_GIZI: "Ahli Gizi",
 };
 
+const formSchema = z.object({
+  password: z.string().min(8, {message: "Password minimal 8 karakter!"}),
+});
+
 const Actions = (props: z.infer<typeof schema>) => {
   const [showDialog, setShowDialog] = React.useState(false);
+  const [isPassword, setIsPassword] = React.useState(true);
+  const [showDialogChangePassword, setShowDialogChangePassword] =
+    React.useState(false);
   const {push} = useRouter();
   const {id, nama, is_active} = props;
+  const form = useForm<z.infer<typeof formSchema>>({
+    defaultValues: {password: ""},
+  });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (values?.password?.length >= 8) {
+      try {
+        const req = await changePassword(id, values);
+        const res = await req;
+
+        if (res?.statusCode === 201 || res?.statusCode === 200) {
+          toast.success("Berhasil Mengubah Password Pengguna!");
+          form.resetField("password");
+          setShowDialogChangePassword(false);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Gagal Mengubah Password Pengguna!");
+      }
+    } else {
+      toast.error("Password minimal 8 karakter!");
+    }
+  };
 
   return (
     <>
@@ -71,6 +131,12 @@ const Actions = (props: z.infer<typeof schema>) => {
         <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuItem onSelect={() => push(`/pengguna/update/${id}`)}>
             Ubah
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              setShowDialogChangePassword((prevState) => !prevState)
+            }>
+            Ganti Password
           </DropdownMenuItem>
           <DropdownMenuItem
             variant={is_active ? "destructive" : "default"}
@@ -108,6 +174,64 @@ const Actions = (props: z.infer<typeof schema>) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Form {...form}>
+        <Dialog
+          open={showDialogChangePassword}
+          onOpenChange={setShowDialogChangePassword}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogContent className="sm:max-w-[480px]">
+              <form className="space-y-6">
+                <DialogHeader>
+                  <DialogTitle>Ubah Password</DialogTitle>
+                  <DialogDescription>
+                    Formulir ubah password pengguna dengan nama {nama}
+                  </DialogDescription>
+                </DialogHeader>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Password Baru</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupInput
+                            {...field}
+                            placeholder="Masukan Password Baru"
+                            type={isPassword ? "password" : "text"}
+                          />
+                          <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                              size="icon-xs"
+                              onClick={() => {
+                                setIsPassword((prev) => !prev);
+                              }}>
+                              {true ? <EyeOffIcon /> : <EyeClosed />}
+                            </InputGroupButton>
+                          </InputGroupAddon>
+                        </InputGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button
+                      disabled={form.formState.isSubmitting}
+                      variant="outline">
+                      Batal
+                    </Button>
+                  </DialogClose>
+                  <Button disabled={form.formState.isSubmitting} type="submit">
+                    Simpan
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </form>
+        </Dialog>
+      </Form>
     </>
   );
 };
