@@ -1,14 +1,10 @@
+import {redirect} from "next/navigation";
 import React from "react";
-import AdminDashboard from "./admin/admin-dashboard";
 
 type Props = object;
 
-const DashboardPage = (props: Props) => {
-  return (
-    <div>
-      <AdminDashboard />
-    </div>
-  );
+const Page = (props: Props) => {
+  return <p>123</p>
 };
 
-export default DashboardPage;
+export default Page;

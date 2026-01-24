@@ -19,9 +19,10 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
     "/posyandu",
     "/panduan_gizi",
     "/pemeriksaan",
+    "/admin",
   ],
-  AHLI_GIZI: ["/dashboard", "/rekomendasi_gizi"],
-  PETUGAS: ["/dashboard", "/anak", "/ibu", "/pemeriksaan"],
+  AHLI_GIZI: ["/ahli_gizi", "/dashboard", "/rekomendasi_gizi", "/admin"],
+  PETUGAS: ["/petugas", "/dashboard", "/anak", "/ibu", "/pemeriksaan"],
 };
 
 export async function proxy(request: NextRequest) {

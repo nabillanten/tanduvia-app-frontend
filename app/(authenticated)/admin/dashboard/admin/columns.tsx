@@ -19,7 +19,7 @@ import {
   CircleAlertIcon,
   LucideIcon,
 } from "lucide-react";
-import {JenisKelaminEnum} from "../../anak/columns";
+import {JenisKelaminEnum} from "../../../anak/columns";
 
 const statusBBU = z.enum([
   "bb_sangat_kurang",
