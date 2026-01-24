@@ -82,7 +82,7 @@ export default function UpdateUserForm({
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal Mengubah Pengguna!");
+      toast.error("Gagal Mengubah Pengguna!");
     }
   }
 

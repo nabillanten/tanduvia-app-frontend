@@ -55,6 +55,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {Spinner} from "@/components/ui/spinner";
 
 const PosyanduSchema = z.object({
   id: z.string(),
@@ -224,7 +225,7 @@ const Actions = (props: z.infer<typeof schema>) => {
                     </Button>
                   </DialogClose>
                   <Button disabled={form.formState.isSubmitting} type="submit">
-                    Simpan
+                    {form.formState.isSubmitting && <Spinner />} Simpan
                   </Button>
                 </DialogFooter>
               </form>
