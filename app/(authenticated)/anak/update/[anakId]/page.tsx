@@ -1,5 +1,7 @@
 import fetchWithCredentials from "@/lib/fetchWithCredential";
 import UpdateAnakForm from "./update-anak-form";
+import {Suspense} from "react";
+import FormLoading from "@/components/ui/form-loading";
 
 async function findAllIbu() {
   const response = await fetchWithCredentials(`/anak/ibu`);
@@ -17,9 +19,9 @@ const UpdateIbuPage = async ({params}: {params: Promise<{anakId: string}>}) => {
   const ibu = await findAllIbu();
 
   return (
-    <div>
+    <Suspense key={anak} fallback={<FormLoading />}>
       <UpdateAnakForm anakId={anakId} anak={anak?.data} ibu={ibu?.data} />
-    </div>
+    </Suspense>
   );
 };
 
