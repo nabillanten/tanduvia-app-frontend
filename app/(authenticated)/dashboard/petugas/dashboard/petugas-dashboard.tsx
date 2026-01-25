@@ -1,18 +1,17 @@
 import React, {Suspense} from "react";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {BookAlert, BookCheck, BookX} from "lucide-react";
-import {Badge} from "@/components/ui/badge";
-import TableLoading from "@/components/ui/table/table-loading";
-import {ChartAreaInteractive} from "../../admin/dashboard-chart";
 import PemeriksaanTable from "../../admin/PemeriksaanTable";
+import {ChartBarMultiple} from "@/components/bar-chart-multiple";
+import {ChartPieDonutText} from "@/components/pie-chart-donut";
+import {ChartPieDonutTextPanduanGizi} from "@/components/pie-chart-donut-panduan-gizi";
+import TableLoading from "@/components/ui/table/table-loading";
 
 type Props = object;
 
@@ -60,13 +59,23 @@ const PetugasDashboard = (props: Props) => {
           </CardFooter>
         </Card>
       </section>
-      <section>
-        <ChartAreaInteractive />
+      <section className="grid grid-cols-2 gap-4">
+        <div>
+          <ChartPieDonutText />
+        </div>
+        <div>
+          <ChartPieDonutTextPanduanGizi />
+        </div>
+      </section>
+      <section className="grid lg:grid-cols-2 gap-4">
+        <div>
+          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status BB/U" />
+        </div>
+        <div>
+          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status TB/U" />
+        </div>
       </section>
       <section>
-        <PemeriksaanTable />
-      </section>
-      {/* <section>
         <Suspense
           key={1}
           fallback={
@@ -76,9 +85,9 @@ const PetugasDashboard = (props: Props) => {
               </CardContent>
             </Card>
           }>
-          <PanduanGiziTable />
+          <PemeriksaanTable />
         </Suspense>
-      </section> */}
+      </section>
     </section>
   );
 };

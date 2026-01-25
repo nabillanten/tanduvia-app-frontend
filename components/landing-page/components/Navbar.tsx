@@ -99,9 +99,11 @@ export const Navbar: React.FC = () => {
             onClick={() => setIsOpen(false)}>
             Mengapa Kami
           </a>
-          <button className="w-full bg-[#0366a9] text-white px-4 py-2.5 rounded-xl font-medium">
-            Daftar Kunjungan
-          </button>
+          <Link href={"/auth/signin"}>
+            <button className="w-full bg-[#0366a9] text-white px-4 py-2.5 rounded-xl font-medium">
+              Masuk
+            </button>
+          </Link>
         </div>
       )}
     </nav>

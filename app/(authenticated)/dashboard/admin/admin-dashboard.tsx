@@ -1,14 +1,19 @@
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {BabyIcon, House, Salad} from "lucide-react";
-import React from "react";
+import React, {Suspense} from "react";
 import PemeriksaanTable from "./PemeriksaanTable";
 import {ChartAreaInteractive} from "./dashboard-chart";
+import {ChartPieDonutText} from "@/components/pie-chart-donut";
+import {ChartBarMultiple} from "@/components/bar-chart-multiple";
+import {ChartPieDonutTextPanduanGizi} from "@/components/pie-chart-donut-panduan-gizi";
+import TableLoading from "@/components/ui/table/table-loading";
 
 type Props = object;
 
@@ -56,11 +61,35 @@ const AdminDashboard = (props: Props) => {
           </CardFooter>
         </Card>
       </section>
-      <section>
-        <ChartAreaInteractive />
+      <section className="grid lg:grid-cols-2 gap-4">
+        {/* <ChartAreaInteractive /> */}
+        <div>
+          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status BB/U" />
+        </div>
+        <div>
+          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status TB/U" />
+        </div>
+      </section>
+      <section className="grid grid-cols-2 gap-4">
+        <div>
+          <ChartPieDonutText />
+        </div>
+        <div>
+          <ChartPieDonutTextPanduanGizi />
+        </div>
       </section>
       <section>
-        <PemeriksaanTable />
+        <Suspense
+          key={1}
+          fallback={
+            <Card>
+              <CardContent>
+                <TableLoading tableColumn={8} />
+              </CardContent>
+            </Card>
+          }>
+          <PemeriksaanTable />
+        </Suspense>
       </section>
     </section>
   );
