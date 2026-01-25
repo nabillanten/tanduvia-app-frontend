@@ -82,7 +82,7 @@ export default function CreateAnakForm({ibu}: Props) {
 
     const payload = {
       ...values,
-      tanggal_lahir: adjustedDate, // Sekarang sudah aman dari pergeseran hari
+      tanggal_lahir: adjustedDate,
     };
     try {
       const req = await createAnak(payload);

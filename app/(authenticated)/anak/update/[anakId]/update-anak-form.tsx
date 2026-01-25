@@ -38,7 +38,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {addHours, format, startOfDay} from "date-fns";
-import { id } from "date-fns/locale";
+import {id} from "date-fns/locale";
 
 const formSchema = z.object({
   nama: z.string().min(2, {message: "Nama lengkap minimal 2 karakter"}),
@@ -85,7 +85,7 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
 
     const payload = {
       ...values,
-      tanggal_lahir: adjustedDate, // Sekarang sudah aman dari pergeseran hari
+      tanggal_lahir: adjustedDate,
     };
 
     try {
@@ -200,7 +200,7 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                             )}>
                             {field.value ? (
                               // format(field.value, "PPP")
-                              format(field.value, "dd MMMM yyyy",{locale : id})
+                              format(field.value, "dd MMMM yyyy", {locale: id})
                             ) : (
                               <span>Pilih Tanggal</span>
                             )}

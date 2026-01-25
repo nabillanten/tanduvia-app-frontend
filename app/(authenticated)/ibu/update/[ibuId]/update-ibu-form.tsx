@@ -23,6 +23,8 @@ import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
 import {cn} from "@/lib/utils";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {addHours, format, startOfDay} from "date-fns";
+import {id} from "date-fns/locale";
 import {CalendarIcon} from "lucide-react";
 import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
@@ -60,8 +62,13 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formScheme>) => {
+    const adjustedDate = addHours(startOfDay(values.tanggal_lahir), 12);
+    const payload = {
+      ...values,
+      tanggal_lahir: adjustedDate, // Sekarang sudah aman dari pergeseran hari
+    };
     try {
-      const req = await updateIbu(ibuId, values);
+      const req = await updateIbu(ibuId, payload);
       const res = await req;
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil Mengubah Ibu!");
@@ -147,7 +154,7 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                             )}>
                             {field.value ? (
                               // format(field.value, "PPP")
-                              field.value.toLocaleDateString()
+                              format(field.value, "dd MMMM yyyy", {locale: id})
                             ) : (
                               <span>Pilih Tanggal</span>
                             )}
