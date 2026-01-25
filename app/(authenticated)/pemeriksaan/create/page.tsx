@@ -72,6 +72,7 @@ import {calculateZScore} from "@/app/actions/zscore";
 import {Badge} from "@/components/ui/badge";
 import {Textarea} from "@/components/ui/textarea";
 import {createPemeriksaan} from "@/app/actions/pemeriksaan";
+import { getAnakByRFID } from "@/app/actions/anak";
 
 // SCHEMA START
 const rfidSchema = z.object({
@@ -186,20 +187,20 @@ const CreatePemeriksaanPage = () => {
   // console.log(pemeriksaanData, "pemeriksaanData");
 
   // Get anak By RFID
-  const getAnakByRfid = async (rfid: string) => {
-    const access_token = getCookie("access_token");
-    const request = await fetch(appConfig.baseUrl + "/anak?search=" + rfid, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": " application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-      cache: "no-store",
-    });
-    const response = await request.json();
-    return response;
-  };
+  // const getAnakByRfid = async (rfid: string) => {
+  //   const access_token = getCookie("access_token");
+  //   const request = await fetch(appConfig.baseUrl + "/anak?search=" + rfid, {
+  //     method: "GET",
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": " application/json",
+  //       Authorization: `Bearer ${access_token}`,
+  //     },
+  //     cache: "no-store",
+  //   });
+  //   const response = await request.json();
+  //   return response;
+  // };
 
   // Submitting Form Function
   const onSubmit = async (values: z.infer<typeof stepper.current.schema>) => {
@@ -207,7 +208,7 @@ const CreatePemeriksaanPage = () => {
       try {
         setIsLoading(true);
         // @ts-expect-error error type
-        const response = await getAnakByRfid(values?.rfid_tag);
+        const response = await getAnakByRFID(values?.rfid_tag);
         if (response?.statusCode === 200 && response?.data?.count !== 0) {
           if (response?.data?.data?.[0]?.is_active) {
             toast.success("Data Anak Ditemukan!");

@@ -20,3 +20,8 @@ export const DeleteAnak = async (id: string) => {
   revalidatePath("/anak");
   return req;
 };
+
+export const getAnakByRFID = async (rfid: string) => {
+  const req = await fetchWithCredentials("/anak?search=" + rfid);
+  return req;
+};
