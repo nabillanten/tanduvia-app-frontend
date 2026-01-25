@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {Home, Map, Users} from "lucide-react";
+import {Baby, HeartHandshake, Home, Map, Salad, Users} from "lucide-react";
 import {NavUser} from "@/components/nav-user";
 import Logo from "@/public/images/logo.png";
 import {
@@ -17,35 +17,115 @@ import {
 import {NavMenu} from "./nav-menu";
 import {usePathname} from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  projects: [
-    {
-      name: "Beranda",
-      url: "#",
-      icon: Home,
-    },
-    {
-      name: "Pengguna",
-      url: "/users",
-      icon: Users,
-    },
-    {
-      name: "Pemeriksaan",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
+export function AppSidebar({
+  name,
+  userRole,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {name: string; userRole: string}) {
+  const mainPath = usePathname();
+  const segments = mainPath.split("/");
+  const pathname = `/${segments[1]}`;
 
-export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
+  const dataAdmin = {
+    user: {
+      name: name,
+      role: userRole,
+    },
+    projects: [
+      {
+        name: "Beranda",
+        url: "/dashboard",
+        icon: Home,
+      },
+      {
+        name: "Pengguna",
+        url: "/pengguna",
+        icon: Users,
+      },
+      {
+        name: "Anak",
+        url: "/anak",
+        icon: Baby,
+      },
+      {
+        name: "Ibu",
+        url: "/ibu",
+        icon: HeartHandshake,
+      },
+      {
+        name: "Posyandu",
+        url: "/posyandu",
+        icon: Baby,
+      },
+      {
+        name: "Panduan Gizi",
+        url: "/panduan_gizi",
+        icon: Salad,
+      },
+      {
+        name: "Pemeriksaan",
+        url: "/pemeriksaan",
+        icon: Map,
+      },
+    ],
+  };
+
+  const dataPetugas = {
+    user: {
+      name: name,
+      role: userRole,
+    },
+    projects: [
+      {
+        name: "Beranda",
+        url: "/dashboard",
+        icon: Home,
+      },
+      {
+        name: "Ibu",
+        url: "/ibu",
+        icon: HeartHandshake,
+      },
+      {
+        name: "Anak",
+        url: "/anak",
+        icon: Baby,
+      },
+      {
+        name: "Pemeriksaan",
+        url: "/pemeriksaan/create",
+        icon: Map,
+      },
+    ],
+  };
+
+  const dataAhliGizi = {
+    user: {
+      name: name,
+      role: userRole,
+    },
+    projects: [
+      {
+        name: "Beranda",
+        url: "/dashboard",
+        icon: Home,
+      },
+      {
+        name: "Rekomendasi Gizi",
+        url: "/rekomendasi_gizi",
+        icon: Salad,
+      },
+    ],
+  };
+
+  const navigation =
+    userRole === "SUPERADMIN"
+      ? dataAdmin
+      : userRole === "PETUGAS"
+        ? dataPetugas
+        : dataAhliGizi;
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -54,21 +134,23 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <a href="#">
+              <Link href="/dashboard">
                 <figure className="w-8">
                   <Image src={Logo} alt="Tanduvia Logo" />
                 </figure>
-                <span className="text-xl font-bold text-[#0366a9]">Tanduvia</span>
-              </a>
+                <span className="text-xl font-bold text-[#0366a9]">
+                  Tanduvia
+                </span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMenu menu={data.projects} pathNow={pathname} />
+        <NavMenu menu={navigation.projects} pathNow={pathname} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={navigation.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
