@@ -72,7 +72,9 @@ import {calculateZScore} from "@/app/actions/zscore";
 import {Badge} from "@/components/ui/badge";
 import {Textarea} from "@/components/ui/textarea";
 import {createPemeriksaan} from "@/app/actions/pemeriksaan";
-import { getAnakByRFID } from "@/app/actions/anak";
+import {getAnakByRFID} from "@/app/actions/anak";
+import {format} from "date-fns";
+import {id} from "date-fns/locale";
 
 // SCHEMA START
 const rfidSchema = z.object({
@@ -530,7 +532,7 @@ const IdentitasAnak = ({anak}: {anak: z.infer<typeof anakSchema>}) => {
               <ItemContent>
                 <ItemTitle>Tanggal Lahir</ItemTitle>
                 <ItemDescription>
-                  {new Date(anak?.tanggal_lahir).toLocaleDateString()}
+                  {format(anak?.tanggal_lahir, "dd MMMM yyyy", {locale: id})}
                 </ItemDescription>
               </ItemContent>
             </Item>
@@ -643,7 +645,8 @@ const InputPemeriksaan = ({anak}: {anak: z.infer<typeof anakSchema>}) => {
                         )}>
                         {field.value ? (
                           // format(field.value, "PPP")
-                          field.value.toLocaleDateString()
+                          // field.value.toLocaleDateString()
+                          format(field.value, "dd MMMM yyyy", {locale: id})
                         ) : (
                           <span>Pilih Tanggal</span>
                         )}
@@ -841,7 +844,7 @@ const InsertHasilPemeriksaan = ({
                         )}>
                         {field.value ? (
                           // format(field.value, "PPP")
-                          field.value.toLocaleDateString()
+                          format(field.value, "dd MMMM yyyy", {locale: id})
                         ) : (
                           <span>Pilih Tanggal</span>
                         )}

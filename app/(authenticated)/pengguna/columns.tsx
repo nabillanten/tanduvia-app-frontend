@@ -258,14 +258,14 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
       return <p>{roleLabels[role] || role}</p>;
     },
   },
-  {
-    accessorKey: "created_at",
-    header: "Tanggal Dibuat",
-    cell: ({row}) => {
-      const date = format(row.getValue("created_at"), "MMM d, yyyy");
-      return date;
-    },
-  },
+  // {
+  //   accessorKey: "created_at",
+  //   header: "Tanggal Dibuat",
+  //   cell: ({row}) => {
+  //     const date = format(row.getValue("created_at"), "dd-MM-yyyy");
+  //     return date;
+  //   },
+  // },
   {
     accessorKey: "is_active",
     header: "Status",
