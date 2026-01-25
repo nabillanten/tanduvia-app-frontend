@@ -37,6 +37,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {addHours, format, startOfDay} from "date-fns";
+import {id} from "date-fns/locale";
 
 const formSchema = z.object({
   nama: z.string().min(2, {message: "Nama lengkap minimal 2 karakter"}),
@@ -76,8 +78,14 @@ export default function CreateAnakForm({ibu}: Props) {
 
   // form submit
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const adjustedDate = addHours(startOfDay(values.tanggal_lahir), 12);
+
+    const payload = {
+      ...values,
+      tanggal_lahir: adjustedDate, // Sekarang sudah aman dari pergeseran hari
+    };
     try {
-      const req = await createAnak(values);
+      const req = await createAnak(payload);
       const res = await req;
 
       if (res?.statusCode === 201 || res?.statusCode === 200) {
@@ -187,7 +195,7 @@ export default function CreateAnakForm({ibu}: Props) {
                             )}>
                             {field.value ? (
                               // format(field.value, "PPP")
-                              field.value.toLocaleDateString()
+                              format(field.value, "dd MMMM yyyy", {locale: id})
                             ) : (
                               <span>Pilih Tanggal</span>
                             )}
@@ -200,7 +208,7 @@ export default function CreateAnakForm({ibu}: Props) {
                           mode="single"
                           captionLayout="dropdown"
                           selected={field.value}
-                          onSelect={field.onChange} // Connects the calendar to RHF's onChange
+                          onSelect={field.onChange}
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
