@@ -14,7 +14,9 @@ export default async function Layout({children}: {children: React.ReactNode}) {
   let decodedJWT;
   try {
     decodedJWT = jwtDecode<{id: string}>(access_token as string);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   try {
     const req = await fetch(appConfig.baseUrl + "/users/" + decodedJWT?.id, {

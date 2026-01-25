@@ -14,7 +14,7 @@ import TableLoading from "@/components/ui/table/table-loading";
 
 type Props = object;
 
-const DashboardPage = (props: Props) => {
+const AhligiziDashboard = (props: Props) => {
   return (
     <section className="space-y-6">
       <section className="flex flex-col md:flex-row w-full gap-4 ">
@@ -75,4 +75,4 @@ const DashboardPage = (props: Props) => {
   );
 };
 
-export default DashboardPage;
+export default AhligiziDashboard;

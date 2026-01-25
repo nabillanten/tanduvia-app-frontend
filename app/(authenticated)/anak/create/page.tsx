@@ -254,7 +254,7 @@ export default function CreateAnakPage() {
                       defaultValue={undefined}
                       onValueChange={field.onChange}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih Posyandu" />
+                        <SelectValue placeholder="Pilih Ibu" />
                       </SelectTrigger>
                       <SelectContent>
                         {ibu?.data?.map(({id, nama, nik}) => (
