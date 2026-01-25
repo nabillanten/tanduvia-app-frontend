@@ -150,7 +150,7 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
       <>
         {row.original.status === "published" ? (
           <Badge className="bg-green-100 text-green-900">
-            <CircleCheckIcon /> Published
+            <CircleCheckIcon /> Terbit
           </Badge>
         ) : row?.original.status === "pending" ? (
           <Badge className="bg-yellow-100 text-yellow-800">
@@ -158,7 +158,7 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
           </Badge>
         ) : (
           <Badge className="bg-red-100 text-red-800">
-            <CircleXIcon /> Rejected
+            <CircleXIcon /> Ditolak
           </Badge>
         )}
       </>

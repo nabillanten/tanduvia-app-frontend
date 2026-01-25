@@ -17,11 +17,11 @@ type Props = object;
 const AhligiziDashboard = (props: Props) => {
   return (
     <section className="space-y-6">
-      <section className="flex flex-col md:flex-row w-full gap-4 ">
+      <section className="flex flex-col sm:flex-row w-full gap-4 ">
         <Card className="w-full ">
           <CardHeader>
-            <CardDescription className="flex items-center gap-2 text-green-700">
-              <BookCheck size={20} /> Panduan Gizi
+            <CardDescription className="flex items-center gap-1 text-green-700">
+              <BookCheck size={16} /> Panduan
             </CardDescription>
             <CardTitle className="text-green-700">5</CardTitle>
             <CardAction>
@@ -33,8 +33,8 @@ const AhligiziDashboard = (props: Props) => {
         </Card>
         <Card className="w-full ">
           <CardHeader>
-            <CardDescription className="flex items-center gap-2 text-yellow-600">
-              <BookAlert size={20} /> Panduan Gizi
+            <CardDescription className="flex items-center gap-1 text-yellow-600">
+              <BookAlert size={16} /> Panduan
             </CardDescription>
             <CardTitle className="text-yellow-600">6</CardTitle>
             <CardAction>
@@ -46,8 +46,8 @@ const AhligiziDashboard = (props: Props) => {
         </Card>
         <Card className="w-full ">
           <CardHeader>
-            <CardDescription className="flex items-center gap-2 text-red-800">
-              <BookX size={20} /> Panduan Gizi
+            <CardDescription className="flex items-center gap-1 text-red-800">
+              <BookX size={16} /> Panduan
             </CardDescription>
             <CardTitle className=" text-red-800">1</CardTitle>
             <CardAction>

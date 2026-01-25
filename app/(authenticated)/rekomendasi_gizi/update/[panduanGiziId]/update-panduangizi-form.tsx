@@ -168,7 +168,7 @@ const UpdatePanduanGiziForm = ({
           <CardAction>
             {panduanGizi?.status === "published" ? (
               <Badge className="bg-green-100 text-green-900">
-                <CircleCheckIcon /> Published
+                <CircleCheckIcon /> Terbit
               </Badge>
             ) : panduanGizi?.status === "pending" ? (
               <Badge className="bg-yellow-100 text-yellow-800">
@@ -176,7 +176,7 @@ const UpdatePanduanGiziForm = ({
               </Badge>
             ) : (
               <Badge className="bg-red-100 text-red-800">
-                <CircleXIcon /> Rejected
+                <CircleXIcon /> Ditolak
               </Badge>
             )}
           </CardAction>
