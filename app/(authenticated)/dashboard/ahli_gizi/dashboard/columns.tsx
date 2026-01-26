@@ -45,7 +45,7 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "created_at",
     header: "Tanggal Diupload",
     cell: ({row}) => {
-      const date = format(row.getValue("created_at"), "MMM d, yyyy");
+      const date = format(row.getValue("created_at"), "dd-MM-yyyy");
       return date;
     },
   },

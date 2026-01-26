@@ -23,6 +23,8 @@ import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
 import {cn} from "@/lib/utils";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {addHours, format, startOfDay} from "date-fns";
+import {id} from "date-fns/locale";
 import {CalendarIcon} from "lucide-react";
 import {useRouter} from "next/navigation";
 import React from "react";
@@ -56,8 +58,13 @@ const CreateIbuPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formScheme>) => {
+    const adjustedDate = addHours(startOfDay(values.tanggal_lahir), 12);
+    const payload = {
+      ...values,
+      tanggal_lahir: adjustedDate,
+    };
     try {
-      const req = await createIbu(values);
+      const req = await createIbu(payload);
       const res = await req;
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil Membuat Ibu!");
@@ -143,7 +150,7 @@ const CreateIbuPage = () => {
                             )}>
                             {field.value ? (
                               // format(field.value, "PPP")
-                              field.value.toLocaleDateString()
+                              format(field.value, "dd MMMM yyyy", {locale: id})
                             ) : (
                               <span>Pilih Tanggal</span>
                             )}

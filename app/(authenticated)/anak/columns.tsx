@@ -25,6 +25,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
 import {updateAnak} from "@/app/actions/anak";
+import { id } from "date-fns/locale";
 
 export const JenisKelaminEnum = z.enum(["L", "P"]);
 export const schema = z.object({
@@ -133,7 +134,7 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "tanggal_lahir",
     header: "Tanggal Lahir",
     cell: ({row}) => {
-      const date = format(row.getValue("tanggal_lahir"), "MMM d, yyyy");
+      const date = format(row.getValue("tanggal_lahir"),"dd MMMM yyyy",{locale: id});
       return date;
     },
   },

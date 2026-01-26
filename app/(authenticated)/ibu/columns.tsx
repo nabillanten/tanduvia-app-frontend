@@ -25,6 +25,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
 import {DeleteIbu} from "@/app/actions/ibu";
+import { id } from "date-fns/locale";
 
 export const schema = z.object({
   id: z.string(),
@@ -121,7 +122,7 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "tanggal_lahir",
     header: "Tanggal Lahir",
     cell: ({row}) => {
-      const date = format(row.getValue("tanggal_lahir"), "dd/MM/yyyy");
+      const date = format(row.getValue("tanggal_lahir"), "dd MMMM yyyy",{locale:id});
       return date;
     },
   },

@@ -37,6 +37,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {addHours, format, startOfDay} from "date-fns";
+import {id} from "date-fns/locale";
 
 const formSchema = z.object({
   nama: z.string().min(2, {message: "Nama lengkap minimal 2 karakter"}),
@@ -79,8 +81,15 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
 
   // form submit
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const adjustedDate = addHours(startOfDay(values.tanggal_lahir), 12);
+
+    const payload = {
+      ...values,
+      tanggal_lahir: adjustedDate,
+    };
+
     try {
-      const req = await updateAnak(anakId, values);
+      const req = await updateAnak(anakId, payload);
       const res = await req;
 
       if (res?.statusCode === 201 || res?.statusCode === 200) {
@@ -191,7 +200,7 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                             )}>
                             {field.value ? (
                               // format(field.value, "PPP")
-                              field.value.toLocaleDateString()
+                              format(field.value, "dd MMMM yyyy", {locale: id})
                             ) : (
                               <span>Pilih Tanggal</span>
                             )}
