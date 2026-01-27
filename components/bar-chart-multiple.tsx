@@ -19,48 +19,40 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-export const description = "A multiple bar chart";
-
-const chartData = [
-  {month: "January", warning: 186, normal: 80},
-  {month: "February", warning: 305, normal: 200},
-  {month: "March", warning: 237, normal: 120},
-  {month: "April", warning: 73, normal: 190},
-  {month: "May", warning: 209, normal: 130},
-  {month: "June", warning: 214, normal: 140},
-  {month: "July", warning: 214, normal: 140},
-  {month: "August", warning: 214, normal: 140},
-  {month: "September", warning: 214, normal: 140},
-  {month: "October", warning: 214, normal: 140},
-  {month: "November", warning: 214, normal: 140},
-  {month: "December", warning: 214, normal: 140},
-];
+import {MonthlyStat} from "@/app/(authenticated)/dashboard/admin/admin-dashboard";
 
 const chartConfig = {
-  warning: {
+  normal: {
     label: "Perlu Perhatian",
     color: "var(--chart-1)",
   },
-  normal: {
+  notNormal: {
     label: "Normal",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig;
 
-export function ChartBarMultiple({title} : {title : string}) {
+export function ChartBarMultiple({
+  title,
+  chartData,
+}: {
+  title: string;
+  chartData: MonthlyStat[];
+}) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>Januari - Maret 2025</CardDescription>
+        <CardDescription>
+          Januari - Desember {new Date().getFullYear()}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="monthName"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
@@ -71,8 +63,8 @@ export function ChartBarMultiple({title} : {title : string}) {
               cursor={false}
               content={<ChartTooltipContent indicator="dot" className="w-48" />}
             />
-            <Bar dataKey="warning" fill="var(--color-warning)" radius={4} />
             <Bar dataKey="normal" fill="var(--color-normal)" radius={4} />
+            <Bar dataKey="notNormal" fill="var(--color-notNormal)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>

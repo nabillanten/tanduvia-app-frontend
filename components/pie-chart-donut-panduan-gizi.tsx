@@ -12,18 +12,13 @@ import {
 } from "@/components/ui/card";
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-export const description = "A donut chart with text";
-
-const chartData = [
-  {status: "published", panduan: 10, fill: "var(--chart-2)"},
-  {status: "pending", panduan: 2, fill: "var(--chart-5)"},
-  {status: "rejected", panduan: 3, fill: "var(--chart-1)"},
-];
+import {RecentPanduanGizi} from "@/app/(authenticated)/dashboard/admin/admin-dashboard";
 
 const chartConfig = {
   panduan: {
@@ -43,36 +38,48 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartPieDonutTextPanduanGizi() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.panduan, 0);
-  }, []);
+export function ChartPieDonutTextPanduanGizi({
+  pieChartData: {
+    totalPendingPanduan,
+    totalPublishedPanduan,
+    totalRejectedPanduan,
+    total,
+  },
+}: {
+  pieChartData: RecentPanduanGizi;
+}) {
+  const chartData = [
+    {
+      status: "published",
+      panduan: totalPublishedPanduan,
+      fill: "var(--chart-2)",
+    },
+    {status: "pending", panduan: totalPendingPanduan, fill: "var(--chart-5)"},
+    {status: "rejected", panduan: totalRejectedPanduan, fill: "var(--chart-1)"},
+  ];
 
   return (
     <Card>
       <CardHeader className="items-center pb-0">
         <CardTitle>Jumlah Panduan Gizi Berdasarkan Status</CardTitle>
-        <CardDescription>Januari - Maret 2025</CardDescription>
+        <CardDescription>
+          Januari - Desember {new Date().getFullYear()}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer config={chartConfig} className="mx-auto">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto [&_.recharts-pie-label-text]:text-xl font-bold">
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <Pie
+              labelLine={false}
+              label
               data={chartData}
               dataKey="panduan"
               nameKey="status"
               innerRadius={60}
               strokeWidth={5}>
-              <LabelList
-                dataKey="status"
-                className="fill-background"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: keyof typeof chartConfig) =>
-                  chartConfig[value]?.label
-                }
-              />
               <Label
                 content={({viewBox}) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -86,7 +93,7 @@ export function ChartPieDonutTextPanduanGizi() {
                           x={viewBox.cx}
                           y={viewBox.cy}
                           className="fill-foreground text-lg lg:text-3xl font-bold">
-                          {totalVisitors.toLocaleString()}
+                          {total.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -100,6 +107,10 @@ export function ChartPieDonutTextPanduanGizi() {
                 }}
               />
             </Pie>
+            <ChartLegend
+              content={<ChartLegendContent nameKey="status" />}
+              className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

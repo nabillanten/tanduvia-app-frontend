@@ -23,7 +23,7 @@ const PanduanGiziPage = async (props: {searchParams: SearchParams}) => {
     <div className="flex flex-col gap-6">
       <div className="flex gap-4">
         <h1 className="text-lg font-bold shrink-0">Daftar Rekomendasi Gizi</h1>
-        <SearchInput placeholder="Cari Berdasarkan Nama..." />
+        <SearchInput placeholder="Cari Berdasarkan Judul" />
         <Link href={"/rekomendasi_gizi/create"}>
           <Button>
             <PlusIcon /> <span>Baru</span>
