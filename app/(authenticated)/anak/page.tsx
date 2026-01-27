@@ -4,7 +4,15 @@ import React, {Suspense} from "react";
 import AnakTable from "./AnakTable";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {PlusIcon} from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {AlertCircle, PlusIcon} from "lucide-react";
 
 type SearchParams = Promise<{page?: string; perPage?: string; q?: string}>;
 
@@ -24,11 +32,29 @@ const AnakPage = async (props: {searchParams: SearchParams}) => {
       <div className="flex gap-4">
         <h1 className="text-lg font-bold shrink-0">Daftar Anak</h1>
         <SearchInput placeholder="Cari Berdasarkan NIK atau Nama" />
-        <Link href={"/anak/create"}>
-          <Button>
-            <PlusIcon /> <span>Baru</span>
-          </Button>
-        </Link>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button>
+              <PlusIcon /> <span>Baru</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end">
+            <PopoverHeader>
+              <PopoverTitle className="flex gap-2 items-center">
+                <AlertCircle className="text-primary" size={16} /> Tambah Anak
+              </PopoverTitle>
+              <PopoverDescription>
+                Untuk menambah anak, silakan ke{" "}
+                <Link
+                  href={"/ibu"}
+                  className="text-primary underline transition-colors hover:text-primary/50">
+                  halaman Ibu{" "}
+                </Link>
+                dan klik tambah anak pada salah satu ibu
+              </PopoverDescription>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
       </div>
       <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
         <AnakTable {...usersTableProps} />

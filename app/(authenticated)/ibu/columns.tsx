@@ -25,7 +25,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
 import {DeleteIbu} from "@/app/actions/ibu";
-import { id } from "date-fns/locale";
+import {id} from "date-fns/locale";
 
 export const schema = z.object({
   id: z.string(),
@@ -57,7 +57,11 @@ const Actions = (props: z.infer<typeof schema>) => {
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
+
         <DropdownMenuContent align="end" className="w-32">
+          <DropdownMenuItem onSelect={() => push(`/ibu/${id}/anak/create`)}>
+            Tambah Anak
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => push(`/ibu/update/${id}`)}>
             Ubah
           </DropdownMenuItem>
@@ -122,7 +126,9 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "tanggal_lahir",
     header: "Tanggal Lahir",
     cell: ({row}) => {
-      const date = format(row.getValue("tanggal_lahir"), "dd MMMM yyyy",{locale:id});
+      const date = format(row.getValue("tanggal_lahir"), "dd MMMM yyyy", {
+        locale: id,
+      });
       return date;
     },
   },
