@@ -4,56 +4,25 @@ import {type ColumnDef} from "@tanstack/react-table";
 import {Badge} from "@/components/ui/badge";
 import {format} from "date-fns";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
-import React from "react";
-import {usePathname, useRouter} from "next/navigation";
-import {
   CircleCheckIcon,
   CircleXIcon,
-  EllipsisIcon,
   CircleAlertIcon,
   LucideIcon,
 } from "lucide-react";
-import { JenisKelaminEnum } from "../../anak/columns";
-
-
-const statusBBU = z.enum([
-  "bb_sangat_kurang",
-  "bb_kurang",
-  "bb_normal",
-  "risiko_bb_lebih",
-]);
-
-const statusTBU = z.enum(["sangat_pendek", "pendek", "normal", "tinggi"]);
+import {JenisKelaminEnum} from "../../anak/columns";
 
 const schema = z.object({
   id: z.string(),
   tanggal_pemeriksaan: z.string(),
-  usia_bulan: z.string(),
-  berat_badan: z.string(),
-  tinggi_badan: z.string(),
-  status_bb_u: statusBBU,
-  status_tb_u: statusTBU,
-  created_at: z.string(),
-  catatan: z.string(),
   anak: z.object({
     nama: z.string(),
-    nik: z.string(),
     jenis_kelamin: JenisKelaminEnum,
-    tanggal_lahir: z.string(),
-    tempat_lahir: z.string(),
   }),
-  posyandu: z.object({
-    nama: z.string(),
-  }),
-  petugas: z.object({
-    nama: z.string(),
-  }),
+  berat_badan: z.string(),
+  tinggi_badan: z.string(),
+  usia_bulan: z.number(),
+  status_bb_u: z.string(),
+  status_tb_u: z.string(),
 });
 
 const jenisKelaminLabel: Record<string, string> = {
@@ -63,10 +32,10 @@ const jenisKelaminLabel: Record<string, string> = {
 
 export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
-    accessorKey: "created_at",
+    accessorKey: "tanggal_pemeriksaan",
     header: "Tanggal Periksa",
     cell: ({row}) => {
-      const date = format(row.getValue("created_at"), "dd-MM-yyyy");
+      const date = format(row.getValue("tanggal_pemeriksaan"), "dd-MM-yyyy");
       return date;
     },
   },

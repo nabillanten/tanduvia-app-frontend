@@ -24,11 +24,11 @@ import {
 } from "@/components/ui/select";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {CalendarIcon} from "lucide-react";
+import {CalendarIcon, CreditCard, Users} from "lucide-react";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Calendar} from "@/components/ui/calendar";
 import {cn} from "@/lib/utils";
-import {createAnak} from "@/app/actions/anak";
+import {updateAnak} from "@/app/actions/anak";
 import {Spinner} from "@/components/ui/spinner";
 import {
   Card,
@@ -39,6 +39,13 @@ import {
 } from "@/components/ui/card";
 import {addHours, format, startOfDay} from "date-fns";
 import {id} from "date-fns/locale";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
 
 const formSchema = z.object({
   nama: z.string().min(2, {message: "Nama lengkap minimal 2 karakter"}),
@@ -47,32 +54,33 @@ const formSchema = z.object({
     .string()
     .nonempty({message: "Tempat lahir tidak boleh kosong!"}),
   rfid_tag: z.string().nonempty({message: "RFID tag tidak boleh kosong!"}),
-  ibu_id: z.string().nonempty({message: "Ibu tidak boleh kosong!"}),
   tanggal_lahir: z.date({message: "Tanggal lahir tidak boleh kosong!"}),
   jenis_kelamin: z.enum(["L", "P"], {
     message: "Jenis kelamin tidak boleh kosong!",
   }),
 });
 
-type Props = {
+type Prop = {
+  anakId: string;
+  anak: z.infer<typeof formSchema>;
   ibu: {
     id: string;
     nama: string;
     nik: string;
-  }[];
+  };
 };
 
-export default function CreateAnakForm({ibu}: Props) {
+export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
   const {push} = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nama: "",
-      nik: "",
-      rfid_tag: "",
-      tempat_lahir: "",
-      ibu_id: "",
-      tanggal_lahir: undefined,
+      nama: anak?.nama,
+      nik: anak?.nik,
+      rfid_tag: anak?.rfid_tag,
+      tempat_lahir: anak?.tempat_lahir,
+      tanggal_lahir: new Date(anak?.tanggal_lahir),
+      jenis_kelamin: anak?.jenis_kelamin,
     },
   });
 
@@ -83,30 +91,53 @@ export default function CreateAnakForm({ibu}: Props) {
     const payload = {
       ...values,
       tanggal_lahir: adjustedDate,
+      ibu_id: ibu?.id,
     };
+
     try {
-      const req = await createAnak(payload);
+      const req = await updateAnak(anakId, payload);
       const res = await req;
 
       if (res?.statusCode === 201 || res?.statusCode === 200) {
-        toast.success("Berhasil Membuat Anak!");
+        toast.success("Berhasil Mengubah Anak!");
         push("/anak");
       } else {
-        toast.warning(res?.message ?? res?.message?.[0]);
+        // toast.warning(res?.message ?? res?.message?.[0]);
+        toast.error("Gagal Mengubah Anak!");
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal Membuat Anak!");
+      toast.error("Gagal Mengubah Anak!");
     }
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tambah Anak Baru</CardTitle>
-        <CardDescription>Formulir Anak Baru</CardDescription>
+        <CardTitle>Ubah Data Anak</CardTitle>
+        <CardDescription>Formulir Ubah Data Anak</CardDescription>
       </CardHeader>
       <CardContent>
+        <section className="flex gap-4 pb-8">
+          <Item variant="outline" size="sm" className="w-full">
+            <ItemMedia variant="icon">
+              <Users />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Nama Ibu</ItemTitle>
+              <ItemDescription>{ibu?.nama}</ItemDescription>
+            </ItemContent>
+          </Item>
+          <Item variant="outline" size="sm" className="w-full">
+            <ItemMedia variant="icon">
+              <CreditCard />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>NIK Ibu</ItemTitle>
+              <ItemDescription>{ibu?.nik}</ItemDescription>
+            </ItemContent>
+          </Item>
+        </section>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
             <FormField
@@ -144,10 +175,10 @@ export default function CreateAnakForm({ibu}: Props) {
                     <FormLabel>Jenis Kelamin</FormLabel>
                     <FormControl>
                       <Select
-                        defaultValue={undefined}
+                        defaultValue={field?.value}
                         onValueChange={field.onChange}>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Pilih jenis kelamin anak" />
+                          <SelectValue placeholder="Pilih jenis kelami anak" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="L">Laki-laki</SelectItem>
@@ -208,7 +239,7 @@ export default function CreateAnakForm({ibu}: Props) {
                           mode="single"
                           captionLayout="dropdown"
                           selected={field.value}
-                          onSelect={field.onChange}
+                          onSelect={field.onChange} // Connects the calendar to RHF's onChange
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
@@ -223,36 +254,9 @@ export default function CreateAnakForm({ibu}: Props) {
 
             <FormField
               control={form.control}
-              name="ibu_id"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel>Nama Ibu - NIK</FormLabel>
-                  <FormControl>
-                    <Select
-                      defaultValue={undefined}
-                      onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih Ibu" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {ibu?.map(({id, nama, nik}) => (
-                          <SelectItem key={id} value={id}>
-                            {nama} - {nik}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="rfid_tag"
               render={({field}) => (
-                <FormItem>
+                <FormItem className="w-full">
                   <FormLabel>RFID Tag</FormLabel>
                   <FormControl>
                     <Input placeholder="Masukan RFID" {...field} />
@@ -274,7 +278,7 @@ export default function CreateAnakForm({ibu}: Props) {
                 Batal
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Spinner />} Tambah
+                {form.formState.isSubmitting && <Spinner />} Simpan
               </Button>
             </div>
           </form>

@@ -6,76 +6,163 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {BabyIcon, House, Salad} from "lucide-react";
-import React, {Suspense} from "react";
+import {Suspense} from "react";
 import PemeriksaanTable from "./PemeriksaanTable";
-import {ChartAreaInteractive} from "./dashboard-chart";
 import {ChartPieDonutText} from "@/components/pie-chart-donut";
 import {ChartBarMultiple} from "@/components/bar-chart-multiple";
 import {ChartPieDonutTextPanduanGizi} from "@/components/pie-chart-donut-panduan-gizi";
 import TableLoading from "@/components/ui/table/table-loading";
+import fetchWithCredentials from "@/lib/fetchWithCredential";
+
+// 1. Definisikan interface kecil untuk bagian yang berulang
+export interface MonthlyStat {
+  month: number;
+  monthName: string;
+  normal: number;
+  notNormal: number;
+  total: number;
+}
+
+interface YearTotal {
+  normal: number;
+  notNormal: number;
+  total: number;
+}
+
+export interface StatusStat {
+  year: number;
+  monthly: MonthlyStat[];
+  yearTotal: YearTotal;
+}
+
+// 2. Interface untuk data pemeriksaan terbaru
+export interface RecentPemeriksaan {
+  id: string;
+  tanggal_pemeriksaan: string; // ISO Date string
+  anak: {
+    nama: string;
+    jenis_kelamin: "L" | "P";
+  };
+  berat_badan: string;
+  tinggi_badan: string;
+  usia_bulan: number;
+  status_bb_u: string; // Bisa dibuat enum jika statusnya sudah tetap
+  status_tb_u: string;
+}
+
+export interface RecentPanduanGizi {
+  totalPendingPanduan: number;
+  totalPublishedPanduan: number;
+  totalRejectedPanduan: number;
+  total: number;
+}
+
+// 3. Interface utama untuk objek "data"
+interface TanduviaDashboardData {
+  cardStats: {
+    totalAnak: number;
+    totalPosyandu: number;
+    totalPanduanGizi: number;
+  };
+  statusTBU: StatusStat;
+  statusBBU: StatusStat;
+  totalGender: {
+    totalGenderL: number;
+    totalGenderP: number;
+    total: number;
+  };
+  recentPemeriksaan: RecentPemeriksaan[];
+  recentotalPanduanGizi: RecentPanduanGizi;
+}
+
+// 4. Interface pembungkus untuk API Response
+export interface DashboardResponse {
+  data: TanduviaDashboardData;
+  statusCode: number;
+  message: string;
+}
 
 type Props = object;
 
-const AdminDashboard = (props: Props) => {
+const getDashboardData = async (): Promise<DashboardResponse> => {
+  const response = await fetchWithCredentials("/dashboard");
+  return response;
+};
+
+const AdminDashboard = async (props: Props) => {
+  const {
+    data: {
+      cardStats,
+      statusBBU,
+      statusTBU,
+      totalGender,
+      recentotalPanduanGizi,
+      recentPemeriksaan,
+    },
+  } = await getDashboardData();
   return (
     <section className="flex flex-col gap-6">
       <section className="flex flex-col md:flex-row w-full gap-4 ">
         <Card className="w-full bg-linear-to-t from-primary/10 to-background">
           <CardHeader>
             <CardDescription className="flex items-center gap-2">
-              <BabyIcon size={20} /> Total Anak
+              Total Anak
             </CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              222
+              {cardStats?.totalAnak}
             </CardTitle>
           </CardHeader>
           <CardFooter className="flex-col items-start text-sm">
-            <p className="">Terdaftar</p>
+            <p>Terpantau</p>
           </CardFooter>
         </Card>
         <Card className="w-full bg-linear-to-t from-primary/10 to-background">
           <CardHeader>
             <CardDescription className="flex items-center gap-2">
-              <House size={20} /> Total Posyandu
+              Total Posyandu
             </CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              5
+              {cardStats?.totalPosyandu}
             </CardTitle>
           </CardHeader>
           <CardFooter className="flex-col items-start text-sm">
-            <p className="">Terdaftar</p>
+            <p>Terdaftar</p>
           </CardFooter>
         </Card>
         <Card className="w-full bg-linear-to-t from-primary/10 to-background">
           <CardHeader>
             <CardDescription className="flex items-center gap-2">
-              <Salad size={20} /> Total Panduan Gizi
+              Total Panduan Gizi
             </CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              222
+              {cardStats?.totalPanduanGizi}
             </CardTitle>
           </CardHeader>
           <CardFooter className="flex-col items-start text-sm">
-            <p className="">Telah Terbit</p>
+            <p>Telah Terbit</p>
           </CardFooter>
         </Card>
       </section>
       <section className="grid lg:grid-cols-2 gap-4">
-        {/* <ChartAreaInteractive /> */}
         <div>
-          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status BB/U" />
+          <ChartBarMultiple
+            chartData={statusBBU?.monthly}
+            title="Jumlah Anak Berdasarkan Status BB/U"
+          />
         </div>
         <div>
-          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status TB/U" />
+          <ChartBarMultiple
+            chartData={statusTBU?.monthly}
+            title="Jumlah Anak Berdasarkan Status TB/U"
+          />
         </div>
       </section>
-      <section className="grid grid-cols-2 gap-4">
+      <section className="grid lg:grid-cols-2 gap-4">
         <div>
-          <ChartPieDonutText />
+          <ChartPieDonutText pieChartData={totalGender} />
         </div>
         <div>
-          <ChartPieDonutTextPanduanGizi />
+          <ChartPieDonutTextPanduanGizi pieChartData={recentotalPanduanGizi} />
         </div>
       </section>
       <section>
@@ -88,7 +175,7 @@ const AdminDashboard = (props: Props) => {
               </CardContent>
             </Card>
           }>
-          <PemeriksaanTable />
+          <PemeriksaanTable recentPemeriksaan={recentPemeriksaan} />
         </Suspense>
       </section>
     </section>

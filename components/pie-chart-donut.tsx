@@ -19,13 +19,6 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 
-export const description = "A donut chart with text";
-
-const chartData = [
-  {gender: "l", anak: 100, fill: "#2563eb"},
-  {gender: "p", anak: 120, fill: "#60a5fa"},
-];
-
 const chartConfig = {
   anak: {
     label: "Anak",
@@ -40,36 +33,46 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartPieDonutText() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.anak, 0);
-  }, []);
+export function ChartPieDonutText({
+  pieChartData: {totalGenderL, totalGenderP, total},
+}: {
+  pieChartData: {totalGenderL: number; totalGenderP: number; total: number};
+}) {
+  const chartData = [
+    {
+      gender: "l",
+      anak: totalGenderL,
+      fill: "#2563eb",
+    },
+    {
+      gender: "p",
+      anak: totalGenderP,
+      fill: "#60a5fa",
+    },
+  ];
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Jumlah Anak Berdasarkan Gender</CardTitle>
-        <CardDescription>Januari - Maret 2025</CardDescription>
+        <CardDescription>
+          Januari - Desember {new Date().getFullYear()}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer config={chartConfig} className="mx-auto">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto [&_.recharts-pie-label-text]:text-xl font-bold">
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <Pie
+              labelLine={false}
+              label
               data={chartData}
               dataKey="anak"
               nameKey="gender"
               innerRadius={60}
               strokeWidth={5}>
-              <LabelList
-                dataKey="gender"
-                className="fill-background"
-                stroke="none"
-                fontSize={12}
-                formatter={(value: keyof typeof chartConfig) =>
-                  chartConfig[value]?.label
-                }
-              />
               <Label
                 content={({viewBox}) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -83,7 +86,7 @@ export function ChartPieDonutText() {
                           x={viewBox.cx}
                           y={viewBox.cy}
                           className="fill-foreground text-lg lg:text-3xl font-bold">
-                          {totalVisitors.toLocaleString()}
+                          {total.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -97,6 +100,10 @@ export function ChartPieDonutText() {
                 }}
               />
             </Pie>
+            <ChartLegend
+              content={<ChartLegendContent nameKey="gender" />}
+              className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>

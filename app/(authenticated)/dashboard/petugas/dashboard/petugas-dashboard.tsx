@@ -12,10 +12,93 @@ import {ChartBarMultiple} from "@/components/bar-chart-multiple";
 import {ChartPieDonutText} from "@/components/pie-chart-donut";
 import {ChartPieDonutTextPanduanGizi} from "@/components/pie-chart-donut-panduan-gizi";
 import TableLoading from "@/components/ui/table/table-loading";
+import fetchWithCredentials from "@/lib/fetchWithCredential";
 
 type Props = object;
 
-const PetugasDashboard = (props: Props) => {
+// 1. Tipe Pendukung untuk Statistik Bulanan (Grafik)
+interface MonthlyStat {
+  month: number;
+  monthName: string;
+  normal: number;
+  notNormal: number;
+  total: number;
+}
+
+interface YearTotal {
+  normal: number;
+  notNormal: number;
+  total: number;
+}
+
+interface YearlyStatus {
+  year: number;
+  monthly: MonthlyStat[];
+  yearTotal: YearTotal;
+}
+
+// 2. Tipe untuk Pemeriksaan Terbaru (Table Recent)
+interface RecentPemeriksaan {
+  id: string;
+  tanggal_pemeriksaan: string;
+  anak: {
+    nama: string;
+    jenis_kelamin: "L" | "P";
+  };
+  berat_badan: string;
+  tinggi_badan: string;
+  usia_bulan: number;
+  status_bb_u: string;
+  status_tb_u: string;
+}
+
+// 3. Interface Utama di dalam properti "data"
+interface DashboardData {
+  cardStats: {
+    totalAnak: number;
+    totalStatusNormal: number;
+    totalStatusNotNormal: number;
+  };
+  statusTBU: YearlyStatus;
+  statusBBU: YearlyStatus;
+  totalGender: {
+    totalGenderL: number;
+    totalGenderP: number;
+    total: number;
+  };
+  recentPemeriksaan: RecentPemeriksaan[];
+  recentotalPanduanGizi: {
+    totalPendingPanduan: number;
+    totalPublishedPanduan: number;
+    totalRejectedPanduan: number;
+    total: number;
+  };
+}
+
+// 4. Interface Pembungkus Respons API
+export interface DashboardMainResponse {
+  data: DashboardData;
+  statusCode: number;
+  message: string;
+}
+
+const getDashboardData = async (): Promise<DashboardMainResponse> => {
+  const response = await fetchWithCredentials("/dashboard");
+  return response;
+};
+
+const PetugasDashboard = async (props: Props) => {
+  const {
+    data: {
+      cardStats: {totalAnak, totalStatusNormal, totalStatusNotNormal},
+      statusBBU,
+      statusTBU,
+      totalGender,
+      recentotalPanduanGizi,
+      recentPemeriksaan,
+    },
+  } = await getDashboardData();
+
   return (
     <section className="space-y-6">
       <section className="flex flex-col md:flex-row w-full gap-4 ">
@@ -25,7 +108,7 @@ const PetugasDashboard = (props: Props) => {
               Total Anak
             </CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              222
+              {totalAnak}
             </CardTitle>
           </CardHeader>
           <CardFooter className="flex-col items-start text-sm">
@@ -38,7 +121,7 @@ const PetugasDashboard = (props: Props) => {
               Status Normal
             </CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              212
+              {totalStatusNormal}
             </CardTitle>
           </CardHeader>
           <CardFooter className="flex-col items-start text-sm">
@@ -51,7 +134,7 @@ const PetugasDashboard = (props: Props) => {
               Perlu perhatian
             </CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              10
+              {totalStatusNotNormal}
             </CardTitle>
           </CardHeader>
           <CardFooter className="flex-col items-start text-sm">
@@ -59,20 +142,27 @@ const PetugasDashboard = (props: Props) => {
           </CardFooter>
         </Card>
       </section>
-      <section className="grid grid-cols-2 gap-4">
+
+      <section className="grid lg:grid-cols-2 gap-4">
         <div>
-          <ChartPieDonutText />
+          <ChartBarMultiple
+            chartData={statusBBU?.monthly}
+            title="Jumlah Anak Berdasarkan Status BB/U"
+          />
         </div>
         <div>
-          <ChartPieDonutTextPanduanGizi />
+          <ChartBarMultiple
+            chartData={statusTBU?.monthly}
+            title="Jumlah Anak Berdasarkan Status TB/U"
+          />
         </div>
       </section>
       <section className="grid lg:grid-cols-2 gap-4">
         <div>
-          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status BB/U" />
+          <ChartPieDonutText pieChartData={totalGender} />
         </div>
         <div>
-          <ChartBarMultiple title="Jumlah Anak Berdasarkan Status TB/U" />
+          <ChartPieDonutTextPanduanGizi pieChartData={recentotalPanduanGizi} />
         </div>
       </section>
       <section>
@@ -85,7 +175,7 @@ const PetugasDashboard = (props: Props) => {
               </CardContent>
             </Card>
           }>
-          <PemeriksaanTable />
+          <PemeriksaanTable recentPemeriksaan={recentPemeriksaan} />
         </Suspense>
       </section>
     </section>

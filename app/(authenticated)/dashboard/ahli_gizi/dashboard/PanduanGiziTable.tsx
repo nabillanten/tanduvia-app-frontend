@@ -1,5 +1,4 @@
 import {columns} from "./columns";
-import fetchWithCredentials from "@/lib/fetchWithCredential";
 import {DashboardTable} from "@/components/ui/table/dashboard-table";
 import {
   Card,
@@ -12,14 +11,13 @@ import {
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {ChevronRight} from "lucide-react";
+import {PanduanGiziItem} from "./ahligizi-dashboard";
 
-async function findAllPanduanGizi() {
-  const response = await fetchWithCredentials(`/rekomendasi-gizi?pageSize=10`);
-  return response?.data;
-}
-
-const PanduanGiziTable = async () => {
-  const panduanGizi = await findAllPanduanGizi();
+const PanduanGiziTable = async ({
+  recentPanduanGizi,
+}: {
+  recentPanduanGizi: PanduanGiziItem[];
+}) => {
   return (
     <>
       <Card>
@@ -35,7 +33,11 @@ const PanduanGiziTable = async () => {
           </CardAction>
         </CardHeader>
         <CardContent>
-          <DashboardTable columns={columns} data={panduanGizi?.data ?? []} />
+          <DashboardTable
+            columns={columns}
+            // @ts-expect-error type
+            data={recentPanduanGizi ?? []}
+          />
         </CardContent>
       </Card>
     </>

@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "app/(authenticated)/ibu/[ibuId]/anak/[anakId]/update/page.tsx"  ],
   "exclude": ["node_modules"]
 }
