@@ -12,7 +12,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {AlertCircle, PlusIcon} from "lucide-react";
+import {AlertCircle, ArrowUpRightIcon, PlusIcon} from "lucide-react";
 
 type SearchParams = Promise<{page?: string; perPage?: string; q?: string}>;
 
@@ -44,13 +44,14 @@ const AnakPage = async (props: {searchParams: SearchParams}) => {
                 <AlertCircle className="text-primary" size={16} /> Tambah Anak
               </PopoverTitle>
               <PopoverDescription>
-                Untuk menambah anak, silakan ke{" "}
+                Untuk menambah anak, silakan pilih tambah anak pada
+                salah satu ibu di
                 <Link
                   href={"/ibu"}
-                  className="text-primary underline transition-colors hover:text-primary/50">
-                  halaman Ibu{" "}
+                  className="text-primary underline transition-colors hover:text-primary/50 flex">
+                  {" "}
+                  halaman Ibu <ArrowUpRightIcon size={12} data-icon="inline-end" />
                 </Link>
-                dan klik tambah anak pada salah satu ibu
               </PopoverDescription>
             </PopoverHeader>
           </PopoverContent>

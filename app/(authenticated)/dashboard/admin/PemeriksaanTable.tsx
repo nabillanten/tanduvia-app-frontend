@@ -11,7 +11,7 @@ import {
 
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {ChevronRight} from "lucide-react";
+import {ArrowUpRightIcon} from "lucide-react";
 import {RecentPemeriksaan} from "./admin-dashboard";
 
 const PemeriksaanTable = async ({
@@ -28,7 +28,7 @@ const PemeriksaanTable = async ({
           <CardAction>
             <Link href={"/pemeriksaan"}>
               <Button variant={"link"}>
-                Lihat Selengkapnya <ChevronRight />
+                Lihat Selengkapnya <ArrowUpRightIcon data-icon="inline-end" />
               </Button>
             </Link>
           </CardAction>

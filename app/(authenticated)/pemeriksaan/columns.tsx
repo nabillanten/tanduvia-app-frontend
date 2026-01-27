@@ -10,8 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
-import React from "react";
-import {usePathname, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {
   CircleCheckIcon,
   CircleXIcon,
@@ -41,6 +40,7 @@ const schema = z.object({
   created_at: z.string(),
   catatan: z.string(),
   anak: z.object({
+    id: z.string(),
     nama: z.string(),
     nik: z.string(),
     jenis_kelamin: JenisKelaminEnum,
@@ -61,9 +61,8 @@ const jenisKelaminLabel: Record<string, string> = {
 };
 
 const Actions = (props: z.infer<typeof schema>) => {
-  const pathname = usePathname();
   const {push} = useRouter();
-  const {id} = props;
+  const {id, anak} = props;
 
   return (
     <>
@@ -78,7 +77,8 @@ const Actions = (props: z.infer<typeof schema>) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem onSelect={() => push(`${pathname}/${id}`)}>
+          <DropdownMenuItem
+            onSelect={() => push(`/anak/${anak?.id}/pemeriksaan/${id}`)}>
             Detail
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -89,10 +89,10 @@ const Actions = (props: z.infer<typeof schema>) => {
 
 export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
-    accessorKey: "created_at",
+    accessorKey: "tanggal_pemeriksaan",
     header: "Tanggal Periksa",
     cell: ({row}) => {
-      const date = format(row.getValue("created_at"), "dd-MM-yyyy");
+      const date = format(row.getValue("tanggal_pemeriksaan"), "dd-MM-yyyy");
       return date;
     },
   },
@@ -268,11 +268,11 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Nama Petugas",
   },
 
-  //   {
-  //     accessorKey: "id",
-  //     header: "",
-  //     cell: ({row}) => {
-  //       return <Actions {...row.original} />;
-  //     },
-  //   },
+  {
+    accessorKey: "id",
+    header: "",
+    cell: ({row}) => {
+      return <Actions {...row.original} />;
+    },
+  },
 ];
