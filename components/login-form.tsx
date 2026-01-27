@@ -23,6 +23,7 @@ import {
 import {login} from "@/app/actions/auth";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
+import {Spinner} from "./ui/spinner";
 
 const signInScheme = z.object({
   username: z.string().nonempty({message: "Username tidak boleh kosong!"}),
@@ -103,10 +104,12 @@ export function LoginForm() {
               )}
             />
             <FieldGroup>
-              <Button type="submit">Masuk</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Spinner />} Masuk
+              </Button>
               <Field>
                 <FieldDescription className="text-center">
-                  Lupa Password? <a href="#">Hubungi Admin</a>
+                  Tidak dapat masuk? <a href="#">Hubungi Admin</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
