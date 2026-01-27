@@ -27,7 +27,6 @@ import {addHours, format, startOfDay} from "date-fns";
 import {id} from "date-fns/locale";
 import {CalendarIcon} from "lucide-react";
 import {useRouter} from "next/navigation";
-import React from "react";
 import {useForm} from "react-hook-form";
 import {toast} from "sonner";
 import z from "zod";
@@ -71,11 +70,11 @@ const CreateIbuPage = () => {
         push("/ibu");
       } else {
         // toast.warning(res?.message ?? res?.message?.[0]);
-        toast.success("Gagal Membuat Ibu!");
+        toast.warning("Gagal Membuat Ibu!");
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal Membuat Ibu!");
+      toast.error("Gagal Membuat Ibu!");
     }
   };
 
@@ -96,7 +95,12 @@ const CreateIbuPage = () => {
                 <FormItem>
                   <FormLabel>Nama</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Masukkan nama" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      type="text"
+                      placeholder="Masukkan nama"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,7 +113,12 @@ const CreateIbuPage = () => {
                 <FormItem>
                   <FormLabel>NIK</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Masukkan NIK" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      type="text"
+                      placeholder="Masukkan NIK"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,6 +133,7 @@ const CreateIbuPage = () => {
                     <FormLabel>Tempat Lahir</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={form?.formState?.isSubmitting}
                         type="text"
                         placeholder="Masukkan Tempat Lahir"
                         {...field}
@@ -143,6 +153,7 @@ const CreateIbuPage = () => {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            disabled={form?.formState?.isSubmitting}
                             variant={"outline"}
                             className={cn(
                               "w-full pl-3 text-left font-normal",
@@ -150,7 +161,9 @@ const CreateIbuPage = () => {
                             )}>
                             {field.value ? (
                               // format(field.value, "PPP")
-                              format(field.value, "dd MMMM yyyy", {locale: id})
+                              format(field.value, "dd MMMM yyyy", {
+                                locale: id,
+                              })
                             ) : (
                               <span>Pilih Tanggal</span>
                             )}
@@ -183,6 +196,7 @@ const CreateIbuPage = () => {
                   <FormLabel>Nomor Telepon</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={form?.formState?.isSubmitting}
                       type="text"
                       placeholder="Masukkan Nomor Telepon (08xxxxxxxxxx)"
                       {...field}
@@ -199,7 +213,11 @@ const CreateIbuPage = () => {
                 <FormItem>
                   <FormLabel>Alamat</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Masukkan Alamat" {...field} />
+                    <Textarea
+                      placeholder="Masukkan Alamat"
+                      {...field}
+                      disabled={form?.formState?.isSubmitting}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

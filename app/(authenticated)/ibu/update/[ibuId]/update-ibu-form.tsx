@@ -67,6 +67,7 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
       ...values,
       tanggal_lahir: adjustedDate, // Sekarang sudah aman dari pergeseran hari
     };
+
     try {
       const req = await updateIbu(ibuId, payload);
       const res = await req;
@@ -100,7 +101,12 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                 <FormItem>
                   <FormLabel>Nama</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Masukkan nama" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      type="text"
+                      placeholder="Masukkan nama"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -113,7 +119,12 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                 <FormItem>
                   <FormLabel>NIK</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Masukkan NIK" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      type="text"
+                      placeholder="Masukkan NIK"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,6 +139,7 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                     <FormLabel>Tempat Lahir</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={form?.formState?.isSubmitting}
                         type="text"
                         placeholder="Masukkan Tempat Lahir"
                         {...field}
@@ -147,6 +159,7 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            disabled={form?.formState?.isSubmitting}
                             variant={"outline"}
                             className={cn(
                               "w-full pl-3 text-left font-normal",
@@ -154,7 +167,9 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                             )}>
                             {field.value ? (
                               // format(field.value, "PPP")
-                              format(field.value, "dd MMMM yyyy", {locale: id})
+                              format(field.value, "dd MMMM yyyy", {
+                                locale: id,
+                              })
                             ) : (
                               <span>Pilih Tanggal</span>
                             )}
@@ -187,6 +202,7 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                   <FormLabel>Nomor Telepon</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={form?.formState?.isSubmitting}
                       type="text"
                       placeholder="Masukkan Nomor Telepon (08xxxxxxxxxx)"
                       {...field}
@@ -203,7 +219,11 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
                 <FormItem>
                   <FormLabel>Alamat</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Masukkan Alamat" {...field} />
+                    <Textarea
+                      placeholder="Masukkan Alamat"
+                      {...field}
+                      disabled={form?.formState?.isSubmitting}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
