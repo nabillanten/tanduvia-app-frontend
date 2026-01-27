@@ -98,7 +98,7 @@ export default function CreateAnakForm({
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal Menambahkan Anak!");
+      toast.error("Gagal Menambahkan Anak!");
     }
   }
 
@@ -138,7 +138,11 @@ export default function CreateAnakForm({
                 <FormItem>
                   <FormLabel>Nama Lengkap</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masukan nama anak" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Masukan nama anak"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -152,7 +156,11 @@ export default function CreateAnakForm({
                   <FormItem className="w-full">
                     <FormLabel>NIK</FormLabel>
                     <FormControl>
-                      <Input placeholder="Masukan NIK anak" {...field} />
+                      <Input
+                        disabled={form?.formState?.isSubmitting}
+                        placeholder="Masukan NIK anak"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -166,6 +174,7 @@ export default function CreateAnakForm({
                     <FormLabel>Jenis Kelamin</FormLabel>
                     <FormControl>
                       <Select
+                        disabled={form?.formState?.isSubmitting}
                         defaultValue={undefined}
                         onValueChange={field.onChange}>
                         <SelectTrigger className="w-full">
@@ -191,6 +200,7 @@ export default function CreateAnakForm({
                     <FormLabel>Tempat Lahir</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={form?.formState?.isSubmitting}
                         placeholder="Masukan tempat lahir anak"
                         {...field}
                       />
@@ -209,6 +219,7 @@ export default function CreateAnakForm({
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            disabled={form?.formState?.isSubmitting}
                             variant={"outline"}
                             className={cn(
                               "w-full pl-3 text-left font-normal",
@@ -249,7 +260,11 @@ export default function CreateAnakForm({
                 <FormItem>
                   <FormLabel>RFID Tag</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masukan RFID" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Masukan RFID"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     Arahkan kursor ke kolom input di atas, dan pindai kartu RFID
