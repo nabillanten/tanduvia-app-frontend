@@ -59,7 +59,7 @@ export function DateFilter() {
           mode="single"
           selected={date}
           onSelect={handleSelect}
-          initialFocus
+          captionLayout="dropdown"
         />
         {date && (
           <div className="p-2 border-t">

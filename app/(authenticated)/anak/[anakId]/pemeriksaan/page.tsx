@@ -30,13 +30,13 @@ const PemeriksaanByAnakPage = async ({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex gap-6 justify-end">
+      {/* <div className="flex gap-6 justify-end">
         <Link href={"/pemeriksaan/create"}>
           <Button>
             <PlusIcon /> <span>Tambah Pemeriksaan</span>
           </Button>
         </Link>
-      </div>
+      </div> */}
       <React.Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
         <PemeriksaanByAnakTable {...pemeriksaanByAnakTableProps} />
       </React.Suspense>

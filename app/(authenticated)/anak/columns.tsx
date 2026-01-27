@@ -25,7 +25,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
 import {updateAnak} from "@/app/actions/anak";
-import { id } from "date-fns/locale";
+import {id} from "date-fns/locale";
 
 export const JenisKelaminEnum = z.enum(["L", "P"]);
 export const schema = z.object({
@@ -40,6 +40,7 @@ export const schema = z.object({
   created_at: z.date(),
   ibu: z.object({
     nama: z.string(),
+    id: z.string(),
   }),
 });
 
@@ -51,7 +52,12 @@ const jenisKelaminLabel: Record<string, string> = {
 const Actions = (props: z.infer<typeof schema>) => {
   const [showDialog, setShowDialog] = React.useState(false);
   const {push} = useRouter();
-  const {id, nama, is_active} = props;
+  const {
+    id,
+    nama,
+    is_active,
+    ibu: {id: ibu_id},
+  } = props;
 
   return (
     <>
@@ -69,7 +75,8 @@ const Actions = (props: z.infer<typeof schema>) => {
           <DropdownMenuItem onSelect={() => push(`/anak/${id}/pemeriksaan`)}>
             Riwayat Pemeriksaan
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => push(`/anak/update/${id}`)}>
+          <DropdownMenuItem
+            onSelect={() => push(`/ibu/${ibu_id}/anak/${id}/update`)}>
             Ubah
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -134,7 +141,9 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "tanggal_lahir",
     header: "Tanggal Lahir",
     cell: ({row}) => {
-      const date = format(row.getValue("tanggal_lahir"),"dd MMMM yyyy",{locale: id});
+      const date = format(row.getValue("tanggal_lahir"), "dd MMMM yyyy", {
+        locale: id,
+      });
       return date;
     },
   },
