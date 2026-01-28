@@ -574,6 +574,7 @@ const InputPemeriksaan = ({anak}: {anak: z.infer<typeof anakSchema>}) => {
   useEffect(() => {
     setValue("anak_id", anak?.id);
     setValue("usia_bulan", usiaBulan);
+    setValue("tanggal_pemeriksaan",new Date())
   });
 
   return (

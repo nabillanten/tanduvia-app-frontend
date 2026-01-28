@@ -24,9 +24,7 @@ import {
 } from "@/components/ui/select";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import {getCookie} from "@/lib/cookies";
-import {appConfig} from "@/app/app-config";
+import React from "react";
 import {createUser} from "@/app/actions/users";
 import {Spinner} from "@/components/ui/spinner";
 import {
@@ -36,6 +34,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {EyeClosed, EyeOffIcon} from "lucide-react";
 
 const formSchema = z.object({
   username: z
@@ -73,19 +78,22 @@ export default function CreateUserForm({posyandu}: {posyandu: PosyanduItem[]}) {
     },
   });
 
+  const [isPassword, setIsPassword] = React.useState(true);
+
   // form submit
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const req = await createUser(values);
       const res = await req;
-
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil Membuat Pengguna!");
         push("/pengguna");
+      } else {
+        toast.warning("Gagal Membuat Pengguna!");
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal Membuat Pengguna!");
+      toast.error("Terjadi Kegagalan!");
     }
   }
 
@@ -105,7 +113,11 @@ export default function CreateUserForm({posyandu}: {posyandu: PosyanduItem[]}) {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : alisyaanggraini" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : alisyaanggraini"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>Tidak menggunakan spasi</FormDescription>
                   <FormMessage />
@@ -120,7 +132,11 @@ export default function CreateUserForm({posyandu}: {posyandu: PosyanduItem[]}) {
                 <FormItem>
                   <FormLabel>Nama Lengkap</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : Alisya Anggraini" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : Alisya Anggraini"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,7 +149,11 @@ export default function CreateUserForm({posyandu}: {posyandu: PosyanduItem[]}) {
                 <FormItem>
                   <FormLabel>Nomor Telepon</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : 087645679127" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : 087645679127"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,6 +168,7 @@ export default function CreateUserForm({posyandu}: {posyandu: PosyanduItem[]}) {
                     <FormLabel>Role</FormLabel>
                     <FormControl>
                       <Select
+                        disabled={form?.formState?.isSubmitting}
                         defaultValue={undefined}
                         onValueChange={field.onChange}>
                         <SelectTrigger className="w-full">
@@ -173,6 +194,7 @@ export default function CreateUserForm({posyandu}: {posyandu: PosyanduItem[]}) {
                     <FormLabel>Posyandu</FormLabel>
                     <FormControl>
                       <Select
+                        disabled={form?.formState?.isSubmitting}
                         defaultValue={undefined}
                         onValueChange={field.onChange}>
                         <SelectTrigger className="w-full">
@@ -199,11 +221,24 @@ export default function CreateUserForm({posyandu}: {posyandu: PosyanduItem[]}) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Masukan Password"
-                      type="password"
-                      {...field}
-                    />
+                    <InputGroup>
+                      <InputGroupInput
+                        disabled={form?.formState?.isSubmitting}
+                        {...field}
+                        placeholder="Masukan Password"
+                        type={isPassword ? "password" : "text"}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          disabled={form?.formState?.isSubmitting}
+                          size="icon-xs"
+                          onClick={() => {
+                            setIsPassword((prev) => !prev);
+                          }}>
+                          {true ? <EyeOffIcon /> : <EyeClosed />}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

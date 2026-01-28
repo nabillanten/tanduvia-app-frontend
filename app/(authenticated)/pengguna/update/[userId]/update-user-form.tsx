@@ -102,7 +102,11 @@ export default function UpdateUserForm({
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : alisyaanggraini" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : alisyaanggraini"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>Tidak menggunakan spasi</FormDescription>
                   <FormMessage />
@@ -117,7 +121,11 @@ export default function UpdateUserForm({
                 <FormItem>
                   <FormLabel>Nama Lengkap</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : Alisya Anggraini" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : Alisya Anggraini"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,7 +138,11 @@ export default function UpdateUserForm({
                 <FormItem>
                   <FormLabel>Nomor Telepon</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : 087645679127" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : 087645679127"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -144,6 +156,7 @@ export default function UpdateUserForm({
                   <FormLabel>Role</FormLabel>
                   <FormControl>
                     <Select
+                      disabled={form?.formState?.isSubmitting}
                       defaultValue={field.value}
                       value={field.value}
                       onValueChange={field.onChange}>
@@ -170,6 +183,7 @@ export default function UpdateUserForm({
                   <FormLabel>Posyandu</FormLabel>
                   <FormControl>
                     <Select
+                      disabled={form?.formState?.isSubmitting}
                       {...field}
                       defaultValue={field.value}
                       value={field.value}
