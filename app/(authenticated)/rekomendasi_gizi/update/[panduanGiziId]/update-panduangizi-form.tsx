@@ -137,26 +137,21 @@ const UpdatePanduanGiziForm = ({
       makanan: values?.makanan?.map(({name}) => name),
       status: "pending",
     };
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("Selesai setelah 3000ms");
-      }, 3000);
-    });
 
-    // try {
-    //   const req = await updatePanduanGizi(panduanGiziId, payload);
-    //   const res = await req;
+    try {
+      const req = await updatePanduanGizi(panduanGiziId, payload);
+      const res = await req;
 
-    //   if (res?.statusCode === 201 || res?.statusCode === 200) {
-    //     toast.success("Berhasil mengubah panduan gizi!");
-    //     push("/rekomendasi_gizi");
-    //   } else {
-    //     toast.warning("Gagal mengubah panduan gizi!");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   toast.error("Gagal mengubah panduan gizi!");
-    // }
+      if (res?.statusCode === 201 || res?.statusCode === 200) {
+        toast.success("Berhasil mengubah panduan gizi!");
+        push("/rekomendasi_gizi");
+      } else {
+        toast.warning("Gagal mengubah panduan gizi!");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal mengubah panduan gizi!");
+    }
   };
 
   const {fields, append, remove} = useFieldArray({
