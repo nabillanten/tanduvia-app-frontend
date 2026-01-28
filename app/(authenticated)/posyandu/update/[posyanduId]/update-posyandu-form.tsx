@@ -57,10 +57,12 @@ export default function UpdatePosyanduForm({
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil mengubah posyandu!");
         push("/posyandu");
+      } else {
+        toast.warning("Gagal mengubah posyandu!");
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal mengubah posyandu!");
+      toast.error("Terjadi Kegagalan!");
     }
   }
 
@@ -80,7 +82,11 @@ export default function UpdatePosyanduForm({
                 <FormItem>
                   <FormLabel>Nama Posyandu</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : Posyandu Mawar" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : Posyandu Mawar"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,6 +100,7 @@ export default function UpdatePosyanduForm({
                   <FormLabel>Alamat</FormLabel>
                   <FormControl>
                     <Textarea
+                      disabled={form?.formState?.isSubmitting}
                       placeholder="Masukkan alamat lengkap"
                       {...field}
                     />

@@ -1,5 +1,7 @@
 import fetchWithCredentials from "@/lib/fetchWithCredential";
 import UpdatePosyanduForm from "./update-posyandu-form";
+import React from "react";
+import FormLoading from "@/components/ui/form-loading";
 
 async function findPosyaduById(id: string) {
   const response = await fetchWithCredentials(`/posyandu/${id}`);
@@ -15,9 +17,9 @@ const UpdatePosyanduPage = async ({
   const posyandu = await findPosyaduById(posyanduId);
 
   return (
-    <div>
+    <React.Suspense key={posyandu} fallback={<FormLoading />}>
       <UpdatePosyanduForm posyanduId={posyanduId} posyandu={posyandu?.data} />
-    </div>
+    </React.Suspense>
   );
 };
 
