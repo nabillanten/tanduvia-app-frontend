@@ -60,7 +60,9 @@ const PemeriksaanPage = async (props: {searchParams: PageProps}) => {
           </Link>
         </div>
       </div>
-      <React.Suspense key={page} fallback={<TableLoading tableColumn={10} />}>
+      <React.Suspense
+        key={page + posyanduId + tanggal}
+        fallback={<TableLoading tableColumn={10} />}>
         <PemeriksaanTable {...PemreiksaanTableProps} />
       </React.Suspense>
     </div>
