@@ -25,3 +25,13 @@ export const getAnakByRFID = async (rfid: string) => {
   const req = await fetchWithCredentials("/anak?search=" + rfid);
   return req;
 };
+
+export const getPertumbuhanAnak = async (body: object) => {
+  const req = await fetchWithCredentials(
+    "/anak/ibu/pemeriksaan/",
+    "POST",
+    body,
+  );
+  // revalidatePath("/pertumbuhan_anak");
+  return req;
+};
