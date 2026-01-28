@@ -67,7 +67,7 @@ interface DashboardData {
     total: number;
   };
   recentPemeriksaan: RecentPemeriksaan[];
-  recentotalPanduanGizi: {
+  totalPanduanGizi: {
     totalPendingPanduan: number;
     totalPublishedPanduan: number;
     totalRejectedPanduan: number;
@@ -94,7 +94,7 @@ const PetugasDashboard = async (props: Props) => {
       statusBBU,
       statusTBU,
       totalGender,
-      recentotalPanduanGizi,
+      totalPanduanGizi,
       recentPemeriksaan,
     },
   } = await getDashboardData();
@@ -162,7 +162,7 @@ const PetugasDashboard = async (props: Props) => {
           <ChartPieDonutText pieChartData={totalGender} />
         </div>
         <div>
-          <ChartPieDonutTextPanduanGizi pieChartData={recentotalPanduanGizi} />
+          <ChartPieDonutTextPanduanGizi pieChartData={totalPanduanGizi} />
         </div>
       </section>
       <section>
