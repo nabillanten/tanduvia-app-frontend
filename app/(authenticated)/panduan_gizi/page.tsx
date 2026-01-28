@@ -22,7 +22,7 @@ const PanduanGiziPage = async (props: {searchParams: SearchParams}) => {
         <h1 className="text-lg font-bold shrink-0">Daftar Panduan Gizi</h1>
         <SearchInput placeholder="Cari Berdasarkan Judul..." />
       </div>
-      <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
+      <Suspense key={page + query} fallback={<TableLoading tableColumn={8} />}>
         <PanduanGiziTable {...usersTableProps} />
       </Suspense>
     </div>

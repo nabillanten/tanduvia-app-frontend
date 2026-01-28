@@ -13,10 +13,8 @@ import {
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldError,
   FieldGroup,
-  FieldLegend,
   FieldSet,
 } from "@/components/ui/field";
 import {
@@ -405,6 +403,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Status Publikasi</FormLabel>
                       <FormControl>
                         <Select
+                          disabled={form.formState.isSubmitting}
                           {...field}
                           onValueChange={field.onChange}
                           value={field.value}>
@@ -442,6 +441,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Catatan </FormLabel>
                       <FormControl>
                         <Textarea
+                          disabled={form.formState.isSubmitting}
                           placeholder="Masukan Catatan (Berupa alasan untuk mengubah status publikasi)"
                           {...field}
                           value={field?.value ?? ""}
