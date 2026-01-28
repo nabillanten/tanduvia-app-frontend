@@ -137,21 +137,26 @@ const UpdatePanduanGiziForm = ({
       makanan: values?.makanan?.map(({name}) => name),
       status: "pending",
     };
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve("Selesai setelah 3000ms");
+      }, 3000);
+    });
 
-    try {
-      const req = await updatePanduanGizi(panduanGiziId, payload);
-      const res = await req;
+    // try {
+    //   const req = await updatePanduanGizi(panduanGiziId, payload);
+    //   const res = await req;
 
-      if (res?.statusCode === 201 || res?.statusCode === 200) {
-        toast.success("Berhasil mengubah panduan gizi!");
-        push("/rekomendasi_gizi");
-      } else {
-        toast.error("Gagal mengubah panduan gizi!");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Gagal mengubah panduan gizi!");
-    }
+    //   if (res?.statusCode === 201 || res?.statusCode === 200) {
+    //     toast.success("Berhasil mengubah panduan gizi!");
+    //     push("/rekomendasi_gizi");
+    //   } else {
+    //     toast.warning("Gagal mengubah panduan gizi!");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   toast.error("Gagal mengubah panduan gizi!");
+    // }
   };
 
   const {fields, append, remove} = useFieldArray({
@@ -198,6 +203,7 @@ const UpdatePanduanGiziForm = ({
                     <FormLabel>Ahli Gizi</FormLabel>
                     <FormControl>
                       <Select
+                        disabled={form?.formState?.isSubmitting}
                         {...field}
                         onValueChange={field.onChange}
                         value={field.value}>
@@ -224,7 +230,11 @@ const UpdatePanduanGiziForm = ({
                   <FormItem>
                     <FormLabel>Judul</FormLabel>
                     <FormControl>
-                      <Input placeholder="Masukan Judul" {...field} />
+                      <Input
+                        disabled={form?.formState?.isSubmitting}
+                        placeholder="Masukan Judul"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -237,7 +247,11 @@ const UpdatePanduanGiziForm = ({
                   <FormItem>
                     <FormLabel>Deskripsi</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Masukan Deskripsi" {...field} />
+                      <Textarea
+                        disabled={form?.formState?.isSubmitting}
+                        placeholder="Masukan Deskripsi"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -252,6 +266,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Usia minimal (bulan)</FormLabel>
                       <FormControl>
                         <Input
+                          disabled={form?.formState?.isSubmitting}
                           placeholder="Masukan Usia minimal (bulan)"
                           {...field}
                           type="number"
@@ -272,6 +287,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Usia maksimal (bulan)</FormLabel>
                       <FormControl>
                         <Input
+                          disabled={form?.formState?.isSubmitting}
                           placeholder="Masukan Usia maksimal (bulan)"
                           {...field}
                           type="number"
@@ -294,6 +310,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Jenis indeks</FormLabel>
                       <FormControl>
                         <Select
+                          disabled={form?.formState?.isSubmitting}
                           {...field}
                           onValueChange={field.onChange}
                           value={field.value}>
@@ -320,6 +337,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Target status</FormLabel>
                       <FormControl>
                         <Select
+                          disabled={form?.formState?.isSubmitting}
                           {...field}
                           onValueChange={field.onChange}
                           value={field.value}>
@@ -373,6 +391,7 @@ const UpdatePanduanGiziForm = ({
                           <FieldContent>
                             <InputGroup>
                               <InputGroupInput
+                                disabled={form?.formState?.isSubmitting}
                                 {...controllerField}
                                 id={`form-rhf-array-makanan-${index}`}
                                 aria-invalid={fieldState.invalid}
@@ -402,6 +421,7 @@ const UpdatePanduanGiziForm = ({
                   ))}
                 </FieldGroup>
                 <Button
+                  disabled={form?.formState?.isSubmitting}
                   type="button"
                   variant="outline"
                   size="sm"

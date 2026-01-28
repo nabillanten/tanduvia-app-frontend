@@ -101,10 +101,12 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil membuat panduan gizi!");
         push("/staff/panduangizi");
+      } else {
+        toast.warning("Gagal membuat panduan gizi!");
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal membuat panduan gizi!");
+      toast.error("Terjadi Kegagalan!");
     }
   };
 
@@ -130,6 +132,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                   <FormLabel>Ahli Gizi</FormLabel>
                   <FormControl>
                     <Select
+                      disabled={form?.formState?.isSubmitting}
                       {...field}
                       onValueChange={field.onChange}
                       value={field.value}>
@@ -156,7 +159,11 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                 <FormItem>
                   <FormLabel>Judul</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masukan Judul" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Masukan Judul"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,7 +176,11 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                 <FormItem>
                   <FormLabel>Deskripsi</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Masukan Deskripsi" {...field} />
+                    <Textarea
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Masukan Deskripsi"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -184,6 +195,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                     <FormLabel>Usia minimal (bulan)</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={form?.formState?.isSubmitting}
                         placeholder="Masukan Usia minimal (bulan)"
                         {...field}
                         type="number"
@@ -202,6 +214,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                     <FormLabel>Usia maksimal (bulan)</FormLabel>
                     <FormControl>
                       <Input
+                        disabled={form?.formState?.isSubmitting}
                         placeholder="Masukan Usia maksimal (bulan)"
                         {...field}
                         type="number"
@@ -222,6 +235,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                     <FormLabel>Jenis indeks</FormLabel>
                     <FormControl>
                       <Select
+                        disabled={form?.formState?.isSubmitting}
                         {...field}
                         onValueChange={field.onChange}
                         value={field.value}>
@@ -248,6 +262,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                     <FormLabel>Target status</FormLabel>
                     <FormControl>
                       <Select
+                        disabled={form?.formState?.isSubmitting}
                         {...field}
                         onValueChange={field.onChange}
                         value={field.value}>
@@ -299,6 +314,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                         <FieldContent>
                           <InputGroup>
                             <InputGroupInput
+                              disabled={form?.formState?.isSubmitting}
                               {...controllerField}
                               id={`form-rhf-array-makanan-${index}`}
                               aria-invalid={fieldState.invalid}
@@ -328,6 +344,7 @@ const CreatePanduanGiziForm = ({ahliGizi}: Props) => {
                 ))}
               </FieldGroup>
               <Button
+                disabled={form?.formState?.isSubmitting}
                 type="button"
                 variant="outline"
                 size="sm"
