@@ -57,7 +57,7 @@ const AnakPage = async (props: {searchParams: SearchParams}) => {
           </PopoverContent>
         </Popover>
       </div>
-      <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
+      <Suspense key={page + query} fallback={<TableLoading tableColumn={8} />}>
         <AnakTable {...usersTableProps} />
       </Suspense>
     </div>

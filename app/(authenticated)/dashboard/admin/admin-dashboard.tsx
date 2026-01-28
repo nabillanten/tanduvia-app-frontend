@@ -72,7 +72,7 @@ interface TanduviaDashboardData {
     total: number;
   };
   recentPemeriksaan: RecentPemeriksaan[];
-  recentotalPanduanGizi: RecentPanduanGizi;
+  totalPanduanGizi: RecentPanduanGizi;
 }
 
 // 4. Interface pembungkus untuk API Response
@@ -96,7 +96,7 @@ const AdminDashboard = async (props: Props) => {
       statusBBU,
       statusTBU,
       totalGender,
-      recentotalPanduanGizi,
+      totalPanduanGizi,
       recentPemeriksaan,
     },
   } = await getDashboardData();
@@ -162,7 +162,7 @@ const AdminDashboard = async (props: Props) => {
           <ChartPieDonutText pieChartData={totalGender} />
         </div>
         <div>
-          <ChartPieDonutTextPanduanGizi pieChartData={recentotalPanduanGizi} />
+          <ChartPieDonutTextPanduanGizi pieChartData={totalPanduanGizi} />
         </div>
       </section>
       <section>

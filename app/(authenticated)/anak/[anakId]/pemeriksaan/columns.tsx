@@ -191,15 +191,12 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
         },
       };
 
-      // 2. Ambil config berdasarkan value status
       const config = statusConfig[status];
 
-      // Fallback jika status tidak dikenali
       if (!config) return <p>{status}</p>;
 
       const Icon = config.icon;
 
-      // 3. Render Badge
       return (
         <Badge
           variant="outline"

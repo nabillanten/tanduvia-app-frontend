@@ -37,7 +37,9 @@ const PemeriksaanByAnakPage = async ({
           </Button>
         </Link>
       </div> */}
-      <React.Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
+      <React.Suspense
+        key={page + query}
+        fallback={<TableLoading tableColumn={8} />}>
         <PemeriksaanByAnakTable {...pemeriksaanByAnakTableProps} />
       </React.Suspense>
     </div>

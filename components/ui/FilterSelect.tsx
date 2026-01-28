@@ -42,7 +42,7 @@ const PosyanduFilter = ({placeholder = "Pilih Posyandu", data}: Props) => {
 
   return (
     <Select value={currentFilter || ""} onValueChange={handleFilterChange}>
-      <SelectTrigger className="w-[200px]">
+      <SelectTrigger className="min-w-48">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
