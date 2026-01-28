@@ -76,11 +76,11 @@ const UpdateIbuForm = ({ibu, ibuId}: Props) => {
         push("/ibu");
       } else {
         // toast.warning(res?.message ?? res?.message?.[0]);
-        toast.success("Gagal Mengubah Ibu!");
+        toast.warning("Gagal Mengubah Ibu!");
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal Mengubah Ibu!");
+      toast.error("Terjadi Kegagalan!");
     }
   };
 

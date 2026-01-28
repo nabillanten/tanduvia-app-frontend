@@ -79,10 +79,12 @@ export default function UpdateUserForm({
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil Mengubah Pengguna!");
         push("/pengguna");
+      } else {
+        toast.warning("Gagal Membuat Pengguna!");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Gagal Mengubah Pengguna!");
+      toast.error("Terjadi Kegagalan!");
     }
   }
 

@@ -103,11 +103,11 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
         push("/anak");
       } else {
         // toast.warning(res?.message ?? res?.message?.[0]);
-        toast.error("Gagal Mengubah Anak!");
+        toast.warning("Gagal Mengubah Anak!");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Gagal Mengubah Anak!");
+      toast.error("Terjadi Kegagalan!");
     }
   }
 

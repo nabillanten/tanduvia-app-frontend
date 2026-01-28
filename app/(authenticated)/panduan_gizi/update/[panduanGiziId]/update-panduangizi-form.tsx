@@ -135,11 +135,11 @@ const UpdatePanduanGiziForm = ({
         toast.success("Berhasil mengubah status publikasi!");
         push("/panduan_gizi");
       } else {
-        toast.error("Gagal mengubah status publikasi!");
+        toast.warning("Gagal mengubah status publikasi!");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Gagal mengubah status publikasi!");
+      toast.error("Terjadi Kesalahan!");
     }
   };
 

@@ -94,11 +94,12 @@ export default function CreateAnakForm({
         toast.success("Berhasil Menambahkan Anak!");
         push("/anak");
       } else {
-        toast.warning(res?.message ?? res?.message?.[0]);
+        // toast.warning(res?.message ?? res?.message?.[0]);
+        toast.warning("Gagal Mengubah Anak!");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Gagal Menambahkan Anak!");
+      toast.error("Terjadi Kegagalan!");
     }
   }
 

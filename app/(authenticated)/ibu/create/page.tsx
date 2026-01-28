@@ -74,7 +74,7 @@ const CreateIbuPage = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Gagal Membuat Ibu!");
+      toast.error("Terjadi Kegagalan!");
     }
   };
 
