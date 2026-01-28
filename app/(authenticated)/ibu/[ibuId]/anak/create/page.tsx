@@ -17,7 +17,7 @@ const CreateAnakByIbuIdPage = async ({
   const dataIbu = await findIbuById(ibuId);
 
   return (
-    <Suspense key={ibuId} fallback={<FormLoading />}>
+    <Suspense key={dataIbu} fallback={<FormLoading />}>
       <CreateAnakForm dataIbu={dataIbu} />
     </Suspense>
   );

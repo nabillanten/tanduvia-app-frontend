@@ -30,7 +30,7 @@ const IbuPage = async (props: {searchParams: SearchParams}) => {
           </Button>
         </Link>
       </div>
-      <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
+      <Suspense key={query + page} fallback={<TableLoading tableColumn={8} />}>
         <IbuTable {...ibuTableProps} />
       </Suspense>
     </div>

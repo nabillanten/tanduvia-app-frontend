@@ -147,7 +147,11 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                 <FormItem>
                   <FormLabel>Nama Lengkap</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masukan nama anak" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Masukan nama anak"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,7 +165,11 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                   <FormItem className="w-full">
                     <FormLabel>NIK</FormLabel>
                     <FormControl>
-                      <Input placeholder="Masukan NIK anak" {...field} />
+                      <Input
+                        disabled={form?.formState?.isSubmitting}
+                        placeholder="Masukan NIK anak"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -175,6 +183,7 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                     <FormLabel>Jenis Kelamin</FormLabel>
                     <FormControl>
                       <Select
+                        disabled={form?.formState?.isSubmitting}
                         defaultValue={field?.value}
                         onValueChange={field.onChange}>
                         <SelectTrigger className="w-full">
@@ -219,6 +228,7 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
+                            disabled={form?.formState?.isSubmitting}
                             variant={"outline"}
                             className={cn(
                               "w-full pl-3 text-left font-normal",
@@ -259,7 +269,11 @@ export default function UpdateAnakForm({anak, anakId, ibu}: Prop) {
                 <FormItem className="w-full">
                   <FormLabel>RFID Tag</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masukan RFID" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Masukan RFID"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     Arahkan kursor ke kolom input di atas, dan pindai kartu RFID

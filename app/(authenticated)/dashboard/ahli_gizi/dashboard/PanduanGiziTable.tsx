@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {ChevronRight} from "lucide-react";
+import {ArrowUpRightIcon} from "lucide-react";
 import {PanduanGiziItem} from "./ahligizi-dashboard";
 
 const PanduanGiziTable = async ({
@@ -27,7 +27,8 @@ const PanduanGiziTable = async ({
           <CardAction>
             <Link href={"/rekomendasi_gizi"}>
               <Button variant={"link"}>
-                Lihat Selengkapnya <ChevronRight />
+                Lihat Selengkapnya
+                <ArrowUpRightIcon data-icon="inline-end" />
               </Button>
             </Link>
           </CardAction>
