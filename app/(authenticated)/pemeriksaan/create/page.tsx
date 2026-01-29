@@ -106,20 +106,30 @@ const pemeriksaanSchema = z.object({
 });
 
 const hasilPemeriksaanSchema = z.object({
-  anak_id: z.string(),
-  posyandu_id: z.string(),
-  tanggal_pemeriksaan: z.date("Tanggal pemeriksaan tidak boleh kosong!"),
-  berat_badan: z.string("Berat badan tidak boleh kosong!"),
-  tinggi_badan: z.string("Tinggi badan tidak boleh kosong!"),
-  usia_bulan: z.string("Usia tidak boleh kosong!"),
-  status_bb_u: z.string(),
-  status_tb_u: z.string(),
+  anakId: z.string(),
+  posyanduId: z.string(),
+  tanggalPemeriksaan: z.date("Tanggal pemeriksaan tidak boleh kosong!"),
+  beratBadan: z.string("Berat badan tidak boleh kosong!"),
+  tinggiBadan: z.string("Tinggi badan tidak boleh kosong!"),
+  usiaBulan: z.string("Usia tidak boleh kosong!"),
+  statusBBU: z.string(),
+  statusTBU: z.string(),
+  zScoreTBU: z.float32(),
+  zScoreBBU: z.float32(),
   catatan: z.string().optional().default(""),
 });
 
 const zScoreSchema = z.object({
-  BBUStatusResult: z.string(),
-  TBUStatusResult: z.string(),
+  data: z.object({
+    scoreResult: z.object({
+      zScoreBBUResult: z.float32(),
+      zScoreTBUResult: z.float32(),
+    }),
+    statusResult: z.object({
+      BBUStatusResult: z.string(),
+      TBUStatusResult: z.string(),
+    }),
+  }),
 });
 
 type zScoreType = z.infer<typeof zScoreSchema>;
@@ -184,26 +194,6 @@ const CreatePemeriksaanPage = () => {
 
   const [zScodeResult, setZScoreResult] = useState<zScoreType>();
 
-  // console.log(zScodeResult, "zScodeResult");
-  // console.log(anak, "anak");
-  // console.log(pemeriksaanData, "pemeriksaanData");
-
-  // Get anak By RFID
-  // const getAnakByRfid = async (rfid: string) => {
-  //   const access_token = getCookie("access_token");
-  //   const request = await fetch(appConfig.baseUrl + "/anak?search=" + rfid, {
-  //     method: "GET",
-  //     mode: "cors",
-  //     headers: {
-  //       "Content-Type": " application/json",
-  //       Authorization: `Bearer ${access_token}`,
-  //     },
-  //     cache: "no-store",
-  //   });
-  //   const response = await request.json();
-  //   return response;
-  // };
-
   // Submitting Form Function
   const onSubmit = async (values: z.infer<typeof stepper.current.schema>) => {
     if (stepper?.current?.id === "rfid_scan") {
@@ -244,7 +234,7 @@ const CreatePemeriksaanPage = () => {
         setIsLoading(true);
         const response = await calculateZScore(payload);
         if (response?.statusCode === 200 || response?.statusCode === 201) {
-          setZScoreResult(response?.data);
+          setZScoreResult(response);
           toast.success("Berhasil menghitung z-score!");
           setTimeout(() => stepper.next(), 1000);
         } else {
@@ -263,20 +253,21 @@ const CreatePemeriksaanPage = () => {
       const payload = {
         ...values,
         // @ts-expect-error error type
-        berat_badan: parseInt(values?.berat_badan),
+        beratBadan: parseInt(values?.beratBadan),
         // @ts-expect-error error type
-        tinggi_badan: parseInt(values?.tinggi_badan),
+        tinggiBadan: parseInt(values?.tinggiBadan),
         // @ts-expect-error error type
-        usia_bulan: parseInt(values?.usia_bulan),
-        tanggal_pemeriksaan: new Date(
+        usiaBulan: parseInt(values?.usiaBulan),
+        tanggalPemeriksaan: new Date(
           // @ts-expect-error error type
-          values?.tanggal_pemeriksaan,
+          values?.tanggalPemeriksaan,
         ).toISOString(),
       };
 
       try {
         setIsLoading(true);
         const response = await createPemeriksaan(payload);
+        console.log(response, "response");
         if (response?.statusCode === 200 || response?.statusCode === 201) {
           toast.success("Berhasil menyimpan pemeriksaan!");
           stepper.reset();
@@ -574,7 +565,7 @@ const InputPemeriksaan = ({anak}: {anak: z.infer<typeof anakSchema>}) => {
   useEffect(() => {
     setValue("anak_id", anak?.id);
     setValue("usia_bulan", usiaBulan);
-    setValue("tanggal_pemeriksaan",new Date())
+    setValue("tanggal_pemeriksaan", new Date());
   });
 
   return (
@@ -770,11 +761,19 @@ const InsertHasilPemeriksaan = ({
   }, [register]);
 
   useEffect(() => {
-    setValue("anak_id", anak?.id);
-    setValue("usia_bulan", usiaBulan);
-    setValue("status_bb_u", zScodeResult?.BBUStatusResult);
-    setValue("status_tb_u", zScodeResult?.TBUStatusResult);
-    setValue("posyandu_id", pemeriksaanData?.posyandu_id as string);
+    setValue("anakId", anak?.id);
+    setValue("usiaBulan", usiaBulan);
+    setValue("beratBadan", pemeriksaanData?.berat_badan);
+    setValue("tinggiBadan", pemeriksaanData?.tinggi_badan);
+    setValue(
+      "tanggalPemeriksaan",
+      new Date(pemeriksaanData?.tanggal_pemeriksaan),
+    );
+    setValue("statusBBU", zScodeResult?.data?.statusResult?.BBUStatusResult);
+    setValue("statusTBU", zScodeResult?.data?.statusResult?.TBUStatusResult);
+    setValue("posyanduId", pemeriksaanData?.posyandu_id as string);
+    setValue("zScoreBBU", zScodeResult?.data?.scoreResult?.zScoreBBUResult);
+    setValue("zScoreTBU", zScodeResult?.data?.scoreResult?.zScoreTBUResult);
   });
   return (
     <Card>
@@ -785,9 +784,9 @@ const InsertHasilPemeriksaan = ({
       <CardContent className="space-y-6">
         <section className="flex gap-6">
           <FormField
-            {...register("anak_id")}
+            {...register("anakId")}
             defaultValue={""}
-            name="anak_id"
+            name="anakId"
             render={({field}) => (
               <FormItem className="hidden">
                 <FormLabel>Anak</FormLabel>
@@ -799,9 +798,37 @@ const InsertHasilPemeriksaan = ({
             )}
           />
           <FormField
-            {...register("posyandu_id")}
+            {...register("zScoreBBU")}
             defaultValue={""}
-            name="posyandu_id"
+            name="zScoreBBU"
+            render={({field}) => (
+              <FormItem className="hidden">
+                <FormLabel>Anak</FormLabel>
+                <FormControl>
+                  <Input placeholder="zScoreBBU" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            {...register("zScoreTBU")}
+            defaultValue={""}
+            name="zScoreTBU"
+            render={({field}) => (
+              <FormItem className="hidden">
+                <FormLabel>Anak</FormLabel>
+                <FormControl>
+                  <Input placeholder="zScoreTBU" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            {...register("posyanduId")}
+            defaultValue={""}
+            name="posyanduId"
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel>Posyandu</FormLabel>
@@ -828,9 +855,9 @@ const InsertHasilPemeriksaan = ({
             )}
           />
           <FormField
-            {...register("tanggal_pemeriksaan")}
+            {...register("tanggalPemeriksaan")}
             defaultValue={""}
-            name="tanggal_pemeriksaan"
+            name="tanggalPemeriksaan"
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel>Tanggal Pemeriksaan</FormLabel>
@@ -872,9 +899,9 @@ const InsertHasilPemeriksaan = ({
         </section>
         <section className="flex gap-6">
           <FormField
-            {...register("berat_badan")}
+            {...register("beratBadan")}
             defaultValue={""}
-            name="berat_badan"
+            name="beratBadan"
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel>Berat Badan (kg)</FormLabel>
@@ -893,9 +920,9 @@ const InsertHasilPemeriksaan = ({
             )}
           />
           <FormField
-            {...register("tinggi_badan")}
+            {...register("tinggiBadan")}
             defaultValue={""}
-            name="tinggi_badan"
+            name="tinggiBadan"
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel>Tinggi Badan (cm)</FormLabel>
@@ -915,9 +942,9 @@ const InsertHasilPemeriksaan = ({
           />
         </section>
         <FormField
-          {...register("usia_bulan")}
+          {...register("usiaBulan")}
           defaultValue={""}
-          name="usia_bulan"
+          name="usiaBulan"
           render={({field}) => (
             <FormItem className="w-full">
               <FormLabel>Umur (bulan)</FormLabel>
@@ -934,8 +961,8 @@ const InsertHasilPemeriksaan = ({
         />
         <section className="flex gap-6">
           <FormField
-            {...register("status_bb_u")}
-            name="status_bb_u"
+            {...register("statusBBU")}
+            name="statusBBU"
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel>Status BB/U</FormLabel>
@@ -993,8 +1020,8 @@ const InsertHasilPemeriksaan = ({
             )}
           />
           <FormField
-            {...register("status_tb_u")}
-            name="status_tb_u"
+            {...register("statusTBU")}
+            name="statusTBU"
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel>Status TB/U</FormLabel>
