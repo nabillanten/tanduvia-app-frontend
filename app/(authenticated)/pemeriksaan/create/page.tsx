@@ -75,6 +75,7 @@ import {createPemeriksaan} from "@/app/actions/pemeriksaan";
 import {getAnakByRFID} from "@/app/actions/anak";
 import {format} from "date-fns";
 import {id} from "date-fns/locale";
+import {getAllPosyandu} from "@/app/actions/posyandu";
 
 // SCHEMA START
 const rfidSchema = z.object({
@@ -541,25 +542,16 @@ const InputPemeriksaan = ({anak}: {anak: z.infer<typeof anakSchema>}) => {
   const usiaBulan = calculateAgeInMonths(anak?.tanggal_lahir);
 
   useEffect(() => {
-    const getAllPosyandu = async () => {
+    const getPosyandu = async () => {
       try {
-        const access_token = getCookie("access_token");
-        const request = await fetch(appConfig.baseUrl + "/posyandu", {
-          method: "GET",
-          headers: {
-            "Content-Type": " application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-          cache: "no-store",
-        });
-        const response = await request.json();
-        setPosyandu(response?.data?.data);
+        const response = await getAllPosyandu();
+        setPosyandu(response?.data);
       } catch (error) {
         console.log(error);
       }
     };
 
-    getAllPosyandu();
+    getPosyandu();
   }, [register]);
 
   useEffect(() => {
@@ -739,25 +731,16 @@ const InsertHasilPemeriksaan = ({
   const usiaBulan = calculateAgeInMonths(anak?.tanggal_lahir);
 
   useEffect(() => {
-    const getAllPosyandu = async () => {
+    const getPosyandu = async () => {
       try {
-        const access_token = getCookie("access_token");
-        const request = await fetch(appConfig.baseUrl + "/posyandu", {
-          method: "GET",
-          headers: {
-            "Content-Type": " application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-          cache: "no-store",
-        });
-        const response = await request.json();
-        setPosyandu(response?.data?.data);
+        const response = await getAllPosyandu();
+        setPosyandu(response?.data);
       } catch (error) {
         console.log(error);
       }
     };
 
-    getAllPosyandu();
+    getPosyandu();
   }, [register]);
 
   useEffect(() => {

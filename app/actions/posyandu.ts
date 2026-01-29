@@ -20,3 +20,8 @@ export const DeletePosyandu = async (id: string) => {
   revalidatePath("/posyandu");
   return req;
 };
+
+export const getAllPosyandu = async () => {
+  const req = await fetchWithCredentials("/posyandu/");
+  return req?.data;
+};
