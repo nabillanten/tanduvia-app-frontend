@@ -79,10 +79,12 @@ export default function UpdateUserForm({
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil Mengubah Pengguna!");
         push("/pengguna");
+      } else {
+        toast.warning("Gagal Membuat Pengguna!");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Gagal Mengubah Pengguna!");
+      toast.error("Terjadi Kegagalan!");
     }
   }
 
@@ -102,7 +104,11 @@ export default function UpdateUserForm({
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : alisyaanggraini" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : alisyaanggraini"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>Tidak menggunakan spasi</FormDescription>
                   <FormMessage />
@@ -117,7 +123,11 @@ export default function UpdateUserForm({
                 <FormItem>
                   <FormLabel>Nama Lengkap</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : Alisya Anggraini" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : Alisya Anggraini"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,7 +140,11 @@ export default function UpdateUserForm({
                 <FormItem>
                   <FormLabel>Nomor Telepon</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : 087645679127" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : 087645679127"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -144,6 +158,7 @@ export default function UpdateUserForm({
                   <FormLabel>Role</FormLabel>
                   <FormControl>
                     <Select
+                      disabled={form?.formState?.isSubmitting}
                       defaultValue={field.value}
                       value={field.value}
                       onValueChange={field.onChange}>
@@ -170,6 +185,7 @@ export default function UpdateUserForm({
                   <FormLabel>Posyandu</FormLabel>
                   <FormControl>
                     <Select
+                      disabled={form?.formState?.isSubmitting}
                       {...field}
                       defaultValue={field.value}
                       value={field.value}

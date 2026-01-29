@@ -31,7 +31,7 @@ const UserPage = async (props: {searchParams: SearchParams}) => {
           </Button>
         </Link>
       </div>
-      <React.Suspense key={page} fallback={<TableLoading tableColumn={7} />}>
+      <React.Suspense key={page + query} fallback={<TableLoading tableColumn={7} />}>
         <UsersTable {...usersTableProps} />
       </React.Suspense>
     </div>

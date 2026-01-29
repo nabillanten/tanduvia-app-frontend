@@ -30,7 +30,7 @@ const PanduanGiziPage = async (props: {searchParams: SearchParams}) => {
           </Button>
         </Link>
       </div>
-      <Suspense key={page} fallback={<TableLoading tableColumn={8} />}>
+      <Suspense key={page + query} fallback={<TableLoading tableColumn={8} />}>
         <PanduanGiziTable {...panduanGiziTableProps} />
       </Suspense>
     </div>

@@ -1,5 +1,7 @@
 import fetchWithCredentials from "@/lib/fetchWithCredential";
 import UpdateUserForm from "./update-user-form";
+import { Suspense } from "react";
+import FormLoading from "@/components/ui/form-loading";
 
 async function findUserById(id: string) {
   const response = await fetchWithCredentials(`/users/${id}`);
@@ -21,13 +23,13 @@ const UpdateUserPage = async ({
   const posyandu = await findAllPosyadu();
 
   return (
-    <div>
+    <Suspense key={user + posyandu} fallback={<FormLoading/>}>
       <UpdateUserForm
         userId={userId}
         user={user?.data}
         posyandu={posyandu?.data}
       />
-    </div>
+    </Suspense>
   );
 };
 

@@ -13,10 +13,8 @@ import {
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldError,
   FieldGroup,
-  FieldLegend,
   FieldSet,
 } from "@/components/ui/field";
 import {
@@ -137,11 +135,11 @@ const UpdatePanduanGiziForm = ({
         toast.success("Berhasil mengubah status publikasi!");
         push("/panduan_gizi");
       } else {
-        toast.error("Gagal mengubah status publikasi!");
+        toast.warning("Gagal mengubah status publikasi!");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Gagal mengubah status publikasi!");
+      toast.error("Terjadi Kesalahan!");
     }
   };
 
@@ -405,6 +403,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Status Publikasi</FormLabel>
                       <FormControl>
                         <Select
+                          disabled={form.formState.isSubmitting}
                           {...field}
                           onValueChange={field.onChange}
                           value={field.value}>
@@ -442,6 +441,7 @@ const UpdatePanduanGiziForm = ({
                       <FormLabel>Catatan </FormLabel>
                       <FormControl>
                         <Textarea
+                          disabled={form.formState.isSubmitting}
                           placeholder="Masukan Catatan (Berupa alasan untuk mengubah status publikasi)"
                           {...field}
                           value={field?.value ?? ""}

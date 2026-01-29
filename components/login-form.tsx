@@ -53,7 +53,7 @@ export function LoginForm() {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Login Gagal");
+      toast.error("Login Gagal, Terjadi Kesalahan!");
     }
   };
   return (

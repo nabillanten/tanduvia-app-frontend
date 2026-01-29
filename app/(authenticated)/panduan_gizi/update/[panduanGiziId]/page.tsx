@@ -1,6 +1,7 @@
 import fetchWithCredentials from "@/lib/fetchWithCredential";
-import React from "react";
+import React, { Suspense } from "react";
 import UpdatePanduanGiziForm from "./update-panduangizi-form";
+import FormLoading from "@/components/ui/form-loading";
 
 async function findPanduanGiziById(id: string) {
   const response = await fetchWithCredentials("/rekomendasi-gizi/" + id);
@@ -20,11 +21,13 @@ const UpdatePanduanGiziPage = async ({
   const ahliGizi = await getAllAhlliGizi();
   const panduanGizi = await findPanduanGiziById(panduanGiziId);
   return (
-    <UpdatePanduanGiziForm
+   <Suspense key={ahliGizi + panduanGizi} fallback={<FormLoading/>}>
+     <UpdatePanduanGiziForm
       panduanGiziId={panduanGiziId}
       panduanGizi={panduanGizi?.data}
       ahliGizi={ahliGizi?.data}
     />
+   </Suspense>
   );
 };
 

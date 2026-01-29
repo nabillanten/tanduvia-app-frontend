@@ -1,4 +1,5 @@
 import {BookOpen} from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 export const Hero: React.FC = () => {
@@ -27,9 +28,11 @@ export const Hero: React.FC = () => {
               untuk mencegah stunting dan malnutrisi
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-105 transition-transform">
-                Lihat Perkembangan Anak
-              </button>
+              <Link href={"/pertumbuhan_anak"}>
+                <button className="px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-105 transition-transform">
+                  Lihat Perkembangan Anak
+                </button>
+              </Link>
               <button className="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 hover:scale-105 transition-all flex items-center justify-center gap-2">
                 <BookOpen />
                 Pelajari Lebih Lanjut

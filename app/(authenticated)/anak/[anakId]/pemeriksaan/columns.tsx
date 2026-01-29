@@ -69,10 +69,10 @@ const Actions = (props: z.infer<typeof schema>) => {
 
 export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
-    accessorKey: "created_at",
+    accessorKey: "tanggal_pemeriksaan",
     header: "Tanggal Periksa",
     cell: ({row}) => {
-      const date = format(row.getValue("created_at"), "MMM d, yyyy");
+      const date = format(row.getValue("tanggal_pemeriksaan"), "dd-MM-yyyy");
       return date;
     },
   },

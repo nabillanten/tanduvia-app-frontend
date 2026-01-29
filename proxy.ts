@@ -33,6 +33,10 @@ export async function proxy(request: NextRequest) {
   if (pathname === "/") {
     return NextResponse.next();
   }
+  // Handle Root Path "/pertumbuhan_anak"
+  if (pathname === "/pertumbuhan_anak") {
+    return NextResponse.next();
+  }
 
   // --- LOGIC 1: Cek Login (Belum ada Token) ---
   if (!access_token) {

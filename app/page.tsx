@@ -4,6 +4,7 @@ import {Services} from "@/components/landing-page/components/Services";
 import {Footer} from "@/components/landing-page/components/Footer";
 import {HowItWorks} from "@/components/landing-page/components/HowItWorks";
 import {WhyChooseUs} from "@/components/landing-page/components/WhyChooseUs";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -63,9 +64,11 @@ export default function Home() {
                   anak
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button className="bg-white text-primary px-10 py-4 rounded-2xl font-bold hover:bg-slate-50 hover:scale-105 transition-all shadow-xl">
-                    Lihat Perkembangan Anak
-                  </button>
+                  <Link href={"/pertumbuhan_anak"}>
+                    <button className="bg-white text-primary px-10 py-4 rounded-2xl font-bold hover:bg-slate-50 hover:scale-105 transition-all shadow-xl">
+                      Lihat Perkembangan Anak
+                    </button>
+                  </Link>
                   <button className="bg-primary-700/50 backdrop-blur-sm border border-primary-400/30 text-white px-10 py-4 rounded-2xl font-bold hover:bg-primary-700 transition-all">
                     Pelajari Program
                   </button>

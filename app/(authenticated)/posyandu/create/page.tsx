@@ -51,10 +51,12 @@ export default function CreatePosyanduPage() {
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil Membuat Posyandu!");
         push("/posyandu");
+      } else {
+        toast.warning("Gagal Membuat Posyandu!");
       }
     } catch (error) {
       console.log(error);
-      toast.success("Gagal Membuat Posyandu!");
+      toast.error("Terjadi Kegagalan!");
     }
   }
 
@@ -74,7 +76,11 @@ export default function CreatePosyanduPage() {
                 <FormItem>
                   <FormLabel>Nama Posyandu</FormLabel>
                   <FormControl>
-                    <Input placeholder="Contoh : Posyandu Mawar" {...field} />
+                    <Input
+                      disabled={form?.formState?.isSubmitting}
+                      placeholder="Contoh : Posyandu Mawar"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -88,6 +94,7 @@ export default function CreatePosyanduPage() {
                   <FormLabel>Alamat</FormLabel>
                   <FormControl>
                     <Textarea
+                      disabled={form?.formState?.isSubmitting}
                       placeholder="Masukkan alamat lengkap"
                       {...field}
                     />
