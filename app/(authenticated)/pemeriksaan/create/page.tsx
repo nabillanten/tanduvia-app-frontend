@@ -206,7 +206,7 @@ const CreatePemeriksaanPage = () => {
           if (response?.data?.data?.[0]?.is_active) {
             toast.success("Data Anak Ditemukan!");
             setAnak(response?.data?.data[0]);
-            setTimeout(() => stepper.next(), 1000);
+            stepper.next();
           } else {
             toast.error("Data Anak Tidak Aktif!");
           }
@@ -237,7 +237,7 @@ const CreatePemeriksaanPage = () => {
         if (response?.statusCode === 200 || response?.statusCode === 201) {
           setZScoreResult(response);
           toast.success("Berhasil menghitung z-score!");
-          setTimeout(() => stepper.next(), 1000);
+          stepper.next();
         } else {
           toast.error("Gagal menghitung z-score!");
         }
