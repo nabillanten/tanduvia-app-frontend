@@ -36,6 +36,7 @@ import {cn} from "@/lib/utils";
 // import PertumbuhanAnakList from "@/components/PertumbuhanAnakList";
 import {checkGrowth} from "@/app/actions/check-growth";
 import PertumbuhanAnakList from "./PertumbuhanAnakList";
+import {useRouter} from "next/navigation";
 
 // --- SCHEMA VALIDASI ---
 const formSchema = z.object({
@@ -47,6 +48,8 @@ const formSchema = z.object({
 export default function PerkembanganAnakPage() {
   const [resultData, setResultData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const {push} = useRouter();
 
   // --- FORM SETUP ---
   const form = useForm<z.infer<typeof formSchema>>({
@@ -237,6 +240,8 @@ export default function PerkembanganAnakPage() {
                 <Button
                   variant={"secondary"}
                   className="w-full"
+                  type="button"
+                  onClick={() => push("/")}
                   disabled={isLoading}>
                   <Undo2 /> Kembali
                 </Button>

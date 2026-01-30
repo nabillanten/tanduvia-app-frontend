@@ -1,6 +1,14 @@
 "use client";
-import {useMemo} from "react";
-import {Baby, Scale, Ruler, Calendar, Activity} from "lucide-react";
+import {useEffect, useMemo, useState} from "react";
+import {
+  Baby,
+  Scale,
+  Ruler,
+  Calendar,
+  Activity,
+  Sparkles,
+  Loader2,
+} from "lucide-react";
 
 import {calculateStatusTBU, calculateStatusBBU} from "@/lib/calculator";
 import {
@@ -13,6 +21,9 @@ import {
 import InfoCard from "@/components/general/InfoCard";
 import GrowthChart from "@/components/general/GrowChart";
 import {Card, CardContent} from "@/components/ui/card";
+import {getPersonalizedNutrition} from "@/app/actions/get-nutrition";
+import {NutritionCard} from "@/components/ui/NutritionCard";
+import {RekomendasiGizi} from "@/lib/nutrition-types";
 
 // --- INTERFACES ---
 interface Pemeriksaan {
@@ -39,7 +50,9 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     return child.pemeriksaan[child.pemeriksaan.length - 1];
   }, [child]);
 
-  console.log(latestMeasurement, "latestMeasurement");
+  // --- STATE BARU UNTUK REKOMENDASI ---
+  const [recommendations, setRecommendations] = useState<RekomendasiGizi[]>([]);
+  const [loadingRec, setLoadingRec] = useState(false);
 
   // 2. Hitung Status TBU
   const statusTBU = useMemo(() => {
@@ -60,6 +73,29 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
       child.jenis_kelamin,
     );
   }, [latestMeasurement, child.jenis_kelamin]);
+
+  // --- USE EFFECT UNTUK FETCH DATA ---
+  useEffect(() => {
+    const fetchNutrition = async () => {
+      if (!latestMeasurement) return;
+
+      setLoadingRec(true);
+
+      // Panggil Server Action dengan parameter status hasil kalkulasi
+      const res = await getPersonalizedNutrition(
+        latestMeasurement.usia_bulan,
+        latestMeasurement?.status_bb_u, // Hasil kalkulasi useMemo (misal: "bb_sangat_kurang")
+        latestMeasurement?.status_tb_u, // Hasil kalkulasi useMemo
+      );
+
+      if (res.success) {
+        setRecommendations(res.data);
+      }
+      setLoadingRec(false);
+    };
+
+    fetchNutrition();
+  }, [latestMeasurement, statusBBU, statusTBU]); // Trigger setiap data/status berubah
 
   // 4. Siapkan Data Chart TB
   const mergedTBData = useMemo(() => {
@@ -109,6 +145,38 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
             </div>
           </div>
         </div>
+
+        {/* --- BAGIAN BARU: REKOMENDASI GIZI --- */}
+        {latestMeasurement && (
+          <div className="mt-8 mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-6 w-1 bg-green-500 rounded-full"></div>
+              <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                Rekomendasi Gizi
+                <Sparkles className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+              </h3>
+            </div>
+
+            {loadingRec ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="animate-spin text-green-600" />
+              </div>
+            ) : recommendations.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {recommendations.map((rec) => (
+                  <NutritionCard key={rec.id} data={rec} />
+                ))}
+              </div>
+            ) : (
+              <div className="p-6 bg-slate-50 border border-slate-200 border-dashed rounded-xl text-center text-slate-500">
+                <p>
+                  Tidak ada rekomendasi khusus saat ini. Lanjutkan gizi
+                  seimbang.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* JIKA DATA KOSONG */}
         {!latestMeasurement ? (
