@@ -23,7 +23,7 @@ import {
 import React from "react";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
-import {CircleCheckIcon, CircleXIcon, EllipsisIcon} from "lucide-react";
+import {CircleCheckIcon, CircleXIcon, EllipsisIcon, Plus} from "lucide-react";
 import {DeleteIbu} from "@/app/actions/ibu";
 import {id} from "date-fns/locale";
 
@@ -39,6 +39,16 @@ export const schema = z.object({
   is_active: z.boolean(),
   created_at: z.date(),
 });
+
+const AddAnakButton = (props: z.infer<typeof schema>) => {
+  const {push} = useRouter();
+  const {id} = props;
+  return (
+    <Button onClick={() => push(`/ibu/${id}/anak/create`)}>
+      <Plus /> Anak
+    </Button>
+  );
+};
 
 const Actions = (props: z.infer<typeof schema>) => {
   const [showDialog, setShowDialog] = React.useState(false);
@@ -59,9 +69,6 @@ const Actions = (props: z.infer<typeof schema>) => {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem onSelect={() => push(`/ibu/${id}/anak/create`)}>
-            Tambah Anak
-          </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => push(`/ibu/update/${id}`)}>
             Ubah
           </DropdownMenuItem>
@@ -152,10 +159,17 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Alamat",
   },
   {
-    accessorKey: "id",
+    accessorKey: "action_button",
     header: "",
     cell: ({row}) => {
       return <Actions {...row.original} />;
+    },
+  },
+  {
+    accessorKey: "addAnak",
+    header: "",
+    cell: ({row}) => {
+      return <AddAnakButton {...row.original} />;
     },
   },
 ];
