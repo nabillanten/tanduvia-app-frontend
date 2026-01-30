@@ -29,14 +29,14 @@ export const login = async (body: {username: string; password: string}) => {
     const expiryDate = new Date(decoded.exp * 1000);
 
     cookie.set("access_token", response?.access_token, {
-      secure: true,
+      // secure: true,
       httpOnly: true,
       expires: expiryDate,
       path: "/",
     });
 
     cookie.set("refresh_token", response?.refresh_token, {
-      secure: true,
+      // secure: true,
       httpOnly: true,
       expires: expiryDate,
       path: "/",
