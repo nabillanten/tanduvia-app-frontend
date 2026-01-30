@@ -22,6 +22,7 @@ interface Pemeriksaan {
   usia_bulan: number;
   status_bb_u: string;
   status_tb_u: string;
+  catatan: string;
 }
 
 interface ChildData {
@@ -37,6 +38,8 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     if (!child.pemeriksaan || child.pemeriksaan.length === 0) return null;
     return child.pemeriksaan[child.pemeriksaan.length - 1];
   }, [child]);
+
+  console.log(latestMeasurement, "latestMeasurement");
 
   // 2. Hitung Status TBU
   const statusTBU = useMemo(() => {
@@ -178,7 +181,11 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
                 <p className="text-yellow-600 text-xs uppercase tracking-wide font-bold">
                   Catatan
                 </p>
-                <p className="text-sm lg:text-base">{statusBBU}</p>
+                <p className="text-sm lg:text-base font-bold">
+                  {latestMeasurement?.catatan
+                    ? latestMeasurement?.catatan
+                    : "-"}
+                </p>
               </div>
             </div>
 
@@ -222,7 +229,7 @@ const PertumbuhanAnakList = ({childrenData}: {childrenData: ChildData[]}) => {
     <div className="min-h-screen pb-12 bg-slate-50">
       <main className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800">
+          <h1 className="text-2xl font-bold text-slate-800">
             Laporan Pertumbuhan Anak
           </h1>
           <p className="text-slate-500 mt-2">
