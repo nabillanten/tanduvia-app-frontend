@@ -42,18 +42,24 @@ export function LoginForm() {
 
   const onSubmit = async (data: z.infer<typeof signInScheme>) => {
     try {
-      const req = await login(data);
-      const res = await req;
+      // Panggil server action
+      const res = await login(data);
 
-      if (res?.statusCode === 401) {
-        toast.warning(`Username atau password salah!`);
-      } else {
+      if (res?.success) {
         toast.success("Selamat datang kembali!");
-        return push("/dashboard");
+
+        // --- SOLUSI UTAMA ---
+        // Gunakan Hard Reload. Ini memaksa browser Android membaca cookie baru
+        // dan mengirimkannya ke server saat request halaman Dashboard.
+        // Ganti baris error dengan ini:
+        window.location.replace("/dashboard");
+      } else {
+        // Tampilkan pesan error dari server action
+        toast.warning(res?.message || "Login Gagal");
       }
     } catch (error) {
       console.log(error);
-      toast.error("Login Gagal, Terjadi Kesalahan!");
+      toast.error("Login Gagal, Terjadi Kesalahan Sistem!");
     }
   };
   return (
