@@ -254,11 +254,11 @@ const CreatePemeriksaanPage = () => {
       const payload = {
         ...values,
         // @ts-expect-error error type
-        beratBadan: parseInt(values?.beratBadan),
+        beratBadan: parseFloat(values?.beratBadan),
         // @ts-expect-error error type
-        tinggiBadan: parseInt(values?.tinggiBadan),
+        tinggiBadan: parseFloat(values?.tinggiBadan),
         // @ts-expect-error error type
-        usiaBulan: parseInt(values?.usiaBulan),
+        usiaBulan: parseFloat(values?.usiaBulan),
         tanggalPemeriksaan: new Date(
           // @ts-expect-error error type
           values?.tanggalPemeriksaan,

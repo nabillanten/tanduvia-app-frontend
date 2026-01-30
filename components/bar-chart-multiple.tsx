@@ -1,13 +1,11 @@
 "use client";
 
-import {TrendingUp} from "lucide-react";
-import {Bar, BarChart, CartesianGrid, XAxis} from "recharts";
+import {Bar, BarChart, CartesianGrid, LabelList, XAxis} from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -23,12 +21,12 @@ import {MonthlyStat} from "@/app/(authenticated)/dashboard/admin/admin-dashboard
 
 const chartConfig = {
   normal: {
-    label: "Perlu Perhatian",
-    color: "var(--chart-1)",
-  },
-  notNormal: {
     label: "Normal",
     color: "var(--chart-2)",
+  },
+  notNormal: {
+    label: "Perlu Perhatian",
+    color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
@@ -49,7 +47,12 @@ export function ChartBarMultiple({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              top: 24,
+            }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="monthName"
@@ -63,8 +66,22 @@ export function ChartBarMultiple({
               cursor={false}
               content={<ChartTooltipContent indicator="dot" className="w-48" />}
             />
-            <Bar dataKey="normal" fill="var(--color-normal)" radius={4} />
-            <Bar dataKey="notNormal" fill="var(--color-notNormal)" radius={4} />
+            <Bar dataKey="normal" fill="var(--color-normal)" radius={4}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+            <Bar dataKey="notNormal" fill="var(--color-notNormal)" radius={4}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
