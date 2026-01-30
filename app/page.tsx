@@ -5,6 +5,8 @@ import {Footer} from "@/components/landing-page/components/Footer";
 import {HowItWorks} from "@/components/landing-page/components/HowItWorks";
 import {WhyChooseUs} from "@/components/landing-page/components/WhyChooseUs";
 import Link from "next/link";
+import {Button} from "@/components/ui/button";
+import {BookOpen} from "lucide-react";
 
 export default function Home() {
   return (
@@ -65,13 +67,17 @@ export default function Home() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href={"/pertumbuhan_anak"}>
-                    <button className="bg-white text-primary px-10 py-4 rounded-2xl font-bold hover:bg-slate-50 hover:scale-105 transition-all shadow-xl">
+                    <Button
+                      variant={"secondary"}
+                      className="w-full font-bold p-6 hover:scale-105 transition-transform">
                       Lihat Perkembangan Anak
-                    </button>
+                    </Button>
                   </Link>
-                  <button className="bg-primary-700/50 backdrop-blur-sm border border-primary-400/30 text-white px-10 py-4 rounded-2xl font-bold hover:bg-primary-700 transition-all">
-                    Pelajari Program
-                  </button>
+                  <Link href={"#"}>
+                    <Button className="w-full font-bold p-6 border hover:scale-105 transition-transform">
+                      <BookOpen /> Pelajari Lebih Lanjut
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>

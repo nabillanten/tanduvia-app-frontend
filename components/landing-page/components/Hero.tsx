@@ -1,3 +1,4 @@
+import {Button} from "@/components/ui/button";
 import {BookOpen} from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -29,14 +30,16 @@ export const Hero: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href={"/pertumbuhan_anak"}>
-                <button className="px-8 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-105 transition-transform">
+                <Button className="w-full font-bold p-6">
                   Lihat Perkembangan Anak
-                </button>
+                </Button>
               </Link>
-              <button className="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 hover:scale-105 transition-all flex items-center justify-center gap-2">
-                <BookOpen />
-                Pelajari Lebih Lanjut
-              </button>
+              <Link href={"#"}>
+                <Button variant={"outline"} className="w-full font-bold p-6">
+                  <BookOpen />
+                  Pelajari Lebih Lanjut
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="relative">

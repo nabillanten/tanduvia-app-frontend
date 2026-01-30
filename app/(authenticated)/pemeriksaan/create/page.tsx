@@ -123,8 +123,8 @@ const hasilPemeriksaanSchema = z.object({
 const zScoreSchema = z.object({
   data: z.object({
     scoreResult: z.object({
-      zScoreBBUResult: z.float32(),
-      zScoreTBUResult: z.float32(),
+      zScoreBBUResult: z.string(),
+      zScoreTBUResult: z.string(),
     }),
     statusResult: z.object({
       BBUStatusResult: z.string(),
@@ -193,7 +193,7 @@ const CreatePemeriksaanPage = () => {
   const [pemeriksaanData, setPemeriksaanData] =
     useState<z.infer<typeof pemeriksaanSchema>>();
 
-  const [zScodeResult, setZScoreResult] = useState<zScoreType>();
+  const [zScoreResult, setZScoreResult] = useState<zScoreType>();
 
   // Submitting Form Function
   const onSubmit = async (values: z.infer<typeof stepper.current.schema>) => {
@@ -268,7 +268,6 @@ const CreatePemeriksaanPage = () => {
       try {
         setIsLoading(true);
         const response = await createPemeriksaan(payload);
-        console.log(response, "response");
         if (response?.statusCode === 200 || response?.statusCode === 201) {
           toast.success("Berhasil menyimpan pemeriksaan!");
           stepper.reset();
@@ -344,7 +343,7 @@ const CreatePemeriksaanPage = () => {
                   // @ts-expect-error error type
                   anak={anak}
                   // @ts-expect-error error type
-                  zScodeResult={zScodeResult}
+                  zScoreResult={zScoreResult}
                   // @ts-expect-error error type
                   pemeriksaanData={pemeriksaanData}
                 />
@@ -718,11 +717,11 @@ const InputPemeriksaan = ({anak}: {anak: z.infer<typeof anakSchema>}) => {
 
 const InsertHasilPemeriksaan = ({
   anak,
-  zScodeResult,
+  zScoreResult,
   pemeriksaanData,
 }: {
   anak: z.infer<typeof anakSchema>;
-  zScodeResult: z.infer<typeof zScoreSchema>;
+  zScoreResult: z.infer<typeof zScoreSchema>;
   pemeriksaanData: z.infer<typeof pemeriksaanSchema>;
 }) => {
   const {register, setValue} =
@@ -752,11 +751,17 @@ const InsertHasilPemeriksaan = ({
       "tanggalPemeriksaan",
       new Date(pemeriksaanData?.tanggal_pemeriksaan),
     );
-    setValue("statusBBU", zScodeResult?.data?.statusResult?.BBUStatusResult);
-    setValue("statusTBU", zScodeResult?.data?.statusResult?.TBUStatusResult);
+    setValue("statusBBU", zScoreResult?.data?.statusResult?.BBUStatusResult);
+    setValue("statusTBU", zScoreResult?.data?.statusResult?.TBUStatusResult);
     setValue("posyanduId", pemeriksaanData?.posyandu_id as string);
-    setValue("zScoreBBU", zScodeResult?.data?.scoreResult?.zScoreBBUResult);
-    setValue("zScoreTBU", zScodeResult?.data?.scoreResult?.zScoreTBUResult);
+    setValue(
+      "zScoreBBU",
+      parseFloat(zScoreResult?.data?.scoreResult?.zScoreBBUResult),
+    );
+    setValue(
+      "zScoreTBU",
+      parseFloat(zScoreResult?.data?.scoreResult?.zScoreTBUResult),
+    );
   });
   return (
     <Card>
