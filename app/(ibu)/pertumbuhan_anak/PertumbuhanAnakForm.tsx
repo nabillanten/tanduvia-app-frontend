@@ -134,7 +134,7 @@ export default function PerkembanganAnakPage() {
             Pantau Tumbuh Kembang
           </h1>
           <p className="text-slate-500 mt-2 text-sm">
-            Masukkan data diri Ibu/Anak untuk melihat riwayat pemeriksaan
+            Masukkan data diri Ibu untuk melihat riwayat pemeriksaan anak
             Posyandu.
           </p>
         </div>
