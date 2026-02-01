@@ -50,20 +50,20 @@ export const Hero: React.FC = () => {
                 alt="Ibu dan Bayi Sehat"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-white/50">
+              <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-sm p-2 md:p-6 rounded-2xl shadow-xl border border-white/50">
                 <div className="flex items-center gap-4">
                   <div className="flex -space-x-3">
                     {[1, 2, 3].map((i) => (
                       <img
                         key={i}
                         src={`https://picsum.photos/100/100?random=${i + 10}`}
-                        className="w-10 h-10 rounded-full border-2 border-white"
+                        className="w-5 h-5 md:w-10 md:h-10 rounded-full border-2 border-white"
                         alt="pengguna"
                       />
                     ))}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800">
+                    <p className="text-xs md:text-sm font-bold text-slate-800">
                       100+ Ibu Bergabung
                     </p>
                     <p className="text-xs text-slate-500">

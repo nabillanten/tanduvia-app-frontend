@@ -155,7 +155,7 @@ export default function PerkembanganAnakPage() {
                   name="nik"
                   render={({field}) => (
                     <FormItem>
-                      <FormLabel>NIK (Ibu / Anak)</FormLabel>
+                      <FormLabel>NIK (Ibu)</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="16 digit NIK..."

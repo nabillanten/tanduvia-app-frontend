@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="text-[#0366a9]" />
-                +62 8xx xxxx xxxx
+                +62 812 1457 8839
               </li>
             </ul>
           </div>
