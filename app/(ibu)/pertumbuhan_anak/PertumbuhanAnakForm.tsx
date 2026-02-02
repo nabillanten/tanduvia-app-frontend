@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from "react";
+import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -30,10 +30,6 @@ import {
 } from "@/components/ui/card";
 import {cn} from "@/lib/utils";
 
-// Import Server Action
-
-// Import Komponen Grafik yang sudah dibuat sebelumnya
-// import PertumbuhanAnakList from "@/components/PertumbuhanAnakList";
 import {checkGrowth} from "@/app/actions/check-growth";
 import PertumbuhanAnakList from "./PertumbuhanAnakList";
 import {useRouter} from "next/navigation";
@@ -131,11 +127,11 @@ export default function PerkembanganAnakPage() {
             <Baby size={32} />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">
-            Pantau Tumbuh Kembang
+            Pantau Tumbuh Kembang Anak
           </h1>
           <p className="text-slate-500 mt-2 text-sm">
-            Masukkan data diri Ibu untuk melihat riwayat pemeriksaan anak
-            Posyandu.
+            Masukkan data diri Ibu untuk melihat <br /> riwayat pemeriksaan anak
+            di Posyandu.
           </p>
         </div>
 
@@ -155,10 +151,11 @@ export default function PerkembanganAnakPage() {
                   name="nik"
                   render={({field}) => (
                     <FormItem>
-                      <FormLabel>NIK (Ibu)</FormLabel>
+                      <FormLabel>NIK Ibu</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="16 digit NIK..."
+                          disabled={isLoading}
+                          placeholder="16 digit NIK"
                           {...field}
                           maxLength={16}
                         />
@@ -177,7 +174,8 @@ export default function PerkembanganAnakPage() {
                       <FormLabel>Nama Lengkap</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Masukkan nama sesuai KTP..."
+                          disabled={isLoading}
+                          placeholder="Masukkan nama sesuai KTP"
                           {...field}
                         />
                       </FormControl>
@@ -197,6 +195,7 @@ export default function PerkembanganAnakPage() {
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
+                              disabled={isLoading}
                               variant={"outline"}
                               className={cn(
                                 "w-full pl-3 text-left font-normal",

@@ -21,9 +21,10 @@ import {
   FormMessage,
 } from "./ui/form";
 import {login} from "@/app/actions/auth";
-import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {Spinner} from "./ui/spinner";
+import {Undo2} from "lucide-react";
+import {useRouter} from "next/navigation";
 
 const signInScheme = z.object({
   username: z.string().nonempty({message: "Username tidak boleh kosong!"}),
@@ -31,7 +32,6 @@ const signInScheme = z.object({
 });
 
 export function LoginForm() {
-  const {push} = useRouter();
   const form = useForm<z.infer<typeof signInScheme>>({
     resolver: zodResolver(signInScheme),
     defaultValues: {
@@ -40,21 +40,17 @@ export function LoginForm() {
     },
   });
 
+  const {push} = useRouter();
+
   const onSubmit = async (data: z.infer<typeof signInScheme>) => {
     try {
-      // Panggil server action
       const res = await login(data);
 
       if (res?.success) {
         toast.success("Selamat datang kembali!");
 
-        // --- SOLUSI UTAMA ---
-        // Gunakan Hard Reload. Ini memaksa browser Android membaca cookie baru
-        // dan mengirimkannya ke server saat request halaman Dashboard.
-        // Ganti baris error dengan ini:
         window.location.replace("/dashboard");
       } else {
-        // Tampilkan pesan error dari server action
         toast.warning(res?.message || "Login Gagal");
       }
     } catch (error) {
@@ -83,6 +79,7 @@ export function LoginForm() {
                   <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={form.formState.isSubmitting}
                       placeholder="Masukkan Username"
                       {...field}
                       type="text"
@@ -100,6 +97,7 @@ export function LoginForm() {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={form.formState.isSubmitting}
                       placeholder="Input Password"
                       {...field}
                       type="password"
@@ -109,13 +107,27 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-            <FieldGroup>
+            <FieldGroup className="gap-2">
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting && <Spinner />} Masuk
               </Button>
+              <Button
+                variant={"secondary"}
+                className="w-full"
+                type="button"
+                onClick={() => push("/")}
+                disabled={form.formState.isSubmitting}>
+                <Undo2 /> Kembali
+              </Button>
               <Field>
                 <FieldDescription className="text-center">
-                  Tidak dapat masuk? <a href="#">Hubungi Admin</a>
+                  Tidak dapat masuk?{" "}
+                  <a
+                    href="https://wa.me/6281214578839"
+                    target={"_blank"}
+                    rel="noreferrer">
+                    Hubungi Admin
+                  </a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
