@@ -143,6 +143,14 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
       return date;
     },
   },
+   {
+    accessorKey: "updated_at",
+    header: "Terakhir Diubah",
+    cell: ({row}) => {
+      const date = format(row.getValue("updated_at"), "dd-MM-yyyy");
+      return date;
+    },
+  },
   {
     accessorKey: "status",
     header: "Status",

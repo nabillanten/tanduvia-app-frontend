@@ -73,11 +73,11 @@ export default function Home() {
                       Lihat Perkembangan Anak
                     </Button>
                   </Link>
-                  <Link href={"#"}>
+                  <a href="#mengapa-kami">
                     <Button className="w-full font-bold p-6 border hover:scale-105 transition-transform">
                       <BookOpen /> Pelajari Lebih Lanjut
                     </Button>
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>

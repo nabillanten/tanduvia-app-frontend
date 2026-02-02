@@ -1,6 +1,22 @@
 "use client";
 
+import React, {useEffect} from "react";
+import {useRouter} from "next/navigation";
+import {useForm, useFieldArray, useWatch, Controller} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {toast} from "sonner";
+import {
+  CircleAlertIcon,
+  CircleCheckIcon,
+  CircleXIcon,
+  PlusIcon,
+  XIcon,
+} from "lucide-react";
+
 import {updatePanduanGizi} from "@/app/actions/panduangizi";
+
+// UI Components
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {
@@ -44,55 +60,45 @@ import {
 } from "@/components/ui/select";
 import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {
-  CircleAlertIcon,
-  CircleCheckIcon,
-  CircleXIcon,
-  PlusIcon,
-  XIcon,
-} from "lucide-react";
-import {useRouter} from "next/navigation";
-import {Controller, useFieldArray, useForm} from "react-hook-form";
-import {toast} from "sonner";
-import z from "zod";
 
-type Props = {
-  panduanGiziId: string;
-  ahliGizi: {id: string; nama: string}[];
-  panduanGizi: z.infer<typeof panduanGiziSchema>;
-};
+// --- CONSTANTS & TYPES ---
+
+const TARGET_STATUS_OPTIONS: Record<string, {label: string; value: string}[]> =
+  {
+    BB_U: [
+      {label: "Berat Badan Sangat Kurang", value: "bb_sangat_kurang"},
+      {label: "Berat Badan Kurang", value: "bb_kurang"},
+      {label: "Berat Badan Normal", value: "bb_normal"},
+      {label: "Risiko Berat Badan Berlebih", value: "risiko_bb_lebih"},
+    ],
+    TB_U: [
+      {label: "Sangat Pendek", value: "sangat_pendek"},
+      {label: "Pendek", value: "pendek"},
+      {label: "Normal", value: "normal"},
+      {label: "Tinggi", value: "tinggi"},
+    ],
+    BB_TB: [],
+    IMT_U: [],
+  };
+
+const AGE_CATEGORIES = [
+  {label: "0 - 6 Bulan", value: "0-6_bln", min: 0, max: 6},
+  {label: "6 - 12 Bulan", value: "6-12_bln", min: 6, max: 12},
+  {label: "1 - 2 Tahun", value: "1-2_thn", min: 12, max: 24},
+  {label: "2 - 5 Tahun", value: "2-5_thn", min: 24, max: 60},
+];
 
 const JenisIndeksEnum = z.enum(
   ["BB_U", "TB_U", "BB_TB", "IMT_U"],
   "Jenis indeks tidak boleh kosong!",
 );
-const StatusEnum = z.enum(["pending", "rejected", "published"]);
 
-const panduanGiziSchema = z.object({
-  ahli_gizi_id: z.string({message: "Ahli gizi tidak boleh kosong!"}),
-  judul: z.string({message: "Judul tidak boleh kosong!"}),
-  deskripsi: z.string({message: "Deskripsi tidak boleh kosong!"}),
-  status: StatusEnum,
-  usia_min: z.number({message: "Usia minimal tidak boleh kosong!"}),
-  usia_max: z.number({message: "Usia maksimal tidak boleh kosong!"}),
-  jenis_indeks: JenisIndeksEnum,
-  target_status: z.string({message: "Target status tidak boleh kosong!"}),
-  catatan_admin: z.string(),
-  rekomendasi_item: z
-    .array(
-      z.object({
-        nama_makanan: z.string(),
-      }),
-    )
-    .min(1, "Tambahkan setidaknya satu rekomendasi makanan."),
-});
-
+// Schema untuk validasi Form
 const formSchema = z.object({
   ahli_gizi_id: z.string({message: "Ahli gizi tidak boleh kosong!"}),
   judul: z.string({message: "Judul tidak boleh kosong!"}),
   deskripsi: z.string({message: "Deskripsi tidak boleh kosong!"}),
-  status: z.string(),
+  status: z.string().optional(),
   usia_min: z.number({message: "Usia minimal tidak boleh kosong!"}),
   usia_max: z.number({message: "Usia maksimal tidak boleh kosong!"}),
   jenis_indeks: JenisIndeksEnum,
@@ -100,36 +106,86 @@ const formSchema = z.object({
   makanan: z
     .array(
       z.object({
-        name: z.string().nonempty({message: "Makanan tidak boleh kosong!"}),
+        name: z.string().min(1, {message: "Makanan tidak boleh kosong!"}),
       }),
     )
     .min(1, "Tambahkan setidaknya satu rekomendasi makanan."),
 });
+
+type Props = {
+  panduanGiziId: string;
+  ahliGizi: {id: string; nama: string}[];
+  panduanGizi: {
+    ahli_gizi_id: string;
+    judul: string;
+    deskripsi: string;
+    status: "pending" | "rejected" | "published";
+    usia_min: number;
+    usia_max: number;
+    jenis_indeks: "BB_U" | "TB_U" | "BB_TB" | "IMT_U";
+    target_status: string;
+    catatan_admin?: string | null;
+    rekomendasi_item: {nama_makanan: string}[];
+  };
+};
 
 const UpdatePanduanGiziForm = ({
   ahliGizi,
   panduanGizi,
   panduanGiziId,
 }: Props) => {
-  const makanan = panduanGizi?.rekomendasi_item?.map(({nama_makanan}) => {
-    return {name: nama_makanan};
-  });
+  const {push} = useRouter();
+
+  const defaultMakanan = panduanGizi?.rekomendasi_item?.map(
+    ({nama_makanan}) => ({
+      name: nama_makanan,
+    }),
+  ) || [{name: ""}];
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      status: panduanGizi?.status,
-      makanan: makanan,
       ahli_gizi_id: panduanGizi?.ahli_gizi_id,
-      deskripsi: panduanGizi?.deskripsi,
-      jenis_indeks: panduanGizi?.jenis_indeks,
       judul: panduanGizi?.judul,
-      target_status: panduanGizi?.target_status,
-      usia_max: panduanGizi?.usia_max,
+      deskripsi: panduanGizi?.deskripsi,
+      status: panduanGizi?.status,
       usia_min: panduanGizi?.usia_min,
+      usia_max: panduanGizi?.usia_max,
+      jenis_indeks: panduanGizi?.jenis_indeks,
+      target_status: panduanGizi?.target_status,
+      makanan: defaultMakanan,
     },
   });
 
-  const {push} = useRouter();
+  const {fields, append, remove} = useFieldArray({
+    control: form.control,
+    name: "makanan",
+  });
+
+  const [selectedIndeks, usiaMin, usiaMax] = useWatch({
+    control: form.control,
+    name: ["jenis_indeks", "usia_min", "usia_max"],
+  });
+
+  const currentCategoryValue = AGE_CATEGORIES.find(
+    (cat) => cat.min === usiaMin && cat.max === usiaMax,
+  )?.value;
+
+  useEffect(() => {
+    if (selectedIndeks) {
+      const currentTarget = form.getValues("target_status");
+      const options = TARGET_STATUS_OPTIONS[selectedIndeks] || [];
+      const isValid = options.some((opt) => opt.value === currentTarget);
+
+      if (currentTarget && !isValid) {
+        form.setValue("target_status", "");
+      }
+    }
+  }, [selectedIndeks, form]);
+
+  const currentStatusOptions = selectedIndeks
+    ? TARGET_STATUS_OPTIONS[selectedIndeks]
+    : [];
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const payload = {
@@ -142,54 +198,57 @@ const UpdatePanduanGiziForm = ({
       const req = await updatePanduanGizi(panduanGiziId, payload);
       const res = await req;
 
-      if (res?.statusCode === 201 || res?.statusCode === 200) {
+      if (res?.statusCode === 201 || res?.statusCode === 200 || res?.success) {
         toast.success("Berhasil mengubah panduan gizi!");
         push("/rekomendasi_gizi");
       } else {
-        toast.warning("Gagal mengubah panduan gizi!");
+        toast.warning(res?.message || "Gagal mengubah panduan gizi!");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Gagal mengubah panduan gizi!");
     }
   };
 
-  const {fields, append, remove} = useFieldArray({
-    control: form.control,
-    name: "makanan",
-  });
-
   return (
     <section className="space-y-4">
+      {/* STATUS CARD */}
       <Card>
         <CardHeader>
-          <CardTitle>Catatan : </CardTitle>
-          <CardDescription>{panduanGizi?.catatan_admin ?? "-"}</CardDescription>
+          <CardTitle>Status & Catatan Admin</CardTitle>
+          <CardDescription>
+            {panduanGizi?.catatan_admin || "Tidak ada catatan."}
+          </CardDescription>
           <CardAction>
             {panduanGizi?.status === "published" ? (
-              <Badge className="bg-green-100 text-green-900">
-                <CircleCheckIcon /> Terbit
+              <Badge className="bg-green-100 text-green-900 hover:bg-green-200">
+                <CircleCheckIcon className="w-4 h-4 mr-1" /> Terbit
               </Badge>
             ) : panduanGizi?.status === "pending" ? (
-              <Badge className="bg-yellow-100 text-yellow-800">
-                <CircleAlertIcon /> Pending
+              <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
+                <CircleAlertIcon className="w-4 h-4 mr-1" /> Pending
               </Badge>
             ) : (
-              <Badge className="bg-red-100 text-red-800">
-                <CircleXIcon /> Ditolak
+              <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
+                <CircleXIcon className="w-4 h-4 mr-1" /> Ditolak
               </Badge>
             )}
           </CardAction>
         </CardHeader>
       </Card>
+
+      {/* FORM CARD */}
       <Card>
         <CardHeader>
           <CardTitle>Ubah Data Rekomendasi Gizi</CardTitle>
-          <CardDescription>Formulir Ubah Data Rekomendasi Gizi</CardDescription>
+          <CardDescription>
+            Sesuaikan data rekomendasi gizi di bawah ini.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* FIELD: AHLI GIZI */}
               <FormField
                 control={form.control}
                 name="ahli_gizi_id"
@@ -198,8 +257,7 @@ const UpdatePanduanGiziForm = ({
                     <FormLabel>Ahli Gizi</FormLabel>
                     <FormControl>
                       <Select
-                        disabled={form?.formState?.isSubmitting}
-                        {...field}
+                        disabled={form.formState.isSubmitting}
                         onValueChange={field.onChange}
                         value={field.value}>
                         <SelectTrigger className="w-full">
@@ -218,6 +276,8 @@ const UpdatePanduanGiziForm = ({
                   </FormItem>
                 )}
               />
+
+              {/* FIELD: JUDUL */}
               <FormField
                 control={form.control}
                 name="judul"
@@ -226,7 +286,7 @@ const UpdatePanduanGiziForm = ({
                     <FormLabel>Judul</FormLabel>
                     <FormControl>
                       <Input
-                        disabled={form?.formState?.isSubmitting}
+                        disabled={form.formState.isSubmitting}
                         placeholder="Masukan Judul"
                         {...field}
                       />
@@ -235,6 +295,8 @@ const UpdatePanduanGiziForm = ({
                   </FormItem>
                 )}
               />
+
+              {/* FIELD: DESKRIPSI */}
               <FormField
                 control={form.control}
                 name="deskripsi"
@@ -243,7 +305,7 @@ const UpdatePanduanGiziForm = ({
                     <FormLabel>Deskripsi</FormLabel>
                     <FormControl>
                       <Textarea
-                        disabled={form?.formState?.isSubmitting}
+                        disabled={form.formState.isSubmitting}
                         placeholder="Masukan Deskripsi"
                         {...field}
                       />
@@ -252,61 +314,73 @@ const UpdatePanduanGiziForm = ({
                   </FormItem>
                 )}
               />
-              <section className="flex gap-6">
-                <FormField
-                  control={form.control}
-                  name="usia_min"
-                  render={({field}) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Usia minimal (bulan)</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={form?.formState?.isSubmitting}
-                          placeholder="Masukan Usia minimal (bulan)"
-                          {...field}
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+
+              <div className="space-y-2">
+                <FormLabel>Kategori Umur</FormLabel>
+                <Select
+                  disabled={form.formState.isSubmitting}
+                  value={currentCategoryValue || ""}
+                  onValueChange={(val) => {
+                    const cat = AGE_CATEGORIES.find((c) => c.value === val);
+                    if (cat) {
+                      form.setValue("usia_min", cat.min);
+                      form.setValue("usia_max", cat.max);
+                    }
+                  }}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue
+                      placeholder={
+                        currentCategoryValue
+                          ? undefined
+                          : "Pilih Kategori Umur (atau set manual)"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {AGE_CATEGORIES.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>
+                        {cat.label} ({cat.min}-{cat.max} bln)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Indikator visual nilai asli */}
+                <div className="text-xs text-muted-foreground">
+                  Rentang usia tersimpan:{" "}
+                  <b>
+                    {usiaMin ?? 0} - {usiaMax ?? 0} bulan
+                  </b>
+                </div>
+
+                {/* Hidden inputs agar Zod tetap valid */}
+                <input
+                  type="hidden"
+                  {...form.register("usia_min", {valueAsNumber: true})}
                 />
-                <FormField
-                  control={form.control}
-                  name="usia_max"
-                  render={({field}) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Usia maksimal (bulan)</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={form?.formState?.isSubmitting}
-                          placeholder="Masukan Usia maksimal (bulan)"
-                          {...field}
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                <input
+                  type="hidden"
+                  {...form.register("usia_max", {valueAsNumber: true})}
                 />
-              </section>
-              <section className="flex gap-6">
+
+                {form.formState.errors.usia_min && (
+                  <p className="text-sm font-medium text-destructive">
+                    Kategori umur wajib dipilih
+                  </p>
+                )}
+              </div>
+
+              {/* SECTION: JENIS INDEKS & TARGET STATUS */}
+              <section className="flex flex-col md:flex-row gap-6">
                 <FormField
                   control={form.control}
                   name="jenis_indeks"
                   render={({field}) => (
                     <FormItem className="w-full">
-                      <FormLabel>Jenis indeks</FormLabel>
+                      <FormLabel>Jenis Indeks</FormLabel>
                       <FormControl>
                         <Select
-                          disabled={form?.formState?.isSubmitting}
-                          {...field}
+                          disabled={form.formState.isSubmitting}
                           onValueChange={field.onChange}
                           value={field.value}>
                           <SelectTrigger className="w-full">
@@ -324,40 +398,43 @@ const UpdatePanduanGiziForm = ({
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="target_status"
                   render={({field}) => (
                     <FormItem className="w-full">
-                      <FormLabel>Target status</FormLabel>
+                      <FormLabel>Target Status</FormLabel>
                       <FormControl>
                         <Select
-                          disabled={form?.formState?.isSubmitting}
-                          {...field}
+                          disabled={
+                            form.formState.isSubmitting || !selectedIndeks
+                          }
                           onValueChange={field.onChange}
                           value={field.value}>
                           <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Pilih Target Status" />
+                            <SelectValue
+                              placeholder={
+                                selectedIndeks
+                                  ? "Pilih Target Status"
+                                  : "Pilih Indeks dahulu"
+                              }
+                            />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="sangat_pendek">
-                              Sangat Pendek
-                            </SelectItem>
-                            <SelectItem value="pendek">Pendek</SelectItem>
-                            <SelectItem value="normal">Normal</SelectItem>
-                            <SelectItem value="tinggi">Tinggi</SelectItem>
-                            <SelectItem value="bb_sangat_kurang">
-                              Berat Badan Sangat Kurang
-                            </SelectItem>
-                            <SelectItem value="bb_kurang">
-                              Berat Badan Kurang
-                            </SelectItem>
-                            <SelectItem value="bb_normal">
-                              Berat Badan Normal
-                            </SelectItem>
-                            <SelectItem value="risiko_bb_lebih">
-                              Risiko Berat Badan Berlebih
-                            </SelectItem>
+                            {currentStatusOptions.length > 0 ? (
+                              currentStatusOptions.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </SelectItem>
+                              ))
+                            ) : (
+                              <div className="p-2 text-sm text-muted-foreground text-center">
+                                {selectedIndeks
+                                  ? "Opsi belum tersedia"
+                                  : "Pilih Indeks dahulu"}
+                              </div>
+                            )}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -367,11 +444,10 @@ const UpdatePanduanGiziForm = ({
                 />
               </section>
 
+              {/* FIELD ARRAY: MAKANAN */}
               <FieldSet className="gap-4">
                 <FieldLegend variant="label">Makanan</FieldLegend>
-                <FieldDescription>
-                  Masukan beberapa rekomendasi makanan
-                </FieldDescription>
+                <FieldDescription>Daftar rekomendasi makanan.</FieldDescription>
                 <FieldGroup className="gap-4">
                   {fields.map((field, index) => (
                     <Controller
@@ -386,7 +462,7 @@ const UpdatePanduanGiziForm = ({
                           <FieldContent>
                             <InputGroup>
                               <InputGroupInput
-                                disabled={form?.formState?.isSubmitting}
+                                disabled={form.formState.isSubmitting}
                                 {...controllerField}
                                 id={`form-rhf-array-makanan-${index}`}
                                 aria-invalid={fieldState.invalid}
@@ -416,26 +492,29 @@ const UpdatePanduanGiziForm = ({
                   ))}
                 </FieldGroup>
                 <Button
-                  disabled={form?.formState?.isSubmitting}
+                  disabled={form.formState.isSubmitting}
                   type="button"
                   variant="outline"
                   size="sm"
+                  className="w-fit mt-2"
                   onClick={() => append({name: ""})}>
-                  <PlusIcon /> Tambah Makanan
+                  <PlusIcon className="mr-2 h-4 w-4" /> Tambah Makanan
                 </Button>
               </FieldSet>
 
-              <div className="space-x-5 text-end">
+              {/* BUTTON ACTIONS */}
+              <div className="space-x-5 text-end pt-4 border-t">
                 <Button
                   onClick={() => push("/rekomendasi_gizi")}
                   disabled={form.formState.isSubmitting}
                   variant={"ghost"}
                   className="border"
-                  type="reset">
+                  type="button">
                   Batal
                 </Button>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting && <Spinner />} Simpan
+                  {form.formState.isSubmitting && <Spinner className="mr-2" />}
+                  Simpan Perubahan
                 </Button>
               </div>
             </form>

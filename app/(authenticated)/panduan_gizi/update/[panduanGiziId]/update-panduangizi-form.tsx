@@ -455,7 +455,7 @@ const UpdatePanduanGiziForm = ({
             </Card>
             <div className="space-x-5 text-end">
               <Button
-                onClick={() => push("/staff/panduangizi")}
+                onClick={() => push("/panduan_gizi")}
                 disabled={form.formState.isSubmitting}
                 variant={"ghost"}
                 className="border"

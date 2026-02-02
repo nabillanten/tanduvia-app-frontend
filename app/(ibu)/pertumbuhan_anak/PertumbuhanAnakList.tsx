@@ -25,7 +25,6 @@ import {getPersonalizedNutrition} from "@/app/actions/get-nutrition";
 import {NutritionCard} from "@/components/ui/NutritionCard";
 import {RekomendasiGizi} from "@/lib/nutrition-types";
 
-// --- INTERFACES ---
 interface Pemeriksaan {
   berat_badan: string;
   tinggi_badan: string;
@@ -42,9 +41,8 @@ interface ChildData {
   pemeriksaan: Pemeriksaan[];
 }
 
-// --- SUB-COMPONENT: UNTUK MENAMPILKAN 1 ANAK ---
 const ChildGrowthCard = ({child}: {child: ChildData}) => {
-  // 1. Ambil pemeriksaan terakhir
+  // get pemeriksaan terakhir
   const latestMeasurement = useMemo(() => {
     if (!child.pemeriksaan || child.pemeriksaan.length === 0) return null;
     return child.pemeriksaan[child.pemeriksaan.length - 1];
@@ -54,7 +52,7 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
   const [recommendations, setRecommendations] = useState<RekomendasiGizi[]>([]);
   const [loadingRec, setLoadingRec] = useState(false);
 
-  // 2. Hitung Status TBU
+  // Hitung Status TBU
   const statusTBU = useMemo(() => {
     if (!latestMeasurement) return "-";
     return calculateStatusTBU(
@@ -64,7 +62,7 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     );
   }, [latestMeasurement, child.jenis_kelamin]);
 
-  // 3. Hitung Status BBU
+  // Hitung Status BBU
   const statusBBU = useMemo(() => {
     if (!latestMeasurement) return "-";
     return calculateStatusBBU(
@@ -74,18 +72,16 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     );
   }, [latestMeasurement, child.jenis_kelamin]);
 
-  // --- USE EFFECT UNTUK FETCH DATA ---
   useEffect(() => {
     const fetchNutrition = async () => {
       if (!latestMeasurement) return;
 
       setLoadingRec(true);
 
-      // Panggil Server Action dengan parameter status hasil kalkulasi
       const res = await getPersonalizedNutrition(
         latestMeasurement.usia_bulan,
-        latestMeasurement?.status_bb_u, // Hasil kalkulasi useMemo (misal: "bb_sangat_kurang")
-        latestMeasurement?.status_tb_u, // Hasil kalkulasi useMemo
+        latestMeasurement?.status_bb_u,
+        latestMeasurement?.status_tb_u,
       );
 
       if (res.success) {
@@ -95,9 +91,9 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     };
 
     fetchNutrition();
-  }, [latestMeasurement, statusBBU, statusTBU]); // Trigger setiap data/status berubah
+  }, [latestMeasurement, statusBBU, statusTBU]);
 
-  // 4. Siapkan Data Chart TB
+  // Data Chart TB
   const mergedTBData = useMemo(() => {
     const standardData = child.jenis_kelamin === "L" ? TB_BOYS : TB_GIRLS;
     return standardData.map((point) => {
@@ -111,7 +107,7 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     });
   }, [child]);
 
-  // 5. Siapkan Data Chart BB
+  // Data Chart BB
   const mergedBBData = useMemo(() => {
     const standardData =
       child.jenis_kelamin === "L" ? FULL_BB_BOYS : FULL_BB_GIRLS;

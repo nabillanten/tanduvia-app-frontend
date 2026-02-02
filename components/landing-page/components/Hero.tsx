@@ -34,12 +34,12 @@ export const Hero: React.FC = () => {
                   Lihat Perkembangan Anak
                 </Button>
               </Link>
-              <Link href={"#"}>
+              <a href="#mengapa-kami">
                 <Button variant={"outline"} className="w-full font-bold p-6">
                   <BookOpen />
                   Pelajari Lebih Lanjut
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
           <div className="relative">

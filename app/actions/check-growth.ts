@@ -1,7 +1,9 @@
 "use server";
 
+import { appConfig } from "../app-config";
+
 // Sesuaikan URL API
-const API_URL = "https://api.tanduvia.com/anak/ibu/pemeriksaan";
+const API_URL = `${appConfig.baseUrl}/anak/ibu/pemeriksaan`;
 
 interface CheckPayload {
   nik: string;
