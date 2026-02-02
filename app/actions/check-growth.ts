@@ -1,14 +1,13 @@
 "use server";
 
-import { appConfig } from "../app-config";
+import {appConfig} from "../app-config";
 
-// Sesuaikan URL API
 const API_URL = `${appConfig.baseUrl}/anak/ibu/pemeriksaan`;
 
 interface CheckPayload {
   nik: string;
   nama: string;
-  tanggal_lahir: string; // Format ISO
+  tanggal_lahir: string;
 }
 
 export async function checkGrowth(payload: CheckPayload) {
@@ -17,7 +16,6 @@ export async function checkGrowth(payload: CheckPayload) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Tambahkan header lain jika perlu (misal API Key public)
       },
       body: JSON.stringify(payload),
       cache: "no-store",
@@ -34,7 +32,7 @@ export async function checkGrowth(payload: CheckPayload) {
 
     return {
       success: true,
-      data: data.data, // Array children
+      data: data.data,
     };
   } catch (error) {
     console.error("API Error:", error);

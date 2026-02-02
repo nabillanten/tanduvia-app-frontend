@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import {useSearchParams} from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -10,29 +12,51 @@ import {
 type Props = {
   page: number;
   perPage: number;
-  query: string;
   count: number;
+  query: string;
 };
 
 const TablePagination = (props: Props) => {
-  const {page, query, perPage, count} = props;
+  const {page, perPage, count} = props;
+
+  // params yang ada di URL saat ini (termasuk status, q, dll)
+  const searchParams = useSearchParams();
+
+  // Fungsi Helper untuk update halaman saja
+  const createPageURL = (pageNumber: number | string) => {
+    // Copy params saat ini
+    const params = new URLSearchParams(searchParams.toString());
+
+    // Update atau Set 'page' ke nomor baru
+    params.set("page", pageNumber.toString());
+
+    // Kembalikan string lengkap (misal: ?page=2&q=cari&status=pending)
+    return `?${params.toString()}`;
+  };
+
+  const totalPages = Math.ceil(Number(count) / perPage) || 1;
+  const currentPage = Number(page);
+
   return (
     <section className="flex items-center justify-end gap-6">
-      <p className="text-sm">
-        Page {page} of {Math.ceil(Number(count) / perPage) || 1}
+      <p className="text-sm text-muted-foreground">
+        Halaman {currentPage} dari {totalPages}
       </p>
       <Pagination>
         <PaginationContent>
+          {/* Tombol Previous */}
           <PaginationItem>
             <PaginationPrevious
-              disabled={Number(page) < 2}
-              route={`?page=${Number(page) - 1}&perPage=${perPage}&q=${query}`}
+              disabled={currentPage <= 1}
+              route={createPageURL(currentPage - 1)}
             />
           </PaginationItem>
+
+          {/* Tombol Next */}
           <PaginationItem>
             <PaginationNext
-              disabled={Number(count) / Number(perPage) <= Number(page)}
-              route={`?page=${Number(page) + 1}&perPage=${perPage}&q=${query}`}
+              disabled={currentPage >= totalPages}
+              route={createPageURL(currentPage + 1)}
             />
           </PaginationItem>
         </PaginationContent>

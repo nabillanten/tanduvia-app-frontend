@@ -51,11 +51,16 @@ export default function PerkembanganAnakPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nik: "3201234567890123",
-      nama: "Siti Nurhaliza",
-      tanggal_lahir : new Date()
+      nik: "",
+      nama: "",
     },
   });
+
+  // defaultValues: {
+  //   nik: "3201234567890123",
+  //   nama: "Siti Nurhaliza",
+  //   tanggal_lahir : new Date()
+  // },
 
   // --- HANDLE SUBMIT ---
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
