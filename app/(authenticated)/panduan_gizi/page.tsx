@@ -2,7 +2,8 @@ import SearchInput from "@/components/ui/SearchInput";
 import TableLoading from "@/components/ui/table/table-loading";
 import React, {Suspense} from "react";
 import StatusFilter from "@/components/ui/StatusFilter";
-import PanduanGiziTable from "../rekomendasi_gizi/PanduanGiziTable";
+import PanduanGiziTable from "./PanduanGiziTable";
+
 
 type SearchParams = Promise<{
   page?: string;
