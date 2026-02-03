@@ -251,6 +251,11 @@ const CreatePemeriksaanPage = () => {
         setIsLoading(false);
       }
     } else {
+      // @ts-expect-error error type
+      const rawDate = new Date(values?.tanggalPemeriksaan);
+      const utcDate = new Date(
+        Date.UTC(rawDate.getFullYear(), rawDate.getMonth(), rawDate.getDate()),
+      );
       const payload = {
         ...values,
         // @ts-expect-error error type
@@ -259,10 +264,7 @@ const CreatePemeriksaanPage = () => {
         tinggiBadan: parseFloat(values?.tinggiBadan),
         // @ts-expect-error error type
         usiaBulan: parseFloat(values?.usiaBulan),
-        tanggalPemeriksaan: new Date(
-          // @ts-expect-error error type
-          values?.tanggalPemeriksaan,
-        ).toISOString(),
+        tanggalPemeriksaan: utcDate.toISOString(),
       };
 
       try {

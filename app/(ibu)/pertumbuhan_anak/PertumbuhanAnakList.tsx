@@ -1,5 +1,6 @@
 "use client";
-import {useEffect, useMemo, useState} from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import {
   Baby,
   Scale,
@@ -10,7 +11,8 @@ import {
   Loader2,
 } from "lucide-react";
 
-import {calculateStatusTBU, calculateStatusBBU} from "@/lib/calculator";
+// --- IMPORTS (Sesuaikan path dengan project Anda) ---
+import { calculateStatusTBU, calculateStatusBBU } from "@/lib/calculator";
 import {
   TB_BOYS,
   TB_GIRLS,
@@ -20,12 +22,14 @@ import {
 } from "@/data/growthData";
 import InfoCard from "@/components/general/InfoCard";
 import GrowthChart from "@/components/general/GrowChart";
-import {Card, CardContent} from "@/components/ui/card";
-import {getPersonalizedNutrition} from "@/app/actions/get-nutrition";
-import {NutritionCard} from "@/components/ui/NutritionCard";
-import {RekomendasiGizi} from "@/lib/nutrition-types";
+import { Card, CardContent } from "@/components/ui/card";
+import { getPersonalizedNutrition } from "@/app/actions/get-nutrition";
+import { NutritionCard } from "@/components/ui/NutritionCard";
+import { RekomendasiGizi } from "@/lib/nutrition-types";
 
+// --- INTERFACES ---
 interface Pemeriksaan {
+  id: string;
   berat_badan: string;
   tinggi_badan: string;
   tanggal_pemeriksaan: string;
@@ -41,14 +45,27 @@ interface ChildData {
   pemeriksaan: Pemeriksaan[];
 }
 
-const ChildGrowthCard = ({child}: {child: ChildData}) => {
-  // get pemeriksaan terakhir
-  const latestMeasurement = useMemo(() => {
-    if (!child.pemeriksaan || child.pemeriksaan.length === 0) return null;
-    return child.pemeriksaan[child.pemeriksaan.length - 1];
-  }, [child]);
+// --- SUB COMPONENT: CHILD CARD ---
+const ChildGrowthCard = ({ child }: { child: ChildData }) => {
+  
+  // 1. URUTKAN DATA PEMERIKSAAN (Lama -> Baru)
+  // Penting: Agar chart dan data 'latest' selalu akurat mengambil yang paling akhir inputnya
+  const sortedPemeriksaan = useMemo(() => {
+    if (!child.pemeriksaan) return [];
+    
+    // Kita copy array dulu [...child.pemeriksaan] agar props asli tidak termutasi
+    return [...child.pemeriksaan].sort((a, b) => 
+      new Date(a.tanggal_pemeriksaan).getTime() - new Date(b.tanggal_pemeriksaan).getTime()
+    );
+  }, [child.pemeriksaan]);
 
-  // --- STATE BARU UNTUK REKOMENDASI ---
+  // 2. AMBIL DATA TERAKHIR
+  const latestMeasurement = useMemo(() => {
+    if (sortedPemeriksaan.length === 0) return null;
+    return sortedPemeriksaan[sortedPemeriksaan.length - 1];
+  }, [sortedPemeriksaan]);
+
+  // --- STATE REKOMENDASI GIZI ---
   const [recommendations, setRecommendations] = useState<RekomendasiGizi[]>([]);
   const [loadingRec, setLoadingRec] = useState(false);
 
@@ -58,7 +75,7 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     return calculateStatusTBU(
       Number(latestMeasurement.usia_bulan),
       Number(latestMeasurement.tinggi_badan),
-      child.jenis_kelamin,
+      child.jenis_kelamin
     );
   }, [latestMeasurement, child.jenis_kelamin]);
 
@@ -68,59 +85,81 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
     return calculateStatusBBU(
       Number(latestMeasurement.usia_bulan),
       Number(latestMeasurement.berat_badan),
-      child.jenis_kelamin,
+      child.jenis_kelamin
     );
   }, [latestMeasurement, child.jenis_kelamin]);
 
+  // FETCH REKOMENDASI GIZI
   useEffect(() => {
     const fetchNutrition = async () => {
       if (!latestMeasurement) return;
 
       setLoadingRec(true);
+      
+      try {
+        const res = await getPersonalizedNutrition(
+          latestMeasurement.usia_bulan,
+          latestMeasurement?.status_bb_u,
+          latestMeasurement?.status_tb_u
+        );
 
-      const res = await getPersonalizedNutrition(
-        latestMeasurement.usia_bulan,
-        latestMeasurement?.status_bb_u,
-        latestMeasurement?.status_tb_u,
-      );
-
-      if (res.success) {
-        setRecommendations(res.data);
+        if (res.success) {
+          setRecommendations(res.data);
+        } else {
+            setRecommendations([]);
+        }
+      } catch (error) {
+          console.error("Gagal fetch rekomendasi", error);
+      } finally {
+          setLoadingRec(false);
       }
-      setLoadingRec(false);
     };
 
     fetchNutrition();
   }, [latestMeasurement, statusBBU, statusTBU]);
 
-  // Data Chart TB
+  // 3. LOGIC DATA CHART TB (FIXED)
   const mergedTBData = useMemo(() => {
     const standardData = child.jenis_kelamin === "L" ? TB_BOYS : TB_GIRLS;
     return standardData.map((point) => {
-      const childMeasure = child.pemeriksaan.find(
-        (m) => Math.round(m.usia_bulan) === point.age,
+      
+      // Cari semua pemeriksaan di bulan ini (misal bulan 59 ada 2 data)
+      const measuresInThisMonth = sortedPemeriksaan.filter(
+        (m) => Math.round(m.usia_bulan) === point.age
       );
+
+      // Ambil yang paling terakhir (paling baru)
+      // Karena sortedPemeriksaan sudah urut, elemen terakhir adalah yang terbaru
+      const childMeasure = measuresInThisMonth.length > 0 
+        ? measuresInThisMonth[measuresInThisMonth.length - 1] 
+        : null;
+
       return {
         ...point,
         childHeight: childMeasure ? childMeasure.tinggi_badan : null,
       };
     });
-  }, [child]);
+  }, [child.jenis_kelamin, sortedPemeriksaan]);
 
-  // Data Chart BB
+  // 4. LOGIC DATA CHART BB (FIXED)
   const mergedBBData = useMemo(() => {
-    const standardData =
-      child.jenis_kelamin === "L" ? FULL_BB_BOYS : FULL_BB_GIRLS;
+    const standardData = child.jenis_kelamin === "L" ? FULL_BB_BOYS : FULL_BB_GIRLS;
     return standardData.map((point) => {
-      const childMeasure = child.pemeriksaan.find(
-        (m) => Math.round(m.usia_bulan) === point.age,
+      
+      const measuresInThisMonth = sortedPemeriksaan.filter(
+        (m) => Math.round(m.usia_bulan) === point.age
       );
+
+      const childMeasure = measuresInThisMonth.length > 0 
+        ? measuresInThisMonth[measuresInThisMonth.length - 1] 
+        : null;
+
       return {
         ...point,
         childWeight: childMeasure ? childMeasure.berat_badan : null,
       };
     });
-  }, [child]);
+  }, [child.jenis_kelamin, sortedPemeriksaan]);
 
   return (
     <Card className="mb-10 shadow-md border-t-4 border-t-blue-500">
@@ -209,7 +248,7 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
               <InfoCard
                 label="Tgl Pemeriksaan"
                 value={new Date(
-                  latestMeasurement.tanggal_pemeriksaan,
+                  latestMeasurement.tanggal_pemeriksaan
                 ).toLocaleDateString("id-ID", {
                   day: "numeric",
                   month: "short",
@@ -254,7 +293,6 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
             </div>
 
             {/* GRAFIK PERTUMBUHAN */}
-
             <div className="space-y-8">
               <GrowthChart
                 title={`Kurva TB/U - ${child.nama}`}
@@ -279,8 +317,8 @@ const ChildGrowthCard = ({child}: {child: ChildData}) => {
   );
 };
 
-// --- MAIN COMPONENT: LOOPING ARRAY CHILDREN ---
-const PertumbuhanAnakList = ({childrenData}: {childrenData: ChildData[]}) => {
+// --- MAIN COMPONENT ---
+const PertumbuhanAnakList = ({ childrenData }: { childrenData: ChildData[] }) => {
   if (!childrenData || childrenData.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
