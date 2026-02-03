@@ -16,13 +16,16 @@ export async function getPersonalizedNutrition(
     params.set("statusBBU", statusBBU);
     params.set("statusTBU", statusTBU);
 
-    const res = await fetch(`${API_URL}?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `${API_URL}?${params.toString()}&status=published`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
       },
-      cache: "no-store",
-    });
+    );
 
     const data = await res.json();
 
