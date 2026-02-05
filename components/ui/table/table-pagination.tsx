@@ -38,29 +38,31 @@ const TablePagination = (props: Props) => {
   const currentPage = Number(page);
 
   return (
-    <section className="flex items-center justify-end gap-6">
-      <p className="text-sm text-muted-foreground">
-        Halaman {currentPage} dari {totalPages}
-      </p>
-      <Pagination>
-        <PaginationContent>
-          {/* Tombol Previous */}
-          <PaginationItem>
-            <PaginationPrevious
-              disabled={currentPage <= 1}
-              route={createPageURL(currentPage - 1)}
-            />
-          </PaginationItem>
-
-          {/* Tombol Next */}
-          <PaginationItem>
-            <PaginationNext
-              disabled={currentPage >= totalPages}
-              route={createPageURL(currentPage + 1)}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+    <section className="flex items-center justify-between gap-6">
+      <p className="pl-2 font-medium text-sm"> Total Data {count}</p>
+      <section className="flex items-center gap-4">
+        <Pagination >
+          <PaginationContent className="gap-6">
+            {/* Tombol Previous */}
+            <PaginationItem>
+              <PaginationPrevious
+                disabled={currentPage <= 1}
+                route={createPageURL(currentPage - 1)}
+              />
+            </PaginationItem>
+            <span className="text-sm text-muted-foreground">
+              Halaman {currentPage} dari {totalPages}
+            </span>
+            {/* Tombol Next */}
+            <PaginationItem>
+              <PaginationNext
+                disabled={currentPage >= totalPages}
+                route={createPageURL(currentPage + 1)}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </section>
     </section>
   );
 };

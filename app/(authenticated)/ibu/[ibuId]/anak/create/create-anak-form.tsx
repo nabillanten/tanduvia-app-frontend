@@ -92,7 +92,7 @@ export default function CreateAnakForm({
 
       if (res?.statusCode === 201 || res?.statusCode === 200) {
         toast.success("Berhasil Menambahkan Anak!");
-        push("/anak");
+        push("/ibu");
       } else {
         // toast.warning(res?.message ?? res?.message?.[0]);
         toast.warning("Gagal Mengubah Anak!");

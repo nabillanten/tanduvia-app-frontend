@@ -45,7 +45,8 @@ const AddAnakButton = (props: z.infer<typeof schema>) => {
   const {id} = props;
   return (
     <Button onClick={() => push(`/ibu/${id}/anak/create`)}>
-      <Plus /> Anak
+      <Plus />
+      Tambah Anak
     </Button>
   );
 };
@@ -113,6 +114,13 @@ const Actions = (props: z.infer<typeof schema>) => {
 
 export const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
+    accessorKey: "addAnak",
+    header: "Aksi",
+    cell: ({row}) => {
+      return <AddAnakButton {...row.original} />;
+    },
+  },
+  {
     accessorKey: "nama",
     header: "Nama",
   },
@@ -163,13 +171,6 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "",
     cell: ({row}) => {
       return <Actions {...row.original} />;
-    },
-  },
-  {
-    accessorKey: "addAnak",
-    header: "",
-    cell: ({row}) => {
-      return <AddAnakButton {...row.original} />;
     },
   },
 ];
