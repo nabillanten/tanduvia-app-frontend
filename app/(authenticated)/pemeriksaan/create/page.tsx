@@ -227,9 +227,9 @@ const CreatePemeriksaanPage = () => {
         umur_bulan: parseInt(values?.usia_bulan),
         jenis_kelamin: anak?.jenis_kelamin,
         // @ts-expect-error error type
-        berat_badan: parseInt(values?.berat_badan),
+        berat_badan: parseFloat(values?.berat_badan),
         // @ts-expect-error error type
-        tinggi_badan: parseInt(values?.tinggi_badan),
+        tinggi_badan: parseFloat(values?.tinggi_badan),
       };
       try {
         setIsLoading(true);
