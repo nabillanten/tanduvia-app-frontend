@@ -23,8 +23,15 @@ import {
 import {login} from "@/app/actions/auth";
 import {toast} from "sonner";
 import {Spinner} from "./ui/spinner";
-import {Undo2} from "lucide-react";
+import {EyeClosed, EyeOffIcon, Undo2} from "lucide-react";
 import {useRouter} from "next/navigation";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "./ui/input-group";
+import React from "react";
 
 const signInScheme = z.object({
   username: z.string().nonempty({message: "Username tidak boleh kosong!"}),
@@ -39,6 +46,8 @@ export function LoginForm() {
       username: "",
     },
   });
+
+  const [isPassword, setIsPassword] = React.useState(true);
 
   const {push} = useRouter();
 
@@ -89,6 +98,7 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="password"
@@ -96,12 +106,24 @@ export function LoginForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={form.formState.isSubmitting}
-                      placeholder="Input Password"
-                      {...field}
-                      type="password"
-                    />
+                    <InputGroup>
+                      <InputGroupInput
+                        disabled={form?.formState?.isSubmitting}
+                        {...field}
+                        placeholder="Masukan Password"
+                        type={isPassword ? "password" : "text"}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          disabled={form?.formState?.isSubmitting}
+                          size="icon-xs"
+                          onClick={() => {
+                            setIsPassword((prev) => !prev);
+                          }}>
+                          {true ? <EyeOffIcon /> : <EyeClosed />}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
