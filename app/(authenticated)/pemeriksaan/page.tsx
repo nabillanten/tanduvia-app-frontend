@@ -7,6 +7,7 @@ import fetchWithCredentials from "@/lib/fetchWithCredential";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {PlusIcon} from "lucide-react";
+import ExportToCSV from "@/components/ui/ExportToCSV";
 
 type PageProps = {
   searchParams: {[key: string]: string | string[] | undefined};
@@ -52,6 +53,8 @@ const PemeriksaanPage = async (props: {searchParams: PageProps}) => {
 
             {/* Filter Posyandu */}
             <FilterSelect data={dataPosyandu?.data} />
+
+            <ExportToCSV data={dataPosyandu?.data}/>
           </div>
           <Link href={"/pemeriksaan/create"}>
             <Button>

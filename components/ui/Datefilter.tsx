@@ -50,7 +50,7 @@ export function DateFilter() {
           {date ? (
             format(date, "dd MMM yyyy", {locale: idLocale})
           ) : (
-            <span>Pilih Tanggal</span>
+            <span>Tanggal</span>
           )}
         </Button>
       </PopoverTrigger>
