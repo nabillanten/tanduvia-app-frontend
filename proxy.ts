@@ -20,7 +20,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
     "/panduan_gizi",
     "/pemeriksaan",
   ],
-  AHLI_GIZI: ["/dashboard", "/rekomendasi_gizi"],
+  AHLI_GIZI: ["/dashboard", "/rekomendasi_gizi", "/riwayat_pemeriksaan","/anak"],
   PETUGAS: ["/dashboard", "/anak", "/ibu", "/pemeriksaan"],
 };
 

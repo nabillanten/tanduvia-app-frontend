@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {Baby, HeartHandshake, Home, Map, Salad, Users} from "lucide-react";
+import {Baby, HeartHandshake, Home, HouseHeart, Map, Salad, Users} from "lucide-react";
 import {NavUser} from "@/components/nav-user";
 import Logo from "@/public/images/logo.png";
 import {
@@ -57,7 +57,7 @@ export function AppSidebar({
       {
         name: "Posyandu",
         url: "/posyandu",
-        icon: Baby,
+        icon: HouseHeart,
       },
       {
         name: "Panduan Gizi",
@@ -116,6 +116,11 @@ export function AppSidebar({
         name: "Rekomendasi Gizi",
         url: "/rekomendasi_gizi",
         icon: Salad,
+      },
+       {
+        name: "Riwayat Pemeriksaan",
+        url: "/riwayat_pemeriksaan",
+        icon: Map,
       },
     ],
   };

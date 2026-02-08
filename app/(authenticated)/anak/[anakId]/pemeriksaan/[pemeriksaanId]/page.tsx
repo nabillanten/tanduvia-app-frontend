@@ -1,5 +1,5 @@
+import BackButton from "@/components/ui/back-button";
 import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -30,11 +30,9 @@ import {
   MapPinHouseIcon,
   NotebookPen,
   Ruler,
-  Undo2,
   User,
   Weight,
 } from "lucide-react";
-import Link from "next/link";
 
 const getPemeriksaanById = async (id: string) => {
   const response = await fetchWithCredentials(`/pemeriksaan/${id}`);
@@ -148,11 +146,7 @@ const UpdatePemeriksaanPage = async ({
           <CardTitle> Identitas Anak</CardTitle>
           <CardDescription>Biodata indentitas anak</CardDescription>
           <CardAction>
-            <Link href={"/pemeriksaan"}>
-              <Button>
-                <Undo2 /> Kembali
-              </Button>
-            </Link>
+            <BackButton />
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-6">
