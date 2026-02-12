@@ -46,26 +46,44 @@ type Props = {
 const formSchema = z.object({
   posyandu_id: z.string("Posyandu tidak boleh kosong!"),
   quarter: z.string("Rentang quarter tidak boleh kosong!"),
+  year: z.string("Tahun tidak boleh kosong!"),
 });
 
 const ExportToCSV = ({data}: Props) => {
+  const currentYear = new Date().getFullYear();
+  // Array length 6 = Tahun ini (1) + 5 tahun ke belakang
+  const years = Array.from({length: 6}, (_, i) => (currentYear - i).toString());
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {year: currentYear.toString()},
   });
   const [showDialogChangePassword, setShowDialogChangePassword] =
     React.useState(false);
 
   const resetFormFields = () => {
-    form.reset({posyandu_id: undefined, quarter: undefined});
+    form.reset({
+      posyandu_id: undefined,
+      quarter: undefined,
+      year: currentYear.toString(),
+    });
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const selectedPosyandu = data.find((p) => p.id === values.posyandu_id);
+    const posyanduName = selectedPosyandu ? selectedPosyandu.nama : "Posyandu";
+
+    // Bersihkan nama file (Ganti spasi/karakter aneh dengan underscore)
+    const safePosyanduName = posyanduName.replace(/[^a-zA-Z0-9]/g, "_");
+
     try {
       toast.info("Sedang mendownload file...");
 
       const res = await exportPemeriksaanToCSV(
         values.posyandu_id,
         values.quarter,
+        values.year,
+        safePosyanduName,
       );
 
       if (res.success && res.data) {
@@ -181,6 +199,33 @@ const ExportToCSV = ({data}: Props) => {
                         </SelectContent>
                       </Select>
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="year"
+                render={({field}) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Tahun</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Tahun" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {years.map((year) => (
+                          <SelectItem key={year} value={year}>
+                            {year}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

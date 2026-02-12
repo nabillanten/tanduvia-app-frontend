@@ -19,18 +19,16 @@ export const updatePemeriksaan = async (id: string, body: object) => {
 export const exportPemeriksaanToCSV = async (
   posyandu_id: string,
   quarter: string,
+  year : string,
+  safePosyanduName : string
 ) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
 
   const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-  console.log(
-    `Downloading from: ${API_URL}/pemeriksaan/anthropometric-export...`,
-  );
-
   const response = await fetch(
-    `${API_URL}/pemeriksaan/anthropometric-export?posyandu_id=${posyandu_id}&quarter=${quarter}`,
+    `${API_URL}/pemeriksaan/anthropometric-export?posyandu_id=${posyandu_id}&quarter=${quarter}&year=${year}`,
     {
       method: "GET",
       headers: {
@@ -71,6 +69,6 @@ export const exportPemeriksaanToCSV = async (
     success: true,
     data: base64,
     contentType: contentType,
-    filename: `laporan-pemeriksaan-${quarter}.${extension}`,
+    filename: `laporan_pemeriksaan-${safePosyanduName}-${quarter}-${year}.${extension}`,
   };
 };
