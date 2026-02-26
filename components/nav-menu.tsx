@@ -1,6 +1,6 @@
 "use client";
 
-import {type LucideIcon} from "lucide-react";
+import {FileText, type LucideIcon} from "lucide-react";
 
 import {
   SidebarGroup,
@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export function NavMenu({
   menu,
@@ -29,13 +30,22 @@ export function NavMenu({
         {menu.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild isActive={pathNow == item.url}>
-              <a href={item.url}>
+              <Link href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild>
+            <a
+              href="/docs/Tanduvia-User-Guide-Staff.pdf"
+              download="Buku_Panduan_Tanduvia_Staff.pdf">
+               <FileText className="h-4 w-4" /> Unduh Buku Panduan
+              </a>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );

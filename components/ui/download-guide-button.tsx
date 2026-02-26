@@ -14,7 +14,7 @@ const DownloadGuideButton = ({
       href={path}
       download={filename} // Nama file saat didownload oleh user
     >
-      <Button className="w-full font-bold p-6 border hover:scale-105 transition-transform">
+      <Button variant={'link'} className="w-full font-bold p-6 border hover:scale-105 transition-transform">
         <FileText className="h-4 w-4" />
         <span>Download Buku Panduan</span>
         <Download className="h-4 w-4" />
