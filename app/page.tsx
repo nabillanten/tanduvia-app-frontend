@@ -6,7 +6,7 @@ import {HowItWorks} from "@/components/landing-page/components/HowItWorks";
 import {WhyChooseUs} from "@/components/landing-page/components/WhyChooseUs";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {BookOpen} from "lucide-react";
+import DownloadGuideButton from "@/components/ui/download-guide-button";
 
 export default function Home() {
   return (
@@ -73,11 +73,10 @@ export default function Home() {
                       Lihat Perkembangan Anak
                     </Button>
                   </Link>
-                  <a href="#mengapa-kami">
-                    <Button className="w-full font-bold p-6 border hover:scale-105 transition-transform">
-                      <BookOpen /> Pelajari Lebih Lanjut
-                    </Button>
-                  </a>
+                  <DownloadGuideButton
+                    path="/docs/Tanduvia-User-Guide.pdf"
+                    filename="Buku_Panduan_Tanduvia.pdf"
+                  />
                 </div>
               </div>
             </div>
